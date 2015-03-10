@@ -1,0 +1,2 @@
+language: objective-c
+script: "xcodebuild test -workspace Realm-API-Model.xcworkspace -scheme \"RealmAPIModel iOS\" -destination \"platform=iOS Simulator,name=iPhone 5\""
