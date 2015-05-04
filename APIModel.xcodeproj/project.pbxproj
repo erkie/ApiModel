@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		033E23EC1AF6284E00F1C171 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23EB1AF6284E00F1C171 /* ApiRequest.swift */; };
 		033E23EF1AF628FF00F1C171 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23EE1AF628FF00F1C171 /* APIResponse.swift */; };
-		033E23F31AF62A0D00F1C171 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 033E23F21AF62A0D00F1C171 /* Info.plist */; };
 		033E23F61AF62B0A00F1C171 /* RLMArray+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23F51AF62B0A00F1C171 /* RLMArray+Array.swift */; };
 		033E23F91AF62EB600F1C171 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 033E23F81AF62EB600F1C171 /* README.md */; };
 		033E23FB1AF62EC400F1C171 /* API-Model.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 033E23FA1AF62EC400F1C171 /* API-Model.podspec */; };
@@ -32,6 +31,7 @@
 		0370B7BF1AAF82630085F048 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A81AAF82630085F048 /* Utils.swift */; };
 		0370B7C01AAF82D50085F048 /* RLMObject+JSONDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A21AAF82630085F048 /* RLMObject+JSONDictionary.swift */; };
 		03FF5D101AAF8E2900C6528C /* AlamofireSwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FF5D0F1AAF8E2900C6528C /* AlamofireSwiftyJSON.swift */; };
+		6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +61,7 @@
 		0370B7A71AAF82630085F048 /* Transform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transform.swift; sourceTree = "<group>"; };
 		0370B7A81AAF82630085F048 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		03FF5D0F1AAF8E2900C6528C /* AlamofireSwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireSwiftyJSON.swift; sourceTree = "<group>"; };
+		6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleTransform.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 				0370B79B1AAF82630085F048 /* IntTransform.swift */,
 				0370B79E1AAF82630085F048 /* NSDateTransform.swift */,
 				0370B79F1AAF82630085F048 /* PercentageTransform.swift */,
+				6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */,
 			);
 			name = Transforms;
 			sourceTree = "<group>";
@@ -200,7 +202,7 @@
 		03C60D831AAB5B9A00FE99EA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 				TargetAttributes = {
 					0366A4821AAF66ED00506F50 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -229,7 +231,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				033E23F31AF62A0D00F1C171 /* Info.plist in Resources */,
 				033E23FB1AF62EC400F1C171 /* API-Model.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -248,6 +249,7 @@
 				0370B7AC1AAF82630085F048 /* ApiId.swift in Sources */,
 				033E23EF1AF628FF00F1C171 /* APIResponse.swift in Sources */,
 				0370B7B31AAF82630085F048 /* ApiTransformable.swift in Sources */,
+				6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */,
 				0370B7B21AAF82630085F048 /* IntTransform.swift in Sources */,
 				033E23F91AF62EB600F1C171 /* README.md in Sources */,
 				0370B7BD1AAF82630085F048 /* StringTransform.swift in Sources */,
