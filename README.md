@@ -69,8 +69,8 @@ Using the `index` of a REST resource:
 
 `GET /posts.json`
 ```swift
-ApiForm<Post>.findArray { objects in
-    for var post in posts {
+ApiForm<Post>.findArray { posts in
+    for post in posts {
         println("... \(post.title)")
     }
 }
