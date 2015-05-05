@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "APIModel"
-  s.version = "0.1.0"
+  s.version = "0.2.0"
   s.summary = "Easy API integrations using Realm and Swift"
 
   s.description  = <<-DESC
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.license = "MIT"
   s.author = { "Erik Rothoff Andersson" => "erik.rothoff@gmail.com" }
   s.platform = :ios, "8.0"
-  s.source = { :git => "https://github.com/erkie/APIModel.git", tag: "0.1.0" }
+  s.source = { :git => "https://github.com/erkie/APIModel.git", tag: s.version }
   s.source_files  = "Source/*"
 
   # s.framework  = "SomeFramework"
