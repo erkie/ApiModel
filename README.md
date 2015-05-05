@@ -4,15 +4,6 @@ Interact with REST apis using realm.io to represent objects. The goal of `APIMod
 
 This project is very much inspired by [@idlefinger's](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
 
-## Installation
-
-Currently installation is only available through Cocoapods.
-
-```
-# In your Podfile
-pod 'APIModel'
-```
-
 ## Getting started
 
 The key part is to implmenet the `ApiTransformable` protocol.
@@ -68,6 +59,20 @@ class Post: RLMObject, ApiTransformable {
 }
 ```
 
+## Configuring the API
+
+To represent the API itself, you have to create an object of the `API` class. This holds a `ApiConfiguration` object defining the host URL for all requests. After it has been created it can be accessed from the `func api() -> API` singleton function.
+
+To set it up:
+
+```
+// Put this somewhere in your AppDelegate or together with other initialization code
+var apiConfig = ApiConfiguration()
+apiConfig.host = "https://service.io/api/v1/"
+
+ApiSingleton.setInstance(API(configuration: apiConfig))
+```
+
 ## Interacting with APIs
 
 The base of `APIModel` is the `ApiForm` wrapper class. This class wraps a `RLMObject` and takes care of fetching objects, saving objects and dealing with validation errors.
@@ -119,7 +124,7 @@ form.save {
 }
 ```
 
-`ApiForm` will know that the object is not persisted, since it does not have an `id` set. So a `POST` request will be made as follows:
+`ApiForm` will know that the object is not persisted, since it does not have an `id`  set (or which ever field is defined as `primaryKey` in Realm). So a `POST` request will be made as follows:
 
 `POST /posts.json`
 ```json
@@ -174,8 +179,8 @@ Transforms are used to convert attributes from JSON responses to rich types. The
 
 ```swift
 class IntTransform: Transform {
-    func perform(value: AnyObject) -> AnyObject {
-        if let asInt = value.integerValue {
+    func perform(value: AnyObject?) -> AnyObject {
+        if let asInt = value?.integerValue {
             return asInt
         } else {
             return 0
@@ -213,15 +218,40 @@ ApiForm<User>.load { response in
 
 Default transforms are:
 
-- ArrayTransform
-- BoolTransform
-- IntTransform
-- ModelTransform
-- NSDateTransform
-- PercentageTransform
 - StringTransform
+- IntTransform
+- FloatTransform
+- DoubleTransform
+- BoolTransform
+- NSDateTransform
+- ModelTransform
+- ArrayTransform
+- PercentageTransform
 
 However, it is really easy to define your own. Go nuts!
+
+## Hooks
+
+`APIModel` uses [Alamofire](https://github.com/alamofire/alamofire) for sending and receiving requests. To hook into this, the `API` class currently has `before`- and `after`-hooks that you can use to modify or log the requests. An example of sending user credentials with each request:
+
+```swift
+// Put this somewhere in your AppDelegate or together with other initialization code
+api().beforeRequest { request in
+    if let loginToken = User.loginToken() {
+        request.parameters["access_token"] = loginToken
+    }
+}
+```
+
+There is also a `afterRequest` which passes in a `ApiRequest` and `ApiResponse`:
+
+```swift
+api().afterRequest { request, response in
+    println("... Got: \(response.status)")
+    println("... \(request)")
+    println("... \(response)")
+}
+```
 
 ## Dealing with IDs
 
