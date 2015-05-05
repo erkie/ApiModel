@@ -4,6 +4,15 @@ Interact with REST apis using realm.io to represent objects. The goal of `APIMod
 
 This project is very much inspired by [@idlefinger's](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
 
+## Installation
+
+Currently installation is only available through Cocoapods.
+
+```
+# In your Podfile
+pod 'APIModel'
+```
+
 ## Getting started
 
 The key part is to implmenet the `ApiTransformable` protocol.

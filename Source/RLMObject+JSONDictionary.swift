@@ -19,16 +19,18 @@ func camelizedString(string: String) -> String {
 }
 
 func updateRealmObjectFromDictionaryWithMapping(realmObject: RLMObject, data: [String:AnyObject], mapping: JSONMapping) {
-    for (var key, value) in data {
+    for (var key, var value) in data {
         key = camelizedString(key)
         
         if let mappingKey = mapping[key] {
-            if value.isKindOfClass(NSNull) {
-                continue
-            }
-            
             let transform = mapping[key]!
-            realmObject[key] = transform.perform(value)
+            var optionalValue: AnyObject? = value as AnyObject?
+
+            if value.isKindOfClass(NSNull) {
+                optionalValue = nil
+            }
+
+            realmObject[key] = transform.perform(optionalValue)
         }
     }
 }

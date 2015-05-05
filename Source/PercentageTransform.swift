@@ -10,7 +10,7 @@ import Foundation
 public class PercentageTransform: Transform {
     public init() {}
     
-    public func perform(value: AnyObject) -> AnyObject {
+    public func perform(value: AnyObject?) -> AnyObject {
         if let intValue = value as? Int {
             return Float(intValue) / 100.0
         }

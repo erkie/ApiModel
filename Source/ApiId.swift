@@ -7,14 +7,5 @@
 
 public typealias ApiId = String
 
-public class ApiIdTransform: Transform {
-    public init() {}
-    
-    public func perform(value: AnyObject) -> AnyObject {
-        if let stringValue = value as? String {
-            return stringValue
-        } else {
-            return value.stringValue
-        }
-    }
+public class ApiIdTransform: StringTransform {
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol Transform {
-    func perform(value: AnyObject) -> AnyObject
+    func perform(value: AnyObject?) -> AnyObject
 }

@@ -10,8 +10,8 @@ import Foundation
 public class BoolTransform: Transform {
     public init() {}
     
-    public func perform(value: AnyObject) -> AnyObject {
-        if let stringValue = value.stringValue {
+    public func perform(value: AnyObject?) -> AnyObject {
+        if let stringValue = value?.stringValue {
             switch stringValue.lowercaseString {
             case "true": return true
             case "1": return true
@@ -21,7 +21,7 @@ public class BoolTransform: Transform {
             }
         }
         
-        if let integerValue = value.integerValue {
+        if let integerValue = value?.integerValue {
             if integerValue == 0 {
                 return false
             } else {
