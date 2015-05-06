@@ -2,7 +2,7 @@
 
 Interact with REST apis using realm.io to represent objects. The goal of `APIModel` is to be easy to setup, easy to grasp, and fun to use. Boilerplate should be kept to a minimum, but still to intuitive to set up.
 
-This project is very much inspired by [@idlefinger's](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
+This project is very much inspired by [@idlefingers'](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
 
 ## Getting started
 
@@ -22,12 +22,13 @@ class Post: RLMObject, ApiTransformable {
 	override class func primaryKey() -> String {
         return "id"
     }
-    
+
     // Define the standard namespace this class usually resides in JSON responses
+    // MUST BE singular ie `post` not `posts`
     class func apiNamespace() -> String {
         return "post"
     }
-    
+
     // Define where and how to get these. Routes are assumed to use Rails style REST (index, show, update, destroy)
     class func apiResource() -> ApiResource {
         return ApiResource(
@@ -35,7 +36,7 @@ class Post: RLMObject, ApiTransformable {
             show: "/post/:id:.json"
         )
     }
-    
+
     // Define how it is converted from JSON responses into Realm objects. A host of transforms are available
     // See section "Transforms" in README. They are super easy to create as well!
     class func fromJSONMapping() -> JSONMapping {
@@ -112,10 +113,10 @@ post.contents = "Hello!"
 post.createdAt = NSDate()
 
 var form = ApiForm<Post>(model: post)
-form.save {
+form.save { _ in
     if form.hasErrors {
         println("Could not save:")
-        for var error in form.errorMessages {
+        for error in form.errorMessages {
             println("... \(error)")
         }
     } else {
@@ -137,7 +138,7 @@ form.save {
 }
 ```
 
-If the response is successful, the attributes returned by the server will be updated on the model. 
+If the response is successful, the attributes returned by the server will be updated on the model.
 
 `200 OK`
 ```json
@@ -210,7 +211,7 @@ ApiForm<User>.load { response in
     let user = response!.model
 
     println("User: \(user.email)")
-    for var post in user.posts {
+    for post in user.posts {
         println("\(post.title)")
     }
 }
@@ -260,3 +261,20 @@ As a consumer of an API, you never want to make assumptions about the ID structu
 ## Caching and storage
 
 It is up to you to cache and store the results of any calls. APIModel does not do that for you, and will not do that, since strategies vary wildly depending on needs.
+
+# Thanks to
+
+- [idlefingers](https://www.github.com/idlefingers)
+- [Pluralize.swift](https://github.com/joshualat/Pluralize.swift)
+
+# License
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Rootof Creations HB
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
