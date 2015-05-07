@@ -1,12 +1,12 @@
 import Foundation
 
-public class APIResponse {
-    public var request: APIRequest
+public class ApiResponse {
+    public var request: ApiRequest
     public var json: JSON?
     public var error: NSError?
     public var status: Int?
 
-    public init(request: APIRequest) {
+    public init(request: ApiRequest) {
         self.request = request
     }
 }

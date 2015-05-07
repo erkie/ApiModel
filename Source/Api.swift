@@ -4,8 +4,8 @@ import Alamofire
 public class API {
     public var configuration: ApiConfiguration
 
-    public var beforeRequestHooks: [((APIRequest) -> Void)] = []
-    public var afterRequestHooks: [((APIRequest, APIResponse) -> Void)] = []
+    public var beforeRequestHooks: [((ApiRequest) -> Void)] = []
+    public var afterRequestHooks: [((ApiRequest, ApiResponse) -> Void)] = []
 
     public init(configuration: ApiConfiguration) {
         self.configuration = configuration
@@ -24,7 +24,7 @@ public class API {
     }
 
     public func runRequest(method: Alamofire.Method, path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        var request = APIRequest(method: method, path: path)
+        var request = ApiRequest(method: method, path: path)
         request.parameters = parameters
 
         for hook in beforeRequestHooks {
@@ -37,8 +37,8 @@ public class API {
         }
     }
 
-    func performRequest(request: APIRequest, responseHandler: (APIResponse) -> Void) {
-        var response = APIResponse(request: request)
+    func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {
+        var response = ApiResponse(request: request)
 
         Alamofire.request(request.method, request.url, parameters: request.parameters)
             .responseSwiftyJSON(completionHandler: { (_, alamofireResponse, data, error) in
@@ -54,11 +54,11 @@ public class API {
             })
     }
 
-    public func beforeRequest(hook: ((APIRequest) -> Void)) {
+    public func beforeRequest(hook: ((ApiRequest) -> Void)) {
         beforeRequestHooks.append(hook)
     }
 
-    public func afterRequest(hook: ((APIRequest, APIResponse) -> Void)) {
+    public func afterRequest(hook: ((ApiRequest, ApiResponse) -> Void)) {
         afterRequestHooks.append(hook)
     }
 }

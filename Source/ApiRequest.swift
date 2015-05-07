@@ -1,6 +1,6 @@
 import Alamofire
 
-public class APIRequest {
+public class ApiRequest {
     public var path: String
     public var parameters: [String:AnyObject] = [:]
     public var method: Alamofire.Method
