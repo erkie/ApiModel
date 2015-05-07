@@ -254,6 +254,14 @@ api().afterRequest { request, response in
 }
 ```
 
+## API urls
+
+Given the setup for the `Post` model above, if you wanted to get the full url with replacements for the show resource (like `https://service.io/api/v1/posts/123.json`), you can use:
+
+```swift
+post.apiUrlForResource(Post.apiResource().show)
+```
+
 ## Dealing with IDs
 
 As a consumer of an API, you never want to make assumptions about the ID structure used for their models. Do not use `Int` or anything similar for ID types, strings are to be recommended. Therefor `APIModel` defines a typealias to `String`, called ApiId. There is also an `ApiIdTransform` available for IDs.
