@@ -8,6 +8,10 @@ extension RLMObject {
 
     public func isApiSaved() -> Bool {
         let pk = self.dynamicType.primaryKey()
+        
+        if pk.isEmpty {
+            return false
+        }
 
         if let idValue = self[pk] as? String {
             return !idValue.isEmpty
