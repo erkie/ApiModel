@@ -1,11 +1,3 @@
-//
-//  RLMObject+extensions.swift
-//  APIModel
-//
-//  Created by Erik Rothoff Andersson on 04/12/14.
-//  Copyright (c) 2015 Rootof Creations HB. All rights reserved.
-//
-
 import Foundation
 import Realm
 
@@ -21,7 +13,7 @@ func camelizedString(string: String) -> String {
 func updateRealmObjectFromDictionaryWithMapping(realmObject: RLMObject, data: [String:AnyObject], mapping: JSONMapping) {
     for (var key, var value) in data {
         key = camelizedString(key)
-        
+
         if let mappingKey = mapping[key] {
             let transform = mapping[key]!
             var optionalValue: AnyObject? = value as AnyObject?
@@ -41,7 +33,7 @@ extension RLMObject {
     public func updateFromForm(data: NSDictionary, mapping: JSONMapping) {
         updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
     }
-    
+
     public func updateFromDictionaryWithMapping(data: [String:AnyObject], mapping: JSONMapping) {
         updateRealmObjectFromDictionaryWithMapping(self, data, mapping)
     }

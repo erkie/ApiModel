@@ -1,20 +1,13 @@
-//
-//  NSDateTransform.swift
-//  APIModel
-//
-//  Copyright (c) 2015 Rootof Creations HB. All rights reserved.
-//
-
 import Foundation
 
 public class NSDateTransform: Transform {
     public init() {}
-    
+
     public func perform(value: AnyObject?) -> AnyObject {
         if let dateValue = value as? NSDate {
             return dateValue
         }
-        
+
         // Rails dates with time and zone
         if let stringValue = value as? String {
             let dateFormatter = NSDateFormatter()
@@ -22,7 +15,7 @@ public class NSDateTransform: Transform {
             if let date = dateFormatter.dateFromString("\(stringValue)") {
                 return toLocalTimezone(date)
             }
-            
+
             // Standard short dates
             let simpleDateFormatter = NSDateFormatter()
             simpleDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -33,7 +26,7 @@ public class NSDateTransform: Transform {
 
         return NSDate()
     }
-    
+
     func toLocalTimezone(date: NSDate) -> NSDate {
         let seconds = NSTimeInterval(NSTimeZone.localTimeZone().secondsFromGMTForDate(date))
         return NSDate(timeInterval: seconds, sinceDate: date)

@@ -1,11 +1,3 @@
-//
-//  RLMObject+ApiModel.swift
-//  brawn-ios
-//
-//  Created by Erik Rothoff Andersson on 10/04/15.
-//  Copyright (c) 2015 Rootof. All rights reserved.
-//
-
 import Foundation
 import Realm
 
@@ -13,10 +5,10 @@ extension RLMObject {
     public class func localId() -> ApiId {
         return "APIMODELLOCAL-\(NSUUID().UUIDString)"
     }
-    
+
     public func isApiSaved() -> Bool {
         let pk = self.dynamicType.primaryKey()
-        
+
         if let idValue = self[pk] as? String {
             return !idValue.isEmpty
         } else if let idValue = self[pk] as? Int {
@@ -25,17 +17,17 @@ extension RLMObject {
             return false
         }
     }
-    
+
     public var isLocal: Bool {
         get {
             if let id = self[self.dynamicType.primaryKey()] as? NSString {
                 return id.rangeOfString("APIMODELLOCAL-").location == 0
             }
-            
+
             return false
         }
     }
-    
+
     public var unlocalId: ApiId {
         get {
             if isLocal {
@@ -58,11 +50,11 @@ extension RLMObject {
             realm.commitWriteTransaction()
         }
     }
-    
+
     public func saveStoredObject() {
         modifyStoredObject {}
     }
-    
+
     public func removeEmpty(fieldsToRemoveIfEmpty: [String], var data: [String:AnyObject]) -> [String:AnyObject] {
         for field in fieldsToRemoveIfEmpty {
             if data[field] == nil {
@@ -76,20 +68,20 @@ extension RLMObject {
 
     public func apiResourceWithReplacements(url: String) -> String {
         var pieces = url.componentsSeparatedByString(":")
-        
+
         var pathComponents: [String] = []
         while pieces.count > 0 {
             pathComponents.append(pieces.removeAtIndex(0))
             if pieces.count == 0 {
                 break
             }
-            
+
             let methodName = pieces.removeAtIndex(0)
             if let value: AnyObject = self[methodName] {
                 pathComponents.append(value.description)
             }
         }
-        
+
         return "".join(pathComponents)
     }
 

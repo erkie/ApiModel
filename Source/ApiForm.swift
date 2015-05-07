@@ -1,10 +1,3 @@
-//
-//  ApiForm.swift
-//  APIModel
-//
-//  Copyright (c) 2015 Rootof Creations HB. All rights reserved.
-//
-
 import Realm
 import Alamofire
 

@@ -1,11 +1,3 @@
-//
-//  DoubleTransform.swift
-//  APIModel
-//
-//  Created by Damien Timewell on 04/05/2015.
-//
-//
-
 import Foundation
 
 public class DoubleTransform: Transform {

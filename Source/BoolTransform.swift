@@ -1,15 +1,8 @@
-//
-//  BoolTransform.swift
-//  APIModel
-//
-//  Copyright (c) 2015 Rootof Creations HB. All rights reserved.
-//
-
 import Foundation
 
 public class BoolTransform: Transform {
     public init() {}
-    
+
     public func perform(value: AnyObject?) -> AnyObject {
         if let stringValue = value?.stringValue {
             switch stringValue.lowercaseString {
@@ -20,7 +13,7 @@ public class BoolTransform: Transform {
             default: return false
             }
         }
-        
+
         if let integerValue = value?.integerValue {
             if integerValue == 0 {
                 return false
@@ -28,7 +21,7 @@ public class BoolTransform: Transform {
                 return true
             }
         }
-        
+
         return true
     }
 }
