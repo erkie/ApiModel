@@ -92,4 +92,8 @@ extension RLMObject {
         
         return "".join(pathComponents)
     }
+
+    public func apiUrlForResource(resource: String) -> String {
+        return "\(api().configuration.host)\(apiResourceWithReplacements(resource))"
+    }
 }
