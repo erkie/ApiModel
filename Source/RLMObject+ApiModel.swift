@@ -88,4 +88,11 @@ extension RLMObject {
     public func apiUrlForResource(resource: String) -> String {
         return "\(api().configuration.host)\(apiResourceWithReplacements(resource))"
     }
+    
+    /*
+    Not possible because calling methods on protocol types is not implmented yet.
+    public func apiUrlForResource(resource: ApiResourceAction) -> String {
+        let apiResource = (self.dynamicType as! ApiTransformable).dynamicType.apiResource()
+        return apiUrlForResource(apiResource.getAction(resource))
+    }*/
 }

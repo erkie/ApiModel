@@ -1,12 +1,26 @@
 import Foundation
 
+public enum ApiResourceAction {
+    case Index
+    case Show
+    case Create
+    case Update
+    case Destroy
+}
+
 @objc
 public class ApiResource {
     public var index: String
     public var show: String
     public var create: String
-
+    
     public var update: String {
+        get {
+            return show
+        }
+    }
+
+    public var destroy: String {
         get {
             return show
         }
@@ -28,5 +42,20 @@ public class ApiResource {
 
     public convenience init() {
         self.init(index: "NO RESOURCE DEFINED", show: "NO RESOURCE DEFINED", create: "NO RESOURCE DEFINED")
+    }
+    
+    public func getAction(resourceAction: ApiResourceAction) -> String {
+        switch resourceAction {
+        case .Index:
+            return index
+        case .Create:
+            return create
+        case .Show:
+            return show
+        case .Update:
+            return update
+        case .Destroy:
+            return destroy
+        }
     }
 }

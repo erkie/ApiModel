@@ -260,6 +260,7 @@ Given the setup for the `Post` model above, if you wanted to get the full url wi
 
 ```swift
 post.apiUrlForResource(Post.apiResource().show)
+// NOT IMPLEMENTED YET BECAUSE LIMITATIONS IN SWIFT: post.apiUrlForResource(.Show)
 ```
 
 ## Dealing with IDs
