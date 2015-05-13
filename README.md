@@ -1,6 +1,6 @@
 # APIModel
 
-Interact with REST apis using realm.io to represent objects. The goal of `APIModel` is to be easy to setup, easy to grasp, and fun to use. Boilerplate should be kept to a minimum, but still to intuitive to set up.
+Interact with REST apis using realm.io to represent objects. The goal of `APIModel` is to be easy to setup, easy to grasp, and fun to use. Boilerplate should be kept to a minimum, and also intuitive to set up.
 
 This project is very much inspired by [@idlefingers'](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
 
@@ -9,10 +9,10 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 The key part is to implmenet the `ApiTransformable` protocol.
 
 ```swift
-import Realm
+import RealmSwift
 import APIModel
 
-class Post: RLMObject, ApiTransformable {
+class Post: Object, ApiTransformable {
     // Standard Realm boilerplate
     dynamic var id = ""
 	dynamic var title = ""
@@ -76,7 +76,7 @@ ApiSingleton.setInstance(API(configuration: apiConfig))
 
 ## Interacting with APIs
 
-The base of `APIModel` is the `ApiForm` wrapper class. This class wraps a `RLMObject` and takes care of fetching objects, saving objects and dealing with validation errors.
+The base of `APIModel` is the `ApiForm` wrapper class. This class wraps a `Object` and takes care of fetching objects, saving objects and dealing with validation errors.
 
 ### Fetching objects
 
@@ -195,14 +195,14 @@ This takes an object and attempts to convert it into an integer. If that fails, 
 Transforms can be quite complex, and even convert nested models. For example:
 
 ```swift
-class User: RLMObject, ApiTransformable {
+class User: Object, ApiTransformable {
     dynamic var id = ApiId()
     dynamic var email = ""
-    dynamic var posts: RLMArray = RLMArray(objectClassName: Post.className())
+    let posts = List<Post>()
 
     static func fromJSONMapping() -> JSONMapping {
         return [
-            "posts": ArrayTransform(modelType: Post.self)
+            "posts": ArrayTransform<Post>()
         ]
     }
 }
