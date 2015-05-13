@@ -5,4 +5,4 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
 pod 'Alamofire', '~> 1.2'
-pod 'Realm', '~> 0.91.0'
+pod 'RealmSwift', '~> 0.92.0'

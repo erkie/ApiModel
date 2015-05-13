@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
   s.dependency "Alamofire", "~> 1.2"
-  s.dependency "Realm", "~> 0.91.0"
+  s.dependency "RealmSwift", "~> 0.92.0"
 end

@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		030C6B361B010BE100F72ECC /* APIModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 030C6B351B010BE100F72ECC /* APIModel.podspec */; };
 		0326C5151AFB7B79005FC057 /* AlamofireSwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5111AFB7B79005FC057 /* AlamofireSwiftyJSON.swift */; };
 		0326C5161AFB7B79005FC057 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5121AFB7B79005FC057 /* Pluralize.swift */; };
-		0326C5171AFB7B79005FC057 /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5131AFB7B79005FC057 /* RLMSupport.swift */; };
 		0326C5181AFB7B79005FC057 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5141AFB7B79005FC057 /* SwiftyJSON.swift */; };
-		0326C51A1AFB7C1B005FC057 /* APIModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 0326C5191AFB7C1B005FC057 /* APIModel.podspec */; };
 		033E23EC1AF6284E00F1C171 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23EB1AF6284E00F1C171 /* ApiRequest.swift */; };
 		033E23EF1AF628FF00F1C171 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23EE1AF628FF00F1C171 /* ApiResponse.swift */; };
 		033E23F61AF62B0A00F1C171 /* RLMArray+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E23F51AF62B0A00F1C171 /* RLMArray+Array.swift */; };
@@ -39,11 +38,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		030C6B351B010BE100F72ECC /* APIModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APIModel.podspec; sourceTree = SOURCE_ROOT; };
 		0326C5111AFB7B79005FC057 /* AlamofireSwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireSwiftyJSON.swift; sourceTree = "<group>"; };
 		0326C5121AFB7B79005FC057 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
-		0326C5131AFB7B79005FC057 /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
 		0326C5141AFB7B79005FC057 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
-		0326C5191AFB7C1B005FC057 /* APIModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APIModel.podspec; sourceTree = "<group>"; };
 		033E23EB1AF6284E00F1C171 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		033E23EE1AF628FF00F1C171 /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 		033E23F21AF62A0D00F1C171 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
@@ -91,7 +89,6 @@
 			children = (
 				0326C5111AFB7B79005FC057 /* AlamofireSwiftyJSON.swift */,
 				0326C5121AFB7B79005FC057 /* Pluralize.swift */,
-				0326C5131AFB7B79005FC057 /* RLMSupport.swift */,
 				0326C5141AFB7B79005FC057 /* SwiftyJSON.swift */,
 			);
 			path = vendor;
@@ -125,8 +122,8 @@
 		033E23FC1AF62EC700F1C171 /* Podspec */ = {
 			isa = PBXGroup;
 			children = (
+				030C6B351B010BE100F72ECC /* APIModel.podspec */,
 				033E23F81AF62EB600F1C171 /* README.md */,
-				0326C5191AFB7C1B005FC057 /* APIModel.podspec */,
 			);
 			name = Podspec;
 			path = Source;
@@ -266,7 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0326C51A1AFB7C1B005FC057 /* APIModel.podspec in Resources */,
+				030C6B361B010BE100F72ECC /* APIModel.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,7 +308,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0370B7C01AAF82D50085F048 /* RLMObject+JSONDictionary.swift in Sources */,
-				0326C5171AFB7B79005FC057 /* RLMSupport.swift in Sources */,
 				0370B7AA1AAF82630085F048 /* ApiCall.swift in Sources */,
 				0370B7B41AAF82630085F048 /* ModelTransform.swift in Sources */,
 				0370B7AC1AAF82630085F048 /* ApiId.swift in Sources */,

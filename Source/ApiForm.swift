@@ -1,7 +1,16 @@
-import Realm
+import RealmSwift
 import Alamofire
 
-public class ApiForm<ModelType:RLMObject where ModelType:ApiTransformable> {
+// There is a bug in Swift and Realm ~> 0.92 that causes objects that are initialized through a template type
+// to crash. Apparently, adding an init method and calling that in the template works around this.
+// realm.io bug report: https://github.com/realm/realm-cocoa/issues/1916
+extension Object {
+    convenience init(completelyBogusInitializerDoesNothing: Bool) {
+        self.init()
+    }
+}
+
+public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public var errors: [String:[String]] = [:]
     public var model: ModelType
 
@@ -38,7 +47,7 @@ public class ApiForm<ModelType:RLMObject where ModelType:ApiTransformable> {
     }
 
     public class func fromApi(apiResponse: JSON) -> ModelType {
-        let newModel = ModelType()
+        let newModel = ModelType(completelyBogusInitializerDoesNothing: true)
         newModel.updateFromDictionaryWithMapping(apiResponse.dictionaryObject!, mapping: ModelType.fromJSONMapping())
         return newModel
     }

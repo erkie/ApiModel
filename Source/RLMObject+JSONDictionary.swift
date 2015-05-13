@@ -1,5 +1,5 @@
 import Foundation
-import Realm
+import RealmSwift
 
 func camelizedString(string: String) -> String {
     var items: [String] = string.componentsSeparatedByString("_")
@@ -10,7 +10,7 @@ func camelizedString(string: String) -> String {
     return camelCase
 }
 
-func updateRealmObjectFromDictionaryWithMapping(realmObject: RLMObject, data: [String:AnyObject], mapping: JSONMapping) {
+func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [String:AnyObject], mapping: JSONMapping) {
     for (var key, var value) in data {
         key = camelizedString(key)
 
@@ -27,9 +27,9 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: RLMObject, data: [S
     }
 }
 
-extension RLMObject {
+extension Object {
     // We need to pass in JSONMapping manually because of problems in Swift
-    // It's impossible to cast RLMObjects to "RLMObject that conforms to ApiTransformable" currently...
+    // It's impossible to cast Objects to "Object that conforms to ApiTransformable" currently...
     public func updateFromForm(data: NSDictionary, mapping: JSONMapping) {
         updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
     }

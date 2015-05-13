@@ -1,5 +1,5 @@
 import Foundation
-import Realm
+import RealmSwift
 
 public class FloatTransform: Transform {
     public init() {}

@@ -1,22 +1,20 @@
 import Foundation
-import Realm
+import RealmSwift
 
-extension RLMObject {
+extension Object {
     public class func localId() -> ApiId {
         return "APIMODELLOCAL-\(NSUUID().UUIDString)"
     }
 
     public func isApiSaved() -> Bool {
-        let pk = self.dynamicType.primaryKey()
-        
-        if pk.isEmpty {
-            return false
-        }
-
-        if let idValue = self[pk] as? String {
-            return !idValue.isEmpty
-        } else if let idValue = self[pk] as? Int {
-            return idValue != 0
+        if let pk = self.dynamicType.primaryKey() {
+            if let idValue = self[pk] as? String {
+                return !idValue.isEmpty
+            } else if let idValue = self[pk] as? Int {
+                return idValue != 0
+            } else {
+                return false
+            }
         } else {
             return false
         }
@@ -24,8 +22,10 @@ extension RLMObject {
 
     public var isLocal: Bool {
         get {
-            if let id = self[self.dynamicType.primaryKey()] as? NSString {
-                return id.rangeOfString("APIMODELLOCAL-").location == 0
+            if let pk = self.dynamicType.primaryKey() {
+                if let id = self[pk] as? NSString {
+                    return id.rangeOfString("APIMODELLOCAL-").location == 0
+                }
             }
 
             return false
@@ -36,7 +36,9 @@ extension RLMObject {
         get {
             if isLocal {
                 return ""
-            } else if let id = self[self.dynamicType.primaryKey()] as? ApiId {
+            } else if let
+                pk = self.dynamicType.primaryKey(),
+                id = self[pk] as? ApiId {
                 return id
             } else {
                 return ""
@@ -48,10 +50,7 @@ extension RLMObject {
         if realm == nil {
              modifyingBlock()
         } else {
-            let realm = RLMRealm.defaultRealm()
-            realm.beginWriteTransaction()
-            modifyingBlock()
-            realm.commitWriteTransaction()
+            Realm().write(modifyingBlock)
         }
     }
 
