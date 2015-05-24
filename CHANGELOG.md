@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+- Change `ToArray(realmArray: myArray).get()` to `toArray(myArray)`
+
 ## 0.3.0
 
 - Upgrade to `Realm 0.92`, meaning using `import RealmSwift`
