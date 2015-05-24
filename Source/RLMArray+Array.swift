@@ -1,17 +1,10 @@
 import Foundation
 import RealmSwift
 
-public class ToArray<T: Object> {
-    var realmArray: List<T>
-    public init(realmArray: List<T>) {
-        self.realmArray = realmArray
+public func toArray<T: Object>(realmArray: List<T>) -> [T] {
+    var retArray: [T] = []
+    for obj in realmArray {
+        retArray.append(obj)
     }
-    
-    public func get() -> [T] {
-        var retArray: [T] = []
-        for obj in realmArray {
-            retArray.append(obj)
-        }
-        return retArray
-    }
+    return retArray
 }
