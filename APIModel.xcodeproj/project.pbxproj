@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030C6B361B010BE100F72ECC /* APIModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 030C6B351B010BE100F72ECC /* APIModel.podspec */; };
+		030C6B361B010BE100F72ECC /* ApiModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 030C6B351B010BE100F72ECC /* ApiModel.podspec */; };
 		0326C5151AFB7B79005FC057 /* AlamofireSwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5111AFB7B79005FC057 /* AlamofireSwiftyJSON.swift */; };
 		0326C5161AFB7B79005FC057 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5121AFB7B79005FC057 /* Pluralize.swift */; };
 		0326C5181AFB7B79005FC057 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5141AFB7B79005FC057 /* SwiftyJSON.swift */; };
@@ -38,7 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		030C6B351B010BE100F72ECC /* APIModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APIModel.podspec; sourceTree = SOURCE_ROOT; };
+		030C6B351B010BE100F72ECC /* ApiModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ApiModel.podspec; sourceTree = SOURCE_ROOT; };
 		0326C5111AFB7B79005FC057 /* AlamofireSwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireSwiftyJSON.swift; sourceTree = "<group>"; };
 		0326C5121AFB7B79005FC057 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		0326C5141AFB7B79005FC057 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
@@ -47,7 +47,7 @@
 		033E23F21AF62A0D00F1C171 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		033E23F51AF62B0A00F1C171 /* RLMArray+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RLMArray+Array.swift"; sourceTree = "<group>"; };
 		033E23F81AF62EB600F1C171 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		0366A4831AAF66ED00506F50 /* APIModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0366A4831AAF66ED00506F50 /* ApiModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ApiModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0370B7921AAF82630085F048 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		0370B7931AAF82630085F048 /* ApiCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiCall.swift; sourceTree = "<group>"; };
 		0370B7941AAF82630085F048 /* ApiConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiConfiguration.swift; sourceTree = "<group>"; };
@@ -94,14 +94,14 @@
 			path = vendor;
 			sourceTree = "<group>";
 		};
-		033E23F41AF62AD600F1C171 /* Realm+APIModel */ = {
+		033E23F41AF62AD600F1C171 /* Realm+ApiModel */ = {
 			isa = PBXGroup;
 			children = (
 				033E23F51AF62B0A00F1C171 /* RLMArray+Array.swift */,
 				6DE1A3251AFB6035002CB25E /* RLMObject+ApiModel.swift */,
 				0370B7A21AAF82630085F048 /* RLMObject+JSONDictionary.swift */,
 			);
-			name = "Realm+APIModel";
+			name = "Realm+ApiModel";
 			sourceTree = "<group>";
 		};
 		033E23F71AF62C3800F1C171 /* Transforms */ = {
@@ -122,7 +122,7 @@
 		033E23FC1AF62EC700F1C171 /* Podspec */ = {
 			isa = PBXGroup;
 			children = (
-				030C6B351B010BE100F72ECC /* APIModel.podspec */,
+				030C6B351B010BE100F72ECC /* ApiModel.podspec */,
 				033E23F81AF62EB600F1C171 /* README.md */,
 			);
 			name = Podspec;
@@ -132,7 +132,7 @@
 		0366A4491AAF668F00506F50 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0366A4831AAF66ED00506F50 /* APIModel.framework */,
+				0366A4831AAF66ED00506F50 /* ApiModel.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,7 +172,7 @@
 				0370B7A81AAF82630085F048 /* Utils.swift */,
 				0326C5101AFB7B79005FC057 /* vendor */,
 				033E23F71AF62C3800F1C171 /* Transforms */,
-				033E23F41AF62AD600F1C171 /* Realm+APIModel */,
+				033E23F41AF62AD600F1C171 /* Realm+ApiModel */,
 				037D7F341AAF6E2500AC3D32 /* Supporting Files */,
 			);
 			path = Source;
@@ -208,9 +208,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0366A4821AAF66ED00506F50 /* APIModel */ = {
+		0366A4821AAF66ED00506F50 /* ApiModel */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0366A4961AAF66ED00506F50 /* Build configuration list for PBXNativeTarget "APIModel" */;
+			buildConfigurationList = 0366A4961AAF66ED00506F50 /* Build configuration list for PBXNativeTarget "ApiModel" */;
 			buildPhases = (
 				3E81DD4646B6FA8F93277D93 /* Check Pods Manifest.lock */,
 				0366A47E1AAF66ED00506F50 /* Sources */,
@@ -223,9 +223,9 @@
 			);
 			dependencies = (
 			);
-			name = APIModel;
+			name = ApiModel;
 			productName = RealmApiModel;
-			productReference = 0366A4831AAF66ED00506F50 /* APIModel.framework */;
+			productReference = 0366A4831AAF66ED00506F50 /* ApiModel.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -241,7 +241,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */;
+			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -253,7 +253,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0366A4821AAF66ED00506F50 /* APIModel */,
+				0366A4821AAF66ED00506F50 /* ApiModel */,
 			);
 		};
 /* End PBXProject section */
@@ -263,7 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030C6B361B010BE100F72ECC /* APIModel.podspec in Resources */,
+				030C6B361B010BE100F72ECC /* ApiModel.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,7 +489,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0366A4961AAF66ED00506F50 /* Build configuration list for PBXNativeTarget "APIModel" */ = {
+		0366A4961AAF66ED00506F50 /* Build configuration list for PBXNativeTarget "ApiModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0366A4971AAF66ED00506F50 /* Debug */,
@@ -498,7 +498,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */ = {
+		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03C60D871AAB5B9A00FE99EA /* Debug */,

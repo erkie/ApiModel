@@ -1,6 +1,6 @@
-# APIModel
+# ApiModel
 
-Interact with REST apis using realm.io to represent objects. The goal of `APIModel` is to be easy to setup, easy to grasp, and fun to use. Boilerplate should be kept to a minimum, and also intuitive to set up.
+Interact with REST apis using realm.io to represent objects. The goal of `ApiModel` is to be easy to setup, easy to grasp, and fun to use. Boilerplate should be kept to a minimum, and also intuitive to set up.
 
 This project is very much inspired by [@idlefingers'](https://github.com/idlefingers) excellent [api-model](https://github.com/izettle/api-model).
 
@@ -10,7 +10,7 @@ The key part is to implmenet the `ApiTransformable` protocol.
 
 ```swift
 import RealmSwift
-import APIModel
+import ApiModel
 
 class Post: Object, ApiTransformable {
     // Standard Realm boilerplate
@@ -30,8 +30,8 @@ class Post: Object, ApiTransformable {
     }
 
     // Define where and how to get these. Routes are assumed to use Rails style REST (index, show, update, destroy)
-    class func apiResource() -> ApiResource {
-        return ApiResource(
+    class func apiRoutes() -> ApiRoutes {
+        return ApiRoutes(
             index: "/posts.json",
             show: "/post/:id:.json"
         )
@@ -76,7 +76,7 @@ ApiSingleton.setInstance(API(configuration: apiConfig))
 
 ## Interacting with APIs
 
-The base of `APIModel` is the `ApiForm` wrapper class. This class wraps a `Object` and takes care of fetching objects, saving objects and dealing with validation errors.
+The base of `ApiModel` is the `ApiForm` wrapper class. This class wraps a `Object` and takes care of fetching objects, saving objects and dealing with validation errors.
 
 ### Fetching objects
 
@@ -176,7 +176,7 @@ form.errorMessages // -> [String]
 
 Transforms are used to convert attributes from JSON responses to rich types. The easiest way to explain is to show a simple transform.
 
-`APIModel` comes with a host of standard transforms. An example is the `IntTransform`:
+`ApiModel` comes with a host of standard transforms. An example is the `IntTransform`:
 
 ```swift
 class IntTransform: Transform {
@@ -233,7 +233,7 @@ However, it is really easy to define your own. Go nuts!
 
 ## Hooks
 
-`APIModel` uses [Alamofire](https://github.com/alamofire/alamofire) for sending and receiving requests. To hook into this, the `API` class currently has `before`- and `after`-hooks that you can use to modify or log the requests. An example of sending user credentials with each request:
+`ApiModel` uses [Alamofire](https://github.com/alamofire/alamofire) for sending and receiving requests. To hook into this, the `API` class currently has `before`- and `after`-hooks that you can use to modify or log the requests. An example of sending user credentials with each request:
 
 ```swift
 // Put this somewhere in your AppDelegate or together with other initialization code
@@ -259,17 +259,17 @@ api().afterRequest { request, response in
 Given the setup for the `Post` model above, if you wanted to get the full url with replacements for the show resource (like `https://service.io/api/v1/posts/123.json`), you can use:
 
 ```swift
-post.apiUrlForResource(Post.apiResource().show)
+post.apiUrlForRoute(Post.apiRoutes().show)
 // NOT IMPLEMENTED YET BECAUSE LIMITATIONS IN SWIFT: post.apiUrlForResource(.Show)
 ```
 
 ## Dealing with IDs
 
-As a consumer of an API, you never want to make assumptions about the ID structure used for their models. Do not use `Int` or anything similar for ID types, strings are to be recommended. Therefor `APIModel` defines a typealias to `String`, called ApiId. There is also an `ApiIdTransform` available for IDs.
+As a consumer of an API, you never want to make assumptions about the ID structure used for their models. Do not use `Int` or anything similar for ID types, strings are to be recommended. Therefor `ApiModel` defines a typealias to `String`, called ApiId. There is also an `ApiIdTransform` available for IDs.
 
 ## Caching and storage
 
-It is up to you to cache and store the results of any calls. APIModel does not do that for you, and will not do that, since strategies vary wildly depending on needs.
+It is up to you to cache and store the results of any calls. ApiModel does not do that for you, and will not do that, since strategies vary wildly depending on needs.
 
 # Thanks to
 
