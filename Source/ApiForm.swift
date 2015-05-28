@@ -45,10 +45,18 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             self.model.updateFromDictionaryWithMapping(formParameters as! [String:AnyObject], mapping: ModelType.fromJSONMapping())
         }
     }
+    
+    public func updateFromResponse(responseData: [String:AnyObject]?) {
+        if let responseData = responseData {
+            model.modifyStoredObject {
+                self.model.updateFromDictionaryWithMapping(responseData, mapping: ModelType.fromJSONMapping())
+            }
+        }
+    }
 
-    public class func fromApi(apiResponse: JSON) -> ModelType {
+    public class func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
         let newModel = ModelType(completelyBogusInitializerDoesNothing: true)
-        newModel.updateFromDictionaryWithMapping(apiResponse.dictionaryObject!, mapping: ModelType.fromJSONMapping())
+        newModel.updateFromDictionaryWithMapping(apiResponse, mapping: ModelType.fromJSONMapping())
         return newModel
     }
 
@@ -59,9 +67,13 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public class func find(call: ApiCall = ApiCall(), callback: (ModelType?) -> Void) {
         call.provideDefaults(ModelType)
 
-        api().GET(call.resource!, parameters: [:]) { data, error in
-            if data[call.namespace!] != nil {
-                let modelData = data[call.namespace!]
+        perform(
+            .GET,
+            path: call.resource!,
+            parameters: [:],
+            namespace: ModelType.apiNamespace()
+        ) { dictionaryResponse, arrayResponse, errors in
+            if let modelData = dictionaryResponse {
                 let model = self.fromApi(modelData)
                 callback(model)
             } else {
@@ -76,31 +88,37 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
 
     public class func findArray(call: ApiCall, callback: ([ModelType]) -> Void) {
         call.provideDefaults(ModelType)
-        call.namespace = call.namespace!.pluralize()
 
-        api().GET(call.resource!, parameters: [:]) { data, error in
-            if let arrayData = data[call.namespace!].array {
+        perform(
+            .GET,
+            path: call.resource!,
+            parameters: [:],
+            namespace: call.namespace!
+        ) { dictionaryResponse, arrayResponse, errors in
+            if let arrayData = arrayResponse {
                 var ret: [ModelType] = []
-
+                
                 for modelData in arrayData {
-                    let model = self.fromApi(modelData)
+                    let model = self.fromApi(modelData.dictionaryObject!)
                     ret.append(model)
                 }
-
+                
                 callback(ret)
             } else {
                 callback([])
             }
         }
+
     }
 
     public class func post(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
-        api().POST(ModelType.apiResource().create, parameters: parameters) { (data, error) in
-            var namespace = ModelType.apiNamespace()
-
-            if data[namespace] != nil {
-                let modelData = data[namespace]
-
+        perform(
+            .POST,
+            path: ModelType.apiResource().create,
+            parameters: parameters,
+            namespace: ModelType.apiNamespace()
+        ) { dictionaryResponse, arrayResponse, errors in
+            if let modelData = dictionaryResponse {
                 let model = self.fromApi(modelData)
                 callback(model)
             } else {
@@ -108,7 +126,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             }
         }
     }
-
+    
     public func save(callback: (ApiForm) -> Void) {
         var parameters = model.JSONDictionary()
 
@@ -118,41 +136,89 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             apiResource = ModelType.apiResource().update
             method = .PUT
         }
-
-        api().runRequest(method, path: model.apiResourceWithReplacements(apiResource), parameters: [ModelType.apiNamespace(): parameters]) { (data, error) in
-            if let responseData = data[ModelType.apiNamespace()].dictionaryObject {
-                self.model.modifyStoredObject {
-                    self.model.updateFromDictionaryWithMapping(responseData, mapping: ModelType.fromJSONMapping())
-                }
+        
+        self.dynamicType.perform(
+            method,
+            path: model.apiResourceWithReplacements(apiResource),
+            parameters: [ModelType.apiNamespace(): parameters],
+            namespace: ModelType.apiNamespace()
+        ) { dictionaryResponse, arrayResponse, errors in
+            self.updateFromResponse(dictionaryResponse)
+            
+            if let errors = errors {
+                self.errors = errors
             }
-
-            if let errors = data[ModelType.apiNamespace()]["errors"].dictionary {
-                self.errors = JSONtoDictionary(errors)
-            } else if error != nil {
-                self.errors = ["base": ["An unexpected server error occurred"]]
-            }
-
+            
             callback(self)
         }
     }
 
     public func reload(callback: (ApiForm) -> Void) {
-        var parameters = model.JSONDictionary()
-
-        api().GET(model.apiResourceWithReplacements(ModelType.apiResource().show), parameters: [:]) { (data, error) in
-            if let responseData = data[ModelType.apiNamespace()].dictionaryObject {
-                self.model.modifyStoredObject {
-                    self.model.updateFromDictionaryWithMapping(responseData, mapping: ModelType.fromJSONMapping())
-                }
+        self.dynamicType.perform(
+            .GET,
+            path: model.apiResourceWithReplacements(ModelType.apiResource().show),
+            parameters: [:],
+            namespace: ModelType.apiNamespace()
+        ) { dictionaryResponse, arrayResponse, errors in
+            self.updateFromResponse(dictionaryResponse)
+            
+            if let errors = errors {
+                self.errors = errors
             }
-
-            if let errors = data[ModelType.apiNamespace()]["errors"].dictionary {
-                self.errors = JSONtoDictionary(errors)
-            } else if error != nil {
-                self.errors = ["base": ["An unexpected server error occurred"]]
-            }
-
+            
             callback(self)
+        }
+    }
+    
+    public func destroy(callback: (ApiForm) -> Void) {
+        self.dynamicType.perform(
+            .DELETE,
+            path: ModelType.apiResource().destroy,
+            parameters: [:],
+            namespace: ModelType.apiNamespace()
+        ) { dictionaryResponse, arrayResponse, errors in
+            self.updateFromResponse(dictionaryResponse)
+            callback(self)
+        }
+    }
+
+    private class func perform(
+        method: Alamofire.Method,
+        path: String,
+        parameters: [String:AnyObject],
+        namespace: String,
+        callback: ([String:AnyObject]?, [JSON]?, [String:[String]]?) -> Void
+    ) {
+        api().runRequest(method, path: path, parameters: parameters) { (data, error) in
+            if let responseObject = self.objectFromResponseForNamespace(data, namespace: namespace) {
+                if let errors = self.errorFromResponse(responseObject, error: error) {
+                    callback(responseObject, nil, errors)
+                } else {
+                    callback(responseObject, nil, nil)
+                }
+            } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: namespace) {
+                callback(nil, arrayData, nil)
+            } else {
+                callback(nil, nil, nil)
+            }
+        }
+    }
+    
+    private class func objectFromResponseForNamespace(data: JSON, namespace: String) -> [String:AnyObject]? {
+        return data[namespace].dictionaryObject ?? data[namespace.pluralize()].dictionaryObject
+    }
+    
+    private class func arrayFromResponseForNamespace(data: JSON, namespace: String) -> [JSON]? {
+        return data[namespace].array ?? data[namespace.pluralize()].array
+    }
+    
+    private class func errorFromResponse(response: [String:AnyObject]?, error: NSError?) -> [String:[String]]? {
+        if let errors = response?["errors"] as? [String:[String]] {
+            return errors
+        } else if error != nil {
+            return ["base": ["An unexpected server error occurred"]]
+        } else {
+            return nil
         }
     }
 }
