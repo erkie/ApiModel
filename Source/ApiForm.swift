@@ -114,7 +114,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public class func post(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
         perform(
             .POST,
-            path: ModelType.apiResource().create,
+            path: ModelType.apiRoutes().create,
             parameters: parameters,
             namespace: ModelType.apiNamespace()
         ) { dictionaryResponse, arrayResponse, errors in
@@ -130,16 +130,16 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public func save(callback: (ApiForm) -> Void) {
         var parameters = model.JSONDictionary()
 
-        var apiResource = ModelType.apiResource().create
+        var apiRoutes = ModelType.apiRoutes().create
         var method: Alamofire.Method = .POST
         if model.isApiSaved() {
-            apiResource = ModelType.apiResource().update
+            apiRoutes = ModelType.apiRoutes().update
             method = .PUT
         }
         
         self.dynamicType.perform(
             method,
-            path: model.apiResourceWithReplacements(apiResource),
+            path: model.apiRouteWithReplacements(apiRoutes),
             parameters: [ModelType.apiNamespace(): parameters],
             namespace: ModelType.apiNamespace()
         ) { dictionaryResponse, arrayResponse, errors in
@@ -156,7 +156,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public func reload(callback: (ApiForm) -> Void) {
         self.dynamicType.perform(
             .GET,
-            path: model.apiResourceWithReplacements(ModelType.apiResource().show),
+            path: model.apiRouteWithReplacements(ModelType.apiRoutes().show),
             parameters: [:],
             namespace: ModelType.apiNamespace()
         ) { dictionaryResponse, arrayResponse, errors in
@@ -173,7 +173,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public func destroy(callback: (ApiForm) -> Void) {
         self.dynamicType.perform(
             .DELETE,
-            path: ModelType.apiResource().destroy,
+            path: ModelType.apiRoutes().destroy,
             parameters: [:],
             namespace: ModelType.apiNamespace()
         ) { dictionaryResponse, arrayResponse, errors in

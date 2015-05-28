@@ -69,7 +69,7 @@ extension Object {
         return data
     }
 
-    public func apiResourceWithReplacements(url: String) -> String {
+    public func apiRouteWithReplacements(url: String) -> String {
         var pieces = url.componentsSeparatedByString(":")
 
         var pathComponents: [String] = []
@@ -88,14 +88,14 @@ extension Object {
         return "".join(pathComponents)
     }
 
-    public func apiUrlForResource(resource: String) -> String {
-        return "\(api().configuration.host)\(apiResourceWithReplacements(resource))"
+    public func apiUrlForRoute(resource: String) -> String {
+        return "\(api().configuration.host)\(apiRouteWithReplacements(resource))"
     }
     
     /*
     Not possible because calling methods on protocol types is not implmented yet.
-    public func apiUrlForResource(resource: ApiResourceAction) -> String {
-        let apiResource = (self.dynamicType as! ApiTransformable).dynamicType.apiResource()
-        return apiUrlForResource(apiResource.getAction(resource))
+    public func apiUrlForRoute(resource: ApiRoutesAction) -> String {
+        let apiRoutes = (self.dynamicType as! ApiTransformable).dynamicType.apiRoutes()
+        return apiUrlForRoute(apiRoutes.getAction(resource))
     }*/
 }

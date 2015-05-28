@@ -20,7 +20,6 @@
 		0370B7AB1AAF82630085F048 /* ApiConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7941AAF82630085F048 /* ApiConfiguration.swift */; };
 		0370B7AC1AAF82630085F048 /* ApiId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7951AAF82630085F048 /* ApiId.swift */; };
 		0370B7AD1AAF82630085F048 /* ApiForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7961AAF82630085F048 /* ApiForm.swift */; };
-		0370B7AE1AAF82630085F048 /* ApiResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7971AAF82630085F048 /* ApiResource.swift */; };
 		0370B7AF1AAF82630085F048 /* ArrayTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7981AAF82630085F048 /* ArrayTransform.swift */; };
 		0370B7B01AAF82630085F048 /* BoolTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7991AAF82630085F048 /* BoolTransform.swift */; };
 		0370B7B21AAF82630085F048 /* IntTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79B1AAF82630085F048 /* IntTransform.swift */; };
@@ -32,6 +31,7 @@
 		0370B7BE1AAF82630085F048 /* Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A71AAF82630085F048 /* Transform.swift */; };
 		0370B7BF1AAF82630085F048 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A81AAF82630085F048 /* Utils.swift */; };
 		0370B7C01AAF82D50085F048 /* RLMObject+JSONDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A21AAF82630085F048 /* RLMObject+JSONDictionary.swift */; };
+		038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CAB181B17C21D00440808 /* ApiRoutes.swift */; };
 		6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */; };
 		6DE1A3261AFB6035002CB25E /* RLMObject+ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE1A3251AFB6035002CB25E /* RLMObject+ApiModel.swift */; };
 		BE7938AC4C471E976B2F7384 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB40266BE10F16D08FF30F4 /* Pods.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -53,7 +53,6 @@
 		0370B7941AAF82630085F048 /* ApiConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiConfiguration.swift; sourceTree = "<group>"; };
 		0370B7951AAF82630085F048 /* ApiId.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiId.swift; sourceTree = "<group>"; };
 		0370B7961AAF82630085F048 /* ApiForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiForm.swift; sourceTree = "<group>"; };
-		0370B7971AAF82630085F048 /* ApiResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResource.swift; sourceTree = "<group>"; };
 		0370B7981AAF82630085F048 /* ArrayTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransform.swift; sourceTree = "<group>"; };
 		0370B7991AAF82630085F048 /* BoolTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoolTransform.swift; sourceTree = "<group>"; };
 		0370B79B1AAF82630085F048 /* IntTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntTransform.swift; sourceTree = "<group>"; };
@@ -65,6 +64,7 @@
 		0370B7A61AAF82630085F048 /* StringTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTransform.swift; sourceTree = "<group>"; };
 		0370B7A71AAF82630085F048 /* Transform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transform.swift; sourceTree = "<group>"; };
 		0370B7A81AAF82630085F048 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		038CAB181B17C21D00440808 /* ApiRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRoutes.swift; sourceTree = "<group>"; };
 		2D5BA2758CD4A8B5313DB805 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		401654F7FCB7720D7CB61B36 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleTransform.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 				0370B7941AAF82630085F048 /* ApiConfiguration.swift */,
 				0370B7951AAF82630085F048 /* ApiId.swift */,
 				0370B7961AAF82630085F048 /* ApiForm.swift */,
-				0370B7971AAF82630085F048 /* ApiResource.swift */,
+				038CAB181B17C21D00440808 /* ApiRoutes.swift */,
 				0370B79C1AAF82630085F048 /* ApiTransformable.swift */,
 				0370B79D1AAF82630085F048 /* ModelTransform.swift */,
 				0370B7A81AAF82630085F048 /* Utils.swift */,
@@ -319,11 +319,11 @@
 				0370B7BD1AAF82630085F048 /* StringTransform.swift in Sources */,
 				0370B7BE1AAF82630085F048 /* Transform.swift in Sources */,
 				0326C5161AFB7B79005FC057 /* Pluralize.swift in Sources */,
-				0370B7AE1AAF82630085F048 /* ApiResource.swift in Sources */,
 				0370B7A91AAF82630085F048 /* Api.swift in Sources */,
 				033E23F61AF62B0A00F1C171 /* RLMArray+Array.swift in Sources */,
 				0370B7B51AAF82630085F048 /* NSDateTransform.swift in Sources */,
 				0370B7AB1AAF82630085F048 /* ApiConfiguration.swift in Sources */,
+				038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */,
 				0326C5181AFB7B79005FC057 /* SwiftyJSON.swift in Sources */,
 				0370B7BF1AAF82630085F048 /* Utils.swift in Sources */,
 				0370B7AF1AAF82630085F048 /* ArrayTransform.swift in Sources */,

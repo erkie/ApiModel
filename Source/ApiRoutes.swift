@@ -1,6 +1,6 @@
 import Foundation
 
-public enum ApiResourceAction {
+public enum ApiRoutesAction {
     case Index
     case Show
     case Create
@@ -9,7 +9,7 @@ public enum ApiResourceAction {
 }
 
 @objc
-public class ApiResource {
+public class ApiRoutes {
     public var index: String
     public var show: String
     public var create: String
@@ -26,8 +26,8 @@ public class ApiResource {
         }
     }
 
-    public class func resource(resourcePath: String) -> ApiResource {
-        return ApiResource(index: resourcePath, show: resourcePath)
+    public class func resource(resourcePath: String) -> ApiRoutes {
+        return ApiRoutes(index: resourcePath, show: resourcePath)
     }
 
     public init(index: String, show: String, create: String) {
@@ -44,7 +44,7 @@ public class ApiResource {
         self.init(index: "NO RESOURCE DEFINED", show: "NO RESOURCE DEFINED", create: "NO RESOURCE DEFINED")
     }
     
-    public func getAction(resourceAction: ApiResourceAction) -> String {
+    public func getAction(resourceAction: ApiRoutesAction) -> String {
         switch resourceAction {
         case .Index:
             return index

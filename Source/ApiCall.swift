@@ -25,7 +25,7 @@ public class ApiCall {
         }
 
         if resource == nil {
-            resource = model.apiResource().index
+            resource = model.apiRoutes().index
         }
     }
 }
