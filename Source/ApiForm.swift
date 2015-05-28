@@ -60,10 +60,6 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         return newModel
     }
 
-    public class func load(callback: (ModelType?) -> Void) {
-        find(call: ApiCall(), callback: callback)
-    }
-
     public class func find(call: ApiCall = ApiCall(), callback: (ModelType?) -> Void) {
         call.provideDefaults(ModelType)
 

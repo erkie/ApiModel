@@ -95,7 +95,7 @@ Using the `show` of a REST resource:
 
 `GET /user.json`
 ```swift
-ApiForm<User>.load { userResponse in
+ApiForm<User>.find { userResponse in
     if let user = userResponse {
         println("User is: \(user.email)")
     } else {
@@ -207,7 +207,7 @@ class User: Object, ApiTransformable {
     }
 }
 
-ApiForm<User>.load { response in
+ApiForm<User>.find { response in
     let user = response!.model
 
     println("User: \(user.email)")
