@@ -172,13 +172,25 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             path: ModelType.apiRoutes().destroy,
             parameters: [:],
             namespace: ModelType.apiNamespace()
-        ) { dictionaryResponse, arrayResponse, errors in
-            self.updateFromResponse(dictionaryResponse)
-            callback(self)
+            ) { dictionaryResponse, arrayResponse, errors in
+                self.updateFromResponse(dictionaryResponse)
+                callback(self)
+        }
+    }
+    
+    public func destroy(parameters: [String:AnyObject], callback: (ApiForm) -> Void) {
+        self.dynamicType.perform(
+            .DELETE,
+            path: ModelType.apiRoutes().destroy,
+            parameters: parameters,
+            namespace: ModelType.apiNamespace()
+            ) { dictionaryResponse, arrayResponse, errors in
+                self.updateFromResponse(dictionaryResponse)
+                callback(self)
         }
     }
 
-    private class func perform(
+    public class func perform(
         method: Alamofire.Method,
         path: String,
         parameters: [String:AnyObject],
