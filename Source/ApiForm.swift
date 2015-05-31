@@ -106,20 +106,37 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
 
     }
-
-    public class func post(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
+    
+    public class func create(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
         perform(
             .POST,
             path: ModelType.apiRoutes().create,
             parameters: parameters,
             namespace: ModelType.apiNamespace()
+            ) { dictionaryResponse, arrayResponse, errors in
+                if let modelData = dictionaryResponse {
+                    let model = self.fromApi(modelData)
+                    callback(model)
+                } else {
+                    callback(nil)
+                }
+        }
+    }
+    
+    
+    public class func update(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
+        perform(
+            .PUT,
+            path: ModelType.apiRoutes().update,
+            parameters: parameters,
+            namespace: ModelType.apiNamespace()
         ) { dictionaryResponse, arrayResponse, errors in
-            if let modelData = dictionaryResponse {
-                let model = self.fromApi(modelData)
-                callback(model)
-            } else {
-                callback(nil)
-            }
+                if let modelData = dictionaryResponse {
+                    let model = self.fromApi(modelData)
+                    callback(model)
+                } else {
+                    callback(nil)
+                }
         }
     }
     
