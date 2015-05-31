@@ -11,20 +11,8 @@ public class API {
         self.configuration = configuration
     }
 
-    public func GET(path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        runRequest(.GET, path: path, parameters: parameters, responseHandler: responseHandler)
-    }
-
-    public func POST(path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        runRequest(.POST, path: path, parameters: parameters, responseHandler: responseHandler)
-    }
-
-    public func PUT(path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        runRequest(.PUT, path: path, parameters: parameters, responseHandler: responseHandler)
-    }
-
-    public func runRequest(method: Alamofire.Method, path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        var request = ApiRequest(method: method, path: path)
+    public func request(method: Alamofire.Method, path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
+        var request = ApiRequest(configuration: api().configuration, method: method, path: path)
         request.parameters = parameters
 
         for hook in beforeRequestHooks {

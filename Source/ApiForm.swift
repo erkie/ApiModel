@@ -256,7 +256,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
 
     public class func perform(call: ApiCall, namespace: String, callback: ResponseCallback?) {
-        api().runRequest(
+        api().request(
             call.method,
             path: call.path,
             parameters: call.parameters
