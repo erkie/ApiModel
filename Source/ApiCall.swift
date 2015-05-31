@@ -1,31 +1,20 @@
 import Foundation
+import Alamofire
+
+public typealias RequestParameters = [String:AnyObject]
 
 public class ApiCall {
-    public var resource: String?
-    public var namespace: String?
+    public var method: Alamofire.Method
+    public var path: String
+    public var parameters: RequestParameters = [:]
 
-    public init() {}
-
-    public init(resource: String) {
-        self.resource = resource
+    public required init(method: Alamofire.Method, path: String) {
+        self.method = method
+        self.path = path
     }
-
-    public init(namespace: String) {
-        self.namespace = namespace
-    }
-
-    public init(namespace: String, resource: String) {
-        self.namespace = namespace
-        self.resource = resource
-    }
-
-    public func provideDefaults<T:ApiTransformable>(model: T.Type) {
-        if namespace == nil {
-            namespace = model.apiNamespace()
-        }
-
-        if resource == nil {
-            resource = model.apiRoutes().index
-        }
+    
+    public convenience init(method: Alamofire.Method, path: String, parameters: RequestParameters) {
+        self.init(method: method, path: path)
+        self.parameters = parameters
     }
 }

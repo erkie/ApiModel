@@ -10,6 +10,23 @@ extension Object {
     }
 }
 
+public class ApiFormResponse {
+    public var dictionary: [String:AnyObject]?
+    public var array: [JSON]?
+    public var errors: [String:[String]]?
+    
+    public var isSuccessful: Bool {
+        for (key, errorsForKey) in errors ?? [:] {
+            if !errorsForKey.isEmpty {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+public typealias ResponseCallback = (ApiFormResponse) -> Void
+
 public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public var errors: [String:[String]] = [:]
     public var model: ModelType
@@ -59,17 +76,55 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         newModel.updateFromDictionaryWithMapping(apiResponse, mapping: ModelType.fromJSONMapping())
         return newModel
     }
+    
+    // api-model style methods
+    
+    public class func get(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
+        let call = ApiCall(method: .GET, path: path, parameters: parameters)
+        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+    }
+    
+    public class func get(path: String, callback: ResponseCallback?) {
+        get(path, parameters: [:], callback: callback)
+    }
+    
+    public class func post(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
+        let call = ApiCall(method: .POST, path: path, parameters: parameters)
+        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+    }
+    
+    public class func post(path: String, callback: ResponseCallback?) {
+        post(path, parameters: [:], callback: callback)
+    }
+    
+    public class func delete(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
+        let call = ApiCall(method: .DELETE, path: path, parameters: parameters)
+        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+    }
+    
+    public class func delete(path: String, callback: ResponseCallback?) {
+        delete(path, parameters: [:], callback: callback)
+    }
+    
+    public class func put(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
+        let call = ApiCall(method: .PUT, path: path, parameters: parameters)
+        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+    }
+    
+    public class func put(path: String, callback: ResponseCallback?) {
+        put(path, parameters: [:], callback: callback)
+    }
+    
+    // active record (rails) style methods
 
-    public class func find(call: ApiCall = ApiCall(), callback: (ModelType?) -> Void) {
-        call.provideDefaults(ModelType)
+    public class func find(callback: (ModelType?) -> Void) {
+        let call = ApiCall(
+            method: .GET,
+            path: ModelType.apiRoutes().index
+        )
 
-        perform(
-            .GET,
-            path: call.resource!,
-            parameters: [:],
-            namespace: ModelType.apiNamespace()
-        ) { dictionaryResponse, arrayResponse, errors in
-            if let modelData = dictionaryResponse {
+        perform(call, namespace: ModelType.apiNamespace()) { response in
+            if let modelData = response.dictionary {
                 let model = self.fromApi(modelData)
                 callback(model)
             } else {
@@ -79,19 +134,13 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
 
     public class func findArray(callback: ([ModelType]) -> Void) {
-        return findArray(ApiCall(), callback: callback)
-    }
+        let call = ApiCall(
+            method: .GET,
+            path: ModelType.apiRoutes().index
+        )
 
-    public class func findArray(call: ApiCall, callback: ([ModelType]) -> Void) {
-        call.provideDefaults(ModelType)
-
-        perform(
-            .GET,
-            path: call.resource!,
-            parameters: [:],
-            namespace: call.namespace!
-        ) { dictionaryResponse, arrayResponse, errors in
-            if let arrayData = arrayResponse {
+        perform(call, namespace: ModelType.apiNamespace()) { response in
+            if let arrayData = response.array {
                 var ret: [ModelType] = []
                 
                 for modelData in arrayData {
@@ -104,61 +153,62 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
                 callback([])
             }
         }
-
     }
     
-    public class func create(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
-        perform(
-            .POST,
+    public class func create(parameters: RequestParameters, callback: (ModelType?) -> Void) {
+        let call = ApiCall(
+            method: .POST,
             path: ModelType.apiRoutes().create,
-            parameters: parameters,
-            namespace: ModelType.apiNamespace()
-            ) { dictionaryResponse, arrayResponse, errors in
-                if let modelData = dictionaryResponse {
-                    let model = self.fromApi(modelData)
-                    callback(model)
-                } else {
-                    callback(nil)
-                }
+            parameters: parameters
+        )
+        
+        perform(call, namespace: ModelType.apiNamespace()) { response in
+            if let modelData = response.dictionary {
+                let model = self.fromApi(modelData)
+                callback(model)
+            } else {
+                callback(nil)
+            }
         }
     }
     
-    
-    public class func update(parameters: [String:AnyObject], callback: (ModelType?) -> Void) {
-        perform(
-            .PUT,
+    public class func update(parameters: RequestParameters, callback: (ModelType?) -> Void) {
+        let call = ApiCall(
+            method: .PUT,
             path: ModelType.apiRoutes().update,
-            parameters: parameters,
-            namespace: ModelType.apiNamespace()
-        ) { dictionaryResponse, arrayResponse, errors in
-                if let modelData = dictionaryResponse {
-                    let model = self.fromApi(modelData)
-                    callback(model)
-                } else {
-                    callback(nil)
-                }
+            parameters: parameters
+        )
+        
+        perform(call, namespace: ModelType.apiNamespace()) { response in
+            if let modelData = response.dictionary {
+                let model = self.fromApi(modelData)
+                callback(model)
+            } else {
+                callback(nil)
+            }
         }
     }
     
     public func save(callback: (ApiForm) -> Void) {
         var parameters = model.JSONDictionary()
 
-        var apiRoutes = ModelType.apiRoutes().create
+        var path = ModelType.apiRoutes().create
         var method: Alamofire.Method = .POST
         if model.isApiSaved() {
-            apiRoutes = ModelType.apiRoutes().update
+            path = ModelType.apiRoutes().update
             method = .PUT
         }
         
-        self.dynamicType.perform(
-            method,
-            path: model.apiRouteWithReplacements(apiRoutes),
-            parameters: [ModelType.apiNamespace(): parameters],
-            namespace: ModelType.apiNamespace()
-        ) { dictionaryResponse, arrayResponse, errors in
-            self.updateFromResponse(dictionaryResponse)
+        var call = ApiCall(
+            method: method,
+            path: model.apiRouteWithReplacements(path),
+            parameters: parameters
+        )
+        
+        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
+            self.updateFromResponse(response.dictionary)
             
-            if let errors = errors {
+            if let errors = response.errors {
                 self.errors = errors
             }
             
@@ -167,15 +217,15 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
 
     public func reload(callback: (ApiForm) -> Void) {
-        self.dynamicType.perform(
-            .GET,
-            path: model.apiRouteWithReplacements(ModelType.apiRoutes().show),
-            parameters: [:],
-            namespace: ModelType.apiNamespace()
-        ) { dictionaryResponse, arrayResponse, errors in
-            self.updateFromResponse(dictionaryResponse)
+        var call = ApiCall(
+            method: .GET,
+            path: model.apiRouteWithReplacements(ModelType.apiRoutes().show)
+        )
+        
+        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
+            self.updateFromResponse(response.dictionary)
             
-            if let errors = errors {
+            if let errors = response.errors {
                 self.errors = errors
             }
             
@@ -184,48 +234,46 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public func destroy(callback: (ApiForm) -> Void) {
-        self.dynamicType.perform(
-            .DELETE,
-            path: ModelType.apiRoutes().destroy,
-            parameters: [:],
-            namespace: ModelType.apiNamespace()
-            ) { dictionaryResponse, arrayResponse, errors in
-                self.updateFromResponse(dictionaryResponse)
-                callback(self)
-        }
+        destroy([:], callback: callback)
     }
     
-    public func destroy(parameters: [String:AnyObject], callback: (ApiForm) -> Void) {
-        self.dynamicType.perform(
-            .DELETE,
-            path: ModelType.apiRoutes().destroy,
-            parameters: parameters,
-            namespace: ModelType.apiNamespace()
-            ) { dictionaryResponse, arrayResponse, errors in
-                self.updateFromResponse(dictionaryResponse)
-                callback(self)
+    public func destroy(parameters: RequestParameters, callback: (ApiForm) -> Void) {
+        var call = ApiCall(
+            method: .DELETE,
+            path: model.apiRouteWithReplacements(ModelType.apiRoutes().destroy),
+            parameters: parameters
+        )
+        
+        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
+            self.updateFromResponse(response.dictionary)
+            
+            if let errors = response.errors {
+                self.errors = errors
+            }
+            
+            callback(self)
         }
     }
 
-    public class func perform(
-        method: Alamofire.Method,
-        path: String,
-        parameters: [String:AnyObject],
-        namespace: String,
-        callback: ([String:AnyObject]?, [JSON]?, [String:[String]]?) -> Void
-    ) {
-        api().runRequest(method, path: path, parameters: parameters) { (data, error) in
+    public class func perform(call: ApiCall, namespace: String, callback: ResponseCallback?) {
+        api().runRequest(
+            call.method,
+            path: call.path,
+            parameters: call.parameters
+        ) { (data, error) in
+            var response = ApiFormResponse()
+            
             if let responseObject = self.objectFromResponseForNamespace(data, namespace: namespace) {
+                response.dictionary = responseObject
+                
                 if let errors = self.errorFromResponse(responseObject, error: error) {
-                    callback(responseObject, nil, errors)
-                } else {
-                    callback(responseObject, nil, nil)
+                    response.errors = errors
                 }
             } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: namespace) {
-                callback(nil, arrayData, nil)
-            } else {
-                callback(nil, nil, nil)
+                response.array = arrayData
             }
+            
+            callback?(response)
         }
     }
     

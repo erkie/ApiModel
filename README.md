@@ -76,7 +76,36 @@ ApiSingleton.setInstance(API(configuration: apiConfig))
 
 ## Interacting with APIs
 
-The base of `ApiModel` is the `ApiForm` wrapper class. This class wraps a `Object` and takes care of fetching objects, saving objects and dealing with validation errors.
+The base of `ApiModel` is the `ApiForm` wrapper class. This class wraps an `Object` type and takes care of fetching objects, saving objects and dealing with validation errors.
+
+### Basic REST verbs
+
+`ApiModel` supports querying API's using basic HTTP verbs.
+
+```swift
+// GET call without parameters
+ApiForm<Post>.get("/v1/posts.json") { response in
+    println("response.isSuccessful: \(response.isSuccessful)")
+    println("Response as an array: \(response.array)")
+    println("Response as a dictionary: \(response.dictionary)")
+    println("Response errors?: \(response.errors)")
+}
+
+// Other supported methods:
+ApiForm<Post>.get(path, parameters: [String:AnyObject]) { response // ...
+ApiForm<Post>.post(path, parameters: [String:AnyObject]) { response // ...
+ApiForm<Post>.put(path, parameters: [String:AnyObject]) { response // ...
+ApiForm<Post>.delete(path, parameters: [String:AnyObject]) { response // ...
+
+// no parameters
+
+ApiForm<Post>.get(path) { response // ...
+ApiForm<Post>.post(path) { response // ...
+ApiForm<Post>.put(path) { response // ...
+ApiForm<Post>.delete(path) { response // ...
+```
+
+Most of the time you'll want to use the `ActiveRecord`-style verbs `index/show/create/update` for interacting with a REST API, as described below.
 
 ### Fetching objects
 
