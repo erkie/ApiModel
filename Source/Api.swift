@@ -27,12 +27,21 @@ public class API {
 
     func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {
         var response = ApiResponse(request: request)
+        let requestStartedAt = NSDate()
+
+        if configuration.requestLogging {
+            NSLog("ApiModel: \(request.method.rawValue) \(request.url) with params: \(request.parameters)")
+        }
 
         Alamofire.request(request.method, request.url, parameters: request.parameters)
             .responseSwiftyJSON(completionHandler: { (_, alamofireResponse, data, error) in
                 response.json = data
                 response.error = error
                 response.status = alamofireResponse?.statusCode
+
+                if self.configuration.requestLogging {
+                    NSLog("ApiModel: \(request.method.rawValue) \(request.url) finished in %.2fs with status \(response.status!)", NSDate().timeIntervalSinceDate(requestStartedAt))
+                }
 
                 for hook in self.afterRequestHooks {
                     hook(request, response)
