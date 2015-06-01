@@ -73,10 +73,10 @@ var apiConfig = ApiConfiguration(host: "https://service.io/api/v1/")
 ApiSingleton.setInstance(API(configuration: apiConfig))
 ```
 
-If you would like to enable request logging, you can do so by setting `requestLogging` to `true`:
+If you would like to disable request logging, you can do so by setting `requestLogging` to `false`:
 
 ```swift
-apiConfig.requestLogging = true
+apiConfig.requestLogging = false
 ```
 
 ## Interacting with APIs
