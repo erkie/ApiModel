@@ -68,10 +68,15 @@ To set it up:
 
 ```
 // Put this somewhere in your AppDelegate or together with other initialization code
-var apiConfig = ApiConfiguration()
-apiConfig.host = "https://service.io/api/v1/"
+var apiConfig = ApiConfiguration(host: "https://service.io/api/v1/")
 
 ApiSingleton.setInstance(API(configuration: apiConfig))
+```
+
+If you would like to enable request logging, you can do so by setting `requestLogging` to `true`:
+
+```swift
+apiConfig.requestLogging = true
 ```
 
 ## Interacting with APIs

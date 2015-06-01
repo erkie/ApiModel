@@ -1,6 +1,7 @@
 public class ApiConfiguration {
     public var host: String = ""
-    
+    public var requestLogging: Bool = false
+
     public required init() {
         
     }
