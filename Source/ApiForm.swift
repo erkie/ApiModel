@@ -10,9 +10,11 @@ extension Object {
     }
 }
 
-public class ApiFormResponse {
-    public var dictionary: [String:AnyObject]?
-    public var array: [JSON]?
+public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> {
+    public var responseObject: [String:AnyObject]?
+    public var responseArray: [JSON]?
+    public var object: ModelType?
+    public var array: [ModelType]?
     public var errors: [String:[String]]?
     
     public var isSuccessful: Bool {
@@ -25,32 +27,28 @@ public class ApiFormResponse {
     }
 }
 
-public typealias ResponseCallback = (ApiFormResponse) -> Void
-
 public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
+    public typealias ResponseCallback = (ApiFormResponse<ModelType>) -> Void
+
     public var errors: [String:[String]] = [:]
     public var model: ModelType
 
     public var errorMessages:[String] {
-        get {
-            var errorString: [String] = []
-            for (key, errorsForProperty) in errors {
-                for message in errorsForProperty {
-                    if key == "base" {
-                        errorString.append(message)
-                    } else {
-                        errorString.append("\(key.capitalizedString) \(message)")
-                    }
+        var errorString: [String] = []
+        for (key, errorsForProperty) in errors {
+            for message in errorsForProperty {
+                if key == "base" {
+                    errorString.append(message)
+                } else {
+                    errorString.append("\(key.capitalizedString) \(message)")
                 }
             }
-            return errorString
         }
+        return errorString
     }
 
     public var hasErrors: Bool {
-        get {
-            return !errors.isEmpty
-        }
+        return !errors.isEmpty
     }
 
     public init(model: ModelType) {
@@ -63,11 +61,15 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public func updateFromResponse(responseData: [String:AnyObject]?) {
-        if let responseData = responseData {
+    public func updateFromResponse(response: ApiFormResponse<ModelType>) {
+        if let responseObject = response.responseObject {
             model.modifyStoredObject {
-                self.model.updateFromDictionaryWithMapping(responseData, mapping: ModelType.fromJSONMapping())
+                self.model.updateFromDictionaryWithMapping(responseObject, mapping: ModelType.fromJSONMapping())
             }
+        }
+        
+        if let errors = response.errors {
+            self.errors = errors
         }
     }
 
@@ -118,18 +120,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     // active record (rails) style methods
 
     public class func find(callback: (ModelType?) -> Void) {
-        let call = ApiCall(
-            method: .GET,
-            path: ModelType.apiRoutes().index
-        )
-
-        perform(call, namespace: ModelType.apiNamespace()) { response in
-            if let modelData = response.dictionary {
-                let model = self.fromApi(modelData)
-                callback(model)
-            } else {
-                callback(nil)
-            }
+        get(ModelType.apiRoutes().index) { response in
+            callback(response.object)
         }
     }
 
@@ -138,103 +130,45 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
 
     public class func findArray(path: String, namespace: String, callback: ([ModelType]) -> Void) {
-        let call = ApiCall(
-            method: .GET,
-            path: path
-        )
-
-        perform(call, namespace: namespace) { response in
-            if let arrayData = response.array {
-                var ret: [ModelType] = []
-                
-                for modelData in arrayData {
-                    let model = self.fromApi(modelData.dictionaryObject!)
-                    ret.append(model)
-                }
-                
-                callback(ret)
-            } else {
-                callback([])
-            }
+        get(ModelType.apiRoutes().index) { response in
+            callback(response.array ?? [])
         }
     }
     
     public class func create(parameters: RequestParameters, callback: (ModelType?) -> Void) {
-        let call = ApiCall(
-            method: .POST,
-            path: ModelType.apiRoutes().create,
-            parameters: parameters
-        )
-        
-        perform(call, namespace: ModelType.apiNamespace()) { response in
-            if let modelData = response.dictionary {
-                let model = self.fromApi(modelData)
-                callback(model)
-            } else {
-                callback(nil)
-            }
+        post(ModelType.apiRoutes().create, parameters: parameters) { response in
+            callback(response.object)
         }
     }
     
     public class func update(parameters: RequestParameters, callback: (ModelType?) -> Void) {
-        let call = ApiCall(
-            method: .PUT,
-            path: ModelType.apiRoutes().update,
-            parameters: parameters
-        )
-        
-        perform(call, namespace: ModelType.apiNamespace()) { response in
-            if let modelData = response.dictionary {
-                let model = self.fromApi(modelData)
-                callback(model)
-            } else {
-                callback(nil)
-            }
+        put(ModelType.apiRoutes().update, parameters: parameters) { response in
+            callback(response.object)
         }
     }
     
     public func save(callback: (ApiForm) -> Void) {
-        var parameters = model.JSONDictionary()
-
-        var path = ModelType.apiRoutes().create
-        var method: Alamofire.Method = .POST
-        if model.isApiSaved() {
-            path = ModelType.apiRoutes().update
-            method = .PUT
+        let parameters = model.JSONDictionary()
+        
+        let responseCallback: ResponseCallback = { response in
+            self.updateFromResponse(response)
+            callback(self)
         }
         
-        var call = ApiCall(
-            method: method,
-            path: model.apiRouteWithReplacements(path),
-            parameters: parameters
-        )
-        
-        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
-            self.updateFromResponse(response.dictionary)
-            
-            if let errors = response.errors {
-                self.errors = errors
-            }
-            
-            callback(self)
+        if model.isApiSaved() {
+            self.dynamicType.put(model.apiRouteWithReplacements(ModelType.apiRoutes().update), parameters: parameters, callback: responseCallback)
+        } else {
+            self.dynamicType.post(model.apiRouteWithReplacements(ModelType.apiRoutes().create), parameters: parameters, callback: responseCallback)
         }
     }
 
     public func reload(callback: (ApiForm) -> Void) {
-        var call = ApiCall(
-            method: .GET,
-            path: model.apiRouteWithReplacements(ModelType.apiRoutes().show)
-        )
-        
-        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
-            self.updateFromResponse(response.dictionary)
-            
-            if let errors = response.errors {
-                self.errors = errors
-            }
-            
+        let responseCallback: ResponseCallback = { response in
+            self.updateFromResponse(response)
             callback(self)
         }
+        
+        self.dynamicType.get(model.apiRouteWithReplacements(ModelType.apiRoutes().show), callback: responseCallback)
     }
     
     public func destroy(callback: (ApiForm) -> Void) {
@@ -242,39 +176,35 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public func destroy(parameters: RequestParameters, callback: (ApiForm) -> Void) {
-        var call = ApiCall(
-            method: .DELETE,
-            path: model.apiRouteWithReplacements(ModelType.apiRoutes().destroy),
-            parameters: parameters
-        )
-        
-        self.dynamicType.perform(call, namespace: ModelType.apiNamespace()) { response in
-            self.updateFromResponse(response.dictionary)
-            
-            if let errors = response.errors {
-                self.errors = errors
-            }
-            
+        self.dynamicType.delete(model.apiRouteWithReplacements(ModelType.apiRoutes().destroy), parameters: parameters) { response in
+            self.updateFromResponse(response)
             callback(self)
         }
     }
 
-    public class func perform(call: ApiCall, namespace: String, callback: ResponseCallback?) {
+    public class func perform(call: ApiCall, callback: ResponseCallback?) {
         api().request(
             call.method,
             path: call.path,
             parameters: call.parameters
         ) { (data, error) in
-            var response = ApiFormResponse()
+            var response = ApiFormResponse<ModelType>()
             
-            if let responseObject = self.objectFromResponseForNamespace(data, namespace: namespace) {
-                response.dictionary = responseObject
+            if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                response.responseObject = responseObject
+                response.object = self.fromApi(responseObject)
                 
                 if let errors = self.errorFromResponse(responseObject, error: error) {
                     response.errors = errors
                 }
-            } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: namespace) {
-                response.array = arrayData
+            } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                response.responseArray = arrayData
+                response.array = []
+                
+                for modelData in arrayData {
+                    let model = self.fromApi(modelData.dictionaryObject!)
+                    response.array?.append(model)
+                }
             }
             
             callback?(response)

@@ -1,4 +1,5 @@
 import Foundation
+import RealmSwift
 
 func convertNSDictionaryToDictionary(nsDict: NSDictionary) -> Dictionary<String, AnyObject> {
     var dict: [String: AnyObject] = [:]
@@ -26,4 +27,12 @@ func JSONtoDictionary(dict: [String:JSON]) -> [String:[String]] {
     }
 
     return newDict
+}
+
+public func toArray<T: Object>(realmArray: List<T>) -> [T] {
+    var retArray: [T] = []
+    for obj in realmArray {
+        retArray.append(obj)
+    }
+    return retArray
 }
