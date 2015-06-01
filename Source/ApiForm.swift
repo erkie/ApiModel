@@ -134,12 +134,16 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
 
     public class func findArray(callback: ([ModelType]) -> Void) {
+        findArray(ModelType.apiRoutes().index, namespace: ModelType.apiNamespace(), callback: callback)
+    }
+
+    public class func findArray(path: String, namespace: String, callback: ([ModelType]) -> Void) {
         let call = ApiCall(
             method: .GET,
-            path: ModelType.apiRoutes().index
+            path: path
         )
 
-        perform(call, namespace: ModelType.apiNamespace()) { response in
+        perform(call, namespace: namespace) { response in
             if let arrayData = response.array {
                 var ret: [ModelType] = []
                 
