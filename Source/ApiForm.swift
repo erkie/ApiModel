@@ -148,7 +148,9 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public func save(callback: (ApiForm) -> Void) {
-        let parameters = model.JSONDictionary()
+        let parameters: [String: AnyObject] = [
+            ModelType.apiNamespace(): model.JSONDictionary()
+        ]
         
         let responseCallback: ResponseCallback = { response in
             self.updateFromResponse(response)
