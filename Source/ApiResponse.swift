@@ -2,7 +2,7 @@ import Foundation
 
 public class ApiResponse {
     public var request: ApiRequest
-    public var json: JSON?
+    public var responseBody: String?
     public var error: NSError?
     public var status: Int?
 

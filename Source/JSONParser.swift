@@ -7,9 +7,26 @@
 //
 
 import Foundation
+import SwiftyJSON
 
-class JSONParser: ApiParser {
-    func parse() -> AnyObject {
-        return 1
+public class JSONParser: ApiParser {
+    public func parse(responseString: String, completionHandler: (AnyObject?) -> Void) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            
+            var responseJSON: JSON
+            if responseString.isEmpty {
+                responseJSON = JSON.nullJSON
+            } else {
+                if let data = (responseString as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
+                    responseJSON = SwiftyJSON.JSON(data: data)
+                } else {
+                    responseJSON = JSON.nullJSON
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                completionHandler(responseJSON.dictionaryObject ?? responseJSON.arrayObject ?? NSNull())
+            })
+        })
     }
 }

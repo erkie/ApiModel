@@ -11,8 +11,10 @@ public class API {
         self.configuration = configuration
     }
 
-    public func request(method: Alamofire.Method, path: String, var parameters: [String : AnyObject] = [:], responseHandler: (JSON, NSError?) -> Void) {
-        var request = ApiRequest(configuration: api().configuration, method: method, path: path)
+    public func request(method: Alamofire.Method, path: String, parameters: [String : AnyObject] = [:], responseHandler: (AnyObject?, NSError?) -> Void) {
+        let configuration = api().configuration
+        
+        var request = ApiRequest(configuration: configuration, method: method, path: path)
         request.parameters = parameters
 
         for hook in beforeRequestHooks {
@@ -20,8 +22,9 @@ public class API {
         }
 
         performRequest(request) { response in
-            responseHandler(response.json ?? JSON([:]), response.error)
-            return
+            configuration.parser.parse(response.responseBody ?? "") { parsedResponse in
+                responseHandler(parsedResponse, response.error)
+            }
         }
     }
 
@@ -34,8 +37,8 @@ public class API {
         }
 
         Alamofire.request(request.method, request.url, parameters: request.parameters)
-            .responseSwiftyJSON(completionHandler: { (_, alamofireResponse, data, error) in
-                response.json = data
+            .responseString { _, alamofireResponse, responseBody, error in
+                response.responseBody = responseBody
                 response.error = error
                 response.status = alamofireResponse?.statusCode
 
@@ -48,7 +51,7 @@ public class API {
                 }
 
                 responseHandler(response)
-            })
+            }
     }
 
     public func beforeRequest(hook: ((ApiRequest) -> Void)) {

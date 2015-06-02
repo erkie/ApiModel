@@ -12,7 +12,7 @@ extension Object {
 
 public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> {
     public var responseObject: [String:AnyObject]?
-    public var responseArray: [JSON]?
+    public var responseArray: [AnyObject]?
     public var object: ModelType?
     public var array: [ModelType]?
     public var errors: [String:[String]]?
@@ -82,8 +82,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     // api-model style methods
     
     public class func get(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .GET, path: path, parameters: parameters)
-        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+        let call = ApiCall(method: .GET, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
+        perform(call, callback: callback)
     }
     
     public class func get(path: String, callback: ResponseCallback?) {
@@ -91,8 +91,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public class func post(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .POST, path: path, parameters: parameters)
-        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+        let call = ApiCall(method: .POST, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
+        perform(call, callback: callback)
     }
     
     public class func post(path: String, callback: ResponseCallback?) {
@@ -100,8 +100,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public class func delete(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .DELETE, path: path, parameters: parameters)
-        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+        let call = ApiCall(method: .DELETE, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
+        perform(call, callback: callback)
     }
     
     public class func delete(path: String, callback: ResponseCallback?) {
@@ -109,8 +109,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public class func put(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .PUT, path: path, parameters: parameters)
-        perform(call, namespace: ModelType.apiNamespace(), callback: callback)
+        let call = ApiCall(method: .PUT, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
+        perform(call, callback: callback)
     }
     
     public class func put(path: String, callback: ResponseCallback?) {
@@ -190,20 +190,23 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         ) { (data, error) in
             var response = ApiFormResponse<ModelType>()
             
-            if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                response.responseObject = responseObject
-                response.object = self.fromApi(responseObject)
-                
-                if let errors = self.errorFromResponse(responseObject, error: error) {
-                    response.errors = errors
-                }
-            } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                response.responseArray = arrayData
-                response.array = []
-                
-                for modelData in arrayData {
-                    let model = self.fromApi(modelData.dictionaryObject!)
-                    response.array?.append(model)
+            if let data: AnyObject = data {
+                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseObject = responseObject
+                    response.object = self.fromApi(responseObject)
+                    
+                    if let errors = self.errorFromResponse(responseObject, error: error) {
+                        response.errors = errors
+                    }
+                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseArray = arrayData
+                    response.array = []
+                    
+                    for modelData in arrayData {
+                        if let modelDictionary = modelData as? [String:AnyObject] {
+                            response.array?.append(self.fromApi(modelDictionary))
+                        }
+                    }
                 }
             }
             
@@ -211,12 +214,12 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    private class func objectFromResponseForNamespace(data: JSON, namespace: String) -> [String:AnyObject]? {
-        return data[namespace].dictionaryObject ?? data[namespace.pluralize()].dictionaryObject
+    private class func objectFromResponseForNamespace(data: AnyObject, namespace: String) -> [String:AnyObject]? {
+        return (data[namespace] as? [String:AnyObject]) ?? (data[namespace.pluralize()] as? [String:AnyObject])
     }
     
-    private class func arrayFromResponseForNamespace(data: JSON, namespace: String) -> [JSON]? {
-        return data[namespace].array ?? data[namespace.pluralize()].array
+    private class func arrayFromResponseForNamespace(data: AnyObject, namespace: String) -> [AnyObject]? {
+        return (data[namespace] as? [AnyObject]) ?? (data[namespace.pluralize()] as? [AnyObject])
     }
     
     private class func errorFromResponse(response: [String:AnyObject]?, error: NSError?) -> [String:[String]]? {

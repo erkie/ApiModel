@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ApiParser {
-    func parse() -> AnyObject
+public protocol ApiParser {
+    func parse(responseString: String, completionHandler: (AnyObject?) -> Void)
 }
