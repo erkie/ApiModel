@@ -43,7 +43,7 @@ public class API {
                 response.status = alamofireResponse?.statusCode
 
                 if self.configuration.requestLogging {
-                    NSLog("ApiModel: \(request.method.rawValue) \(request.url) finished in %.2fs with status \(response.status!)", NSDate().timeIntervalSinceDate(requestStartedAt))
+                    NSLog("ApiModel: \(request.method.rawValue) \(request.url) finished in %.2fs with status \(response.status ?? 0)", NSDate().timeIntervalSinceDate(requestStartedAt))
                 }
 
                 for hook in self.afterRequestHooks {
