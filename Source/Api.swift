@@ -9,6 +9,33 @@ public class API {
 
     public init(configuration: ApiConfiguration) {
         self.configuration = configuration
+        
+        beforeRequest { request in
+            if self.configuration.requestLogging {
+                request.userInfo["requestStartedAt"] = NSDate()
+                
+                println("ApiModel: \(request.method.rawValue) \(request.path) with params: \(request.parameters)")
+            }
+        }
+        
+        afterRequest { request, response in
+            if self.configuration.requestLogging {
+                let duration: String
+                if let requestStartedAt = request.userInfo["requestStartedAt"] as? NSDate {
+                    let formatter = NSNumberFormatter()
+                    formatter.minimumFractionDigits = 2
+                    formatter.maximumFractionDigits = 2
+                    formatter.minimumIntegerDigits = 1
+                    
+                    let requestDuration = NSDate().timeIntervalSinceDate(requestStartedAt)
+                    duration = formatter.stringFromNumber(requestDuration) ?? "\(requestDuration)"
+                } else {
+                    duration = "?"
+                }
+                
+                println("ApiModel: \(request.method.rawValue) \(request.path) finished in \(duration) seconds with status \(response.status ?? 0)")
+            }
+        }
     }
 
     public func request(method: Alamofire.Method, path: String, parameters: [String : AnyObject] = [:], responseHandler: (AnyObject?, NSError?) -> Void) {
@@ -30,22 +57,12 @@ public class API {
 
     func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {
         var response = ApiResponse(request: request)
-        let requestStartedAt = NSDate()
-
-        if configuration.requestLogging {
-            NSLog("ApiModel: \(request.method.rawValue) \(request.url) with params: \(request.parameters)")
-        }
 
         Alamofire.request(request.method, request.url, parameters: request.parameters)
             .responseString { _, alamofireResponse, responseBody, error in
                 response.responseBody = responseBody
                 response.error = error
                 response.status = alamofireResponse?.statusCode
-
-                if self.configuration.requestLogging {
-                    NSLog("ApiModel: \(request.method.rawValue) \(request.url) finished in %.2fs with status \(response.status ?? 0)", NSDate().timeIntervalSinceDate(requestStartedAt))
-                }
-
                 for hook in self.afterRequestHooks {
                     hook(request, response)
                 }
