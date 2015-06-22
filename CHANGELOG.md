@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1
+- Also recognize error responses when error messages are an array
+
 ## 0.5.0
 Breaking changes:
 - Rename ApiResource to ApiRoutes
