@@ -227,6 +227,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     private class func errorFromResponse(response: [String:AnyObject]?, error: NSError?) -> [String:[String]]? {
         if let errors = response?["errors"] as? [String:[String]] {
             return errors
+        } else if let errors = response?["errors"] as? [String] {
+            return ["base": errors]
         } else if error != nil {
             return ["base": ["An unexpected server error occurred"]]
         } else {
