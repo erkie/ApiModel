@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+Fixed:
+- If a request path contains a full URL do not prefix with configurated host
+
 ## 0.5.1
 - Also recognize error responses when error messages are an array
 
