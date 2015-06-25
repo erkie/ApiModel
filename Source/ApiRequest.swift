@@ -12,9 +12,11 @@ public class ApiRequest {
         self.method = method
         self.path = path
     }
-
+    
     public var url: String {
-        get {
+        if let pathHasScheme = NSURL(string: path)?.scheme {
+            return path
+        } else {
             return configuration.host + path
         }
     }
