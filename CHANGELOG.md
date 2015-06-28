@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+Fixed:
+- Treat nil values as false in `BoolTransform`
+
 ## 0.5.2
 Fixed:
 - If a request path contains a full URL do not prefix with configurated host
