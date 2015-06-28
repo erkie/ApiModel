@@ -22,6 +22,10 @@ public class BoolTransform: Transform {
             }
         }
 
+        if value == nil {
+            return false
+        }
+
         return true
     }
 }
