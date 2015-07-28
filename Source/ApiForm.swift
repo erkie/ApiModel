@@ -11,11 +11,13 @@ extension Object {
 }
 
 public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> {
+    public var responseData: [String:AnyObject]?
     public var responseObject: [String:AnyObject]?
     public var responseArray: [AnyObject]?
     public var object: ModelType?
     public var array: [ModelType]?
     public var errors: [String:[String]]?
+    public var rawResponse: ApiResponse?
     
     public var isSuccessful: Bool {
         for (key, errorsForKey) in errors ?? [:] {
@@ -191,8 +193,11 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             parameters: call.parameters
         ) { (data, error) in
             var response = ApiFormResponse<ModelType>()
+            response.rawResponse = data
             
-            if let data: AnyObject = data {
+            if let data: AnyObject = data?.parsedResponse {
+                response.responseData = data as? [String:AnyObject]
+                
                 if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
                     response.responseObject = responseObject
                     response.object = self.fromApi(responseObject)
