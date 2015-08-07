@@ -7,7 +7,10 @@ public class ApiRequest {
     public var parameters: [String:AnyObject] = [:]
     public var headers: [String:String] = [:]
     public var userInfo: [String:AnyObject] = [:]
-    public var encoding: ParameterEncoding = .JSON
+    
+    public var encoding: ParameterEncoding {
+        return configuration.encoding
+    }
     
     public init(configuration: ApiConfiguration, method: Alamofire.Method, path: String) {
         self.configuration = configuration
