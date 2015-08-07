@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0
+- Upgrade RealmSwift to 0.94.0
+- Add `encoding` to `ApiConfiguration` and make `.URL` default encoding
+
+## 0.6.0
+- Add `responseData` and `rawResponse` to `ApiFormResponse`
+- Introduce concept of parameter encoding (URL encoding, JSON encoding, etc)
+- Upgrade Alamofire to 1.3
+
 ## 0.5.3
 Fixed:
 - Treat nil values as false in `BoolTransform`
