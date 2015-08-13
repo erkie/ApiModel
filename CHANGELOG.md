@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0
+- Introduce `ApiConfiguration.rootNamespace` for namespaced responses
+
+Behind the scenes:
+- Write initial tests for root namespace related methods
+
 ## 0.7.0
 - Upgrade RealmSwift to 0.94.0
 - Add `encoding` to `ApiConfiguration` and make `.URL` default encoding
