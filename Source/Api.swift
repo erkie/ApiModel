@@ -55,7 +55,12 @@ public class API {
         
         performRequest(request) { response in
             configuration.parser.parse(response.responseBody ?? "") { parsedResponse in
-                response.parsedResponse = parsedResponse
+                if let nestedResponse = parsedResponse as? [String:AnyObject] {
+                    response.parsedResponse = fetchPathFromDictionary(configuration.rootNamespace, nestedResponse)
+                } else {
+                    response.parsedResponse = parsedResponse
+                }
+                
                 responseHandler(response, response.error)
             }
         }
