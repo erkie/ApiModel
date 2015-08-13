@@ -226,7 +226,9 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     private class func arrayFromResponseForNamespace(data: AnyObject, namespace: String) -> [AnyObject]? {
-        return (data[namespace] as? [AnyObject]) ?? (data[namespace.pluralize()] as? [AnyObject])
+        return (data[namespace] as? [AnyObject])
+            ?? (data[namespace.pluralize()] as? [AnyObject])
+            ?? data as? [AnyObject]
     }
     
     private class func errorFromResponse(response: [String:AnyObject]?, error: NSError?) -> [String:[String]]? {
