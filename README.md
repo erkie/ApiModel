@@ -60,6 +60,25 @@ class Post: Object, ApiTransformable {
 }
 ```
 
+## Table of Contents
+
+  * [ApiModel](#apimodel)
+    * [Getting started](#getting-started)
+    * [Table of Contents](#table-of-contents)
+    * [Configuring the API](#configuring-the-api)
+    * [Interacting with APIs](#interacting-with-apis)
+      * [Basic REST verbs](#basic-rest-verbs)
+      * [Fetching objects](#fetching-objects)
+      * [Storing objects](#storing-objects)
+    * [Transforms](#transforms)
+    * [Hooks](#hooks)
+    * [URLs](#urls)
+    * [Dealing with IDs](#dealing-with-ids)
+    * [Namespaces and envelopes](#namespaces-and-envelopes)
+    * [Caching and storage](#caching-and-storage)
+  * [Thanks to](#thanks-to)
+  * [License](#license)
+
 ## Configuring the API
 
 To represent the API itself, you have to create an object of the `API` class. This holds a `ApiConfiguration` object defining the host URL for all requests. After it has been created it can be accessed from the `func api() -> API` singleton function.
@@ -288,7 +307,7 @@ api().afterRequest { request, response in
 }
 ```
 
-## API urls
+## URLs
 
 Given the setup for the `Post` model above, if you wanted to get the full url with replacements for the show resource (like `https://service.io/api/v1/posts/123.json`), you can use:
 
@@ -300,6 +319,48 @@ post.apiUrlForRoute(Post.apiRoutes().show)
 ## Dealing with IDs
 
 As a consumer of an API, you never want to make assumptions about the ID structure used for their models. Do not use `Int` or anything similar for ID types, strings are to be recommended. Therefor `ApiModel` defines a typealias to `String`, called ApiId. There is also an `ApiIdTransform` available for IDs.
+
+## Namespaces and envelopes
+
+Some API's wrap all their responses in an "envelope", a container that is generic for all responses. For example an API might wrap all response data within a `data`-property of the root JSON:
+
+```json
+{
+    "data": {
+        "user": { ... }
+    }
+}
+```
+
+To deal with this gracefully there is a configuration option on the `ApiConfiguration` class called `rootNamespace`. This is a dot-separated path that is traversed for each response. To deal with the above example you would simply:
+
+```swift
+let config = ApiConfiguration()
+config.rootNamespace = "data"
+```
+
+It can also be more complex, for example if the envelope looked something like this:
+
+```json
+{
+    "JsonResponseEnvelope": {
+        "SuccessFullJsonResponse": {
+            "SoapResponseContainer": {
+                "EnterpriseBeanData": {
+                    "user": { ... }
+                }
+            }
+        }
+    }
+}
+```
+
+This would then convert into the `rootNamespace`:
+
+```swift
+let config = ApiConfiguration()
+config.rootNamespace = "JsonResponseEnvelope.SuccessFullJsonResponse.SoapResponseContainer.EnterpriseBeanData"
+```
 
 ## Caching and storage
 
