@@ -5,7 +5,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.rootof.ApiModel</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8.0</string>
+	<string>0.8.1</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 </dict>

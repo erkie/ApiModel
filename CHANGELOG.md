@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.1
+- When checking for array responses also check if root is an array
+
 ## 0.8.0
 - Introduce `ApiConfiguration.rootNamespace` for namespaced responses
 
