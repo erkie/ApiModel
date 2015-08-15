@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.2
+- Fix for when server responds with an unparseable response and with a non-200 status code
+
 ## 0.8.1
 - When checking for array responses also check if root is an array
 
