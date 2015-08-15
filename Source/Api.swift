@@ -55,12 +55,12 @@ public class API {
         
         performRequest(request) { response in
             configuration.parser.parse(response.responseBody ?? "") { parsedResponse in
-                if let nestedResponse = parsedResponse as? [String:AnyObject] {
-                    response.parsedResponse = fetchPathFromDictionary(configuration.rootNamespace, nestedResponse)
-                } else {
-                    response.parsedResponse = parsedResponse
+                // if response is either nil or NSNull and the request was not 200 it is an error
+                if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isStatusSuccessful {
+                    response.error = NSError(domain: "bad request", code: response.status ?? 0, userInfo: [:])
                 }
                 
+                response.parsedResponse = parsedResponse
                 responseHandler(response, response.error)
             }
         }
@@ -68,13 +68,13 @@ public class API {
     
     func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {
         var response = ApiResponse(request: request)
-
+        
         Alamofire.request(request.method, request.url, parameters: request.parameters, encoding: request.encoding, headers: request.headers)
             .responseString { _, alamofireResponse, responseBody, error in
                 response.responseBody = responseBody
                 response.error = error
                 response.status = alamofireResponse?.statusCode
-
+                
                 for hook in self.afterRequestHooks {
                     hook(request, response)
                 }
@@ -103,4 +103,3 @@ public struct ApiSingleton {
 public func api() -> API {
     return ApiSingleton.instance
 }
-
