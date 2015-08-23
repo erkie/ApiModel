@@ -14,14 +14,13 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [Stri
     for (var key, var value) in data {
         key = camelizedString(key)
 
-        if let mappingKey = mapping[key] {
-            let transform = mapping[key]!
+        if let transform = mapping[key] {
             var optionalValue: AnyObject? = value as AnyObject?
 
             if value.isKindOfClass(NSNull) {
                 optionalValue = nil
             }
-
+ 
             realmObject[key] = transform.perform(optionalValue)
         }
     }

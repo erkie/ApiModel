@@ -14,7 +14,7 @@ public class API {
             if self.configuration.requestLogging {
                 request.userInfo["requestStartedAt"] = NSDate()
                 
-                println("ApiModel: \(request.method.rawValue) \(request.path) with params: \(request.parameters)")
+                println("ApiModel: \(request.method.rawValue) \(request.path) with params: \(request.parameters) \(request.headers)")
             }
         }
         
@@ -56,8 +56,12 @@ public class API {
         performRequest(request) { response in
             configuration.parser.parse(response.responseBody ?? "") { parsedResponse in
                 // if response is either nil or NSNull and the request was not 200 it is an error
-                if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isStatusSuccessful {
-                    response.error = NSError(domain: "bad request", code: response.status ?? 0, userInfo: [:])
+                if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isSuccessful {
+                    response.error = NSError(domain: "Bad request", code: response.status ?? 0, userInfo: [:])
+                }
+                
+                if response.isInvalid {
+                    response.error = NSError(domain: "Invalid request", code: response.status ?? 0, userInfo: [:])
                 }
                 
                 response.parsedResponse = parsedResponse

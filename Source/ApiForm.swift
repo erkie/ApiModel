@@ -1,6 +1,28 @@
 import RealmSwift
 import Alamofire
 
+public enum ApiFormModelStatus {
+    case None
+    case Successful(Int)
+    case Unauthorized(Int)
+    case Invalid(Int)
+    case ServerError(Int)
+    
+    init(statusCode: Int) {
+        if statusCode >= 200 && statusCode <= 299 {
+            self = .Successful(statusCode)
+        } else if statusCode == 401 {
+            self = .Unauthorized(statusCode)
+        } else if statusCode >= 400 && statusCode <= 499 {
+            self = .Invalid(statusCode)
+        } else if statusCode >= 500 && statusCode <= 599 {
+            self = .ServerError(statusCode)
+        } else {
+            self = .None
+        }
+    }
+}
+
 // There is a bug in Swift and Realm ~> 0.92 that causes objects that are initialized through a template type
 // to crash. Apparently, adding an init method and calling that in the template works around this.
 // realm.io bug report: https://github.com/realm/realm-cocoa/issues/1916
@@ -32,6 +54,7 @@ public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> 
 public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public typealias ResponseCallback = (ApiFormResponse<ModelType>) -> Void
     
+    public var status: ApiFormModelStatus = .None
     public var errors: [String:[String]] = [:]
     public var model: ModelType
     
@@ -64,6 +87,10 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public func updateFromResponse(response: ApiFormResponse<ModelType>) {
+        if let statusCode = response.rawResponse?.status {
+            self.status = ApiFormModelStatus(statusCode: statusCode)
+        }
+        
         if let responseObject = response.responseObject {
             model.modifyStoredObject {
                 self.model.updateFromDictionaryWithMapping(responseObject, mapping: ModelType.fromJSONMapping())
@@ -191,37 +218,37 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             call.method,
             path: call.path,
             parameters: call.parameters
-            ) { data, error in
-                var response = ApiFormResponse<ModelType>()
-                response.rawResponse = data
+        ) { data, error in
+            var response = ApiFormResponse<ModelType>()
+            response.rawResponse = data
+            
+            if let errors = self.errorFromResponse(nil, error: error) {
+                response.errors = errors
+            }
+            
+            if let data: AnyObject = data?.parsedResponse {
+                response.responseData = data as? [String:AnyObject]
                 
-                if let errors = self.errorFromResponse(nil, error: error) {
-                    response.errors = errors
-                }
-                
-                if let data: AnyObject = data?.parsedResponse {
-                    response.responseData = data as? [String:AnyObject]
+                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseObject = responseObject
+                    response.object = self.fromApi(responseObject)
                     
-                    if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                        response.responseObject = responseObject
-                        response.object = self.fromApi(responseObject)
-                        
-                        if let errors = self.errorFromResponse(responseObject, error: error) {
-                            response.errors = errors
-                        }
-                    } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                        response.responseArray = arrayData
-                        response.array = []
-                        
-                        for modelData in arrayData {
-                            if let modelDictionary = modelData as? [String:AnyObject] {
-                                response.array?.append(self.fromApi(modelDictionary))
-                            }
+                    if let errors = self.errorFromResponse(responseObject, error: error) {
+                        response.errors = errors
+                    }
+                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseArray = arrayData
+                    response.array = []
+                    
+                    for modelData in arrayData {
+                        if let modelDictionary = modelData as? [String:AnyObject] {
+                            response.array?.append(self.fromApi(modelDictionary))
                         }
                     }
                 }
-                
-                callback?(response)
+            }
+            
+            callback?(response)
         }
     }
     

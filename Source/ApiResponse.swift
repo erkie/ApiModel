@@ -7,11 +7,19 @@ public class ApiResponse {
     public var status: Int?
     public var parsedResponse: AnyObject?
     
-    public var isStatusSuccessful: Bool {
+    public var isSuccessful: Bool {
         if let status = status {
             return status >= 200 && status <= 299
         } else {
             return false
+        }
+    }
+    
+    public var isInvalid: Bool {
+        if let status = status {
+            return status >= 400 && status <= 499
+        } else {
+            return true
         }
     }
     

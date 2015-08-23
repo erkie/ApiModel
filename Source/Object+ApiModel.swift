@@ -47,10 +47,10 @@ extension Object {
     }
 
     public func modifyStoredObject(modifyingBlock: () -> ()) {
-        if realm == nil {
-             modifyingBlock()
+        if let realm = realm {
+            realm.write(modifyingBlock)
         } else {
-            Realm().write(modifyingBlock)
+            modifyingBlock()
         }
     }
 
