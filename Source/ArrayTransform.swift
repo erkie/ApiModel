@@ -8,7 +8,7 @@ public class ArrayTransform<T: Object where T:ApiTransformable>: Transform {
         if let values = value as? [[String:AnyObject]] {
             var models: [AnyObject] = []
             for nestedData in values {
-                var model = T(completelyBogusInitializerDoesNothing: true)
+                var model = T()
                 updateRealmObjectFromDictionaryWithMapping(model, nestedData, T.fromJSONMapping())
 
                 models.append(model)

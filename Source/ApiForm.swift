@@ -23,15 +23,6 @@ public enum ApiFormModelStatus {
     }
 }
 
-// There is a bug in Swift and Realm ~> 0.92 that causes objects that are initialized through a template type
-// to crash. Apparently, adding an init method and calling that in the template works around this.
-// realm.io bug report: https://github.com/realm/realm-cocoa/issues/1916
-extension Object {
-    convenience init(completelyBogusInitializerDoesNothing: Bool) {
-        self.init()
-    }
-}
-
 public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> {
     public var responseData: [String:AnyObject]?
     public var responseObject: [String:AnyObject]?
@@ -48,6 +39,14 @@ public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> 
             }
         }
         return true
+    }
+    
+    public var responseStatus: ApiFormModelStatus {
+        if let status = rawResponse?.status {
+            return ApiFormModelStatus(statusCode: status)
+        } else {
+            return .None
+        }
     }
 }
 
@@ -103,7 +102,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public class func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
-        let newModel = ModelType(completelyBogusInitializerDoesNothing: true)
+        let newModel = ModelType()
         newModel.updateFromDictionaryWithMapping(apiResponse, mapping: ModelType.fromJSONMapping())
         return newModel
     }

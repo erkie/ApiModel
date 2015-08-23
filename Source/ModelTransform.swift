@@ -6,11 +6,11 @@ public class ModelTransform<T: Object where T:ApiTransformable>: Transform {
 
     public func perform(value: AnyObject?) -> AnyObject {
         if let value = value as? [String:AnyObject] {
-            var model = T(completelyBogusInitializerDoesNothing: true)
+            var model = T()
             updateRealmObjectFromDictionaryWithMapping(model, value, T.fromJSONMapping())
             return model
         } else {
-            return T(completelyBogusInitializerDoesNothing: true)
+            return T()
         }
     }
 }
