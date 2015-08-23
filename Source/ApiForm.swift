@@ -193,15 +193,6 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public func reload(callback: (ApiForm) -> Void) {
-        let responseCallback: ResponseCallback = { response in
-            self.updateFromResponse(response)
-            callback(self)
-        }
-        
-        self.dynamicType.get(model.apiRouteWithReplacements(ModelType.apiRoutes().show), callback: responseCallback)
-    }
-    
     public func destroy(callback: (ApiForm) -> Void) {
         destroy([:], callback: callback)
     }
