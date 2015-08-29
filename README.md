@@ -6,7 +6,7 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 
 ## Getting started
 
-The key part is to implmenet the `ApiTransformable` protocol.
+The key part is to implement the `ApiTransformable` protocol.
 
 ```swift
 import RealmSwift
