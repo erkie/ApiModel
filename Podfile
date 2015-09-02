@@ -6,4 +6,4 @@ use_frameworks!
 
 pod 'Alamofire', '~> 1.3'
 pod 'RealmSwift', '~> 0.94.0'
-pod 'SwiftyJSON', '~> 2.2.0'
+pod 'SwiftyJSON', '~> 2.2.1'

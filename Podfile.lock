@@ -5,17 +5,17 @@ PODS:
   - Realm/Headers (0.94.0)
   - RealmSwift (0.94.0):
     - Realm (= 0.94.0)
-  - SwiftyJSON (2.2.0)
+  - SwiftyJSON (2.2.1)
 
 DEPENDENCIES:
   - Alamofire (~> 1.3)
   - RealmSwift (~> 0.94.0)
-  - SwiftyJSON (~> 2.2.0)
+  - SwiftyJSON (~> 2.2.1)
 
 SPEC CHECKSUMS:
   Alamofire: 220403a8d5840e0b4c946a6fbaf209dbca124282
   Realm: a046149653e0ca220b65b5783da907aa5b74d86c
   RealmSwift: 5efbbf1a5c179a7237e4d428594e41619fa167ba
-  SwiftyJSON: 0b3e6c07af17ff745e77e8e9984097b55c956e5c
+  SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
 
 COCOAPODS: 0.38.2
