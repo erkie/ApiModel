@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.3
+- Fix crash caused by SwiftyJSON when running on device
+
 ## 0.8.2
 - Fix for when server responds with an unparseable response and with a non-200 status code
 
