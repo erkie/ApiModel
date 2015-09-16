@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name = "APIModel"
   s.module_name = "ApiModel"
-  s.version = "0.8.3"
+  s.version = "0.9.0"
   s.summary = "Easy API integrations using Realm and Swift"
 
   s.description  = <<-DESC
@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.dependency "Alamofire", "~> 1.2"
   s.dependency "SwiftyJSON", "~> 2.2.1"
-  s.dependency "RealmSwift", "~> 0.94.0"
+  s.dependency "RealmSwift", "~> 0.95.0"
 end
