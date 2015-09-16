@@ -48,7 +48,7 @@ extension Object {
 
     public func modifyStoredObject(modifyingBlock: () -> ()) {
         if let realm = realm {
-            realm.write(modifyingBlock)
+            try? realm.write(modifyingBlock)
         } else {
             modifyingBlock()
         }
@@ -85,7 +85,7 @@ extension Object {
             }
         }
 
-        return "".join(pathComponents)
+        return pathComponents.joinWithSeparator("")
     }
 
     public func apiUrlForRoute(resource: String) -> String {
