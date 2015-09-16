@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.license = "MIT"
   s.author = { "Erik Rothoff Andersson" => "erik.rothoff@gmail.com" }
   s.platform = :ios, "8.0"
-  s.source = { :git => "https://github.com/erkie/ApiModel.git", tag: s.version }
+  s.source = { git: "https://github.com/erkie/ApiModel.git", tag: s.version }
   s.source_files  = "Source/**/*"
 
   s.requires_arc = true
