@@ -5,7 +5,7 @@ public enum ApiResponseError: ErrorType {
     case ParseError
     case BadRequest(code: Int)
     case InvalidRequest(code: Int)
-    case ServerError
+    case ServerError(ErrorType)
     
     func description() -> String {
         switch self {
@@ -17,7 +17,7 @@ public enum ApiResponseError: ErrorType {
             return "Bad request according from server. HTTP Code: \(code)"
         case .InvalidRequest(let code):
             return "Server could not parse request. HTTP Code: \(code)"
-        case .ServerError:
+        case .ServerError(_):
             return "A server error occurred."
         }
         

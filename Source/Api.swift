@@ -76,7 +76,9 @@ public class API {
         Alamofire.request(request.method, request.url, parameters: request.parameters, encoding: request.encoding, headers: request.headers)
             .responseString { _, alamofireResponse, result in
                 response.responseBody = result.value
-                response.error = ApiResponseError.ServerError
+                if let error = result.error {
+                    response.error = ApiResponseError.ServerError(error)
+                }
                 response.status = alamofireResponse?.statusCode
                 
                 for hook in self.afterRequestHooks {
