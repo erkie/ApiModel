@@ -17,8 +17,9 @@ public enum ApiResponseError: ErrorType {
             return "Bad request according from server. HTTP Code: \(code)"
         case .InvalidRequest(let code):
             return "Server could not parse request. HTTP Code: \(code)"
-        case .ServerError(_):
-            return "A server error occurred."
+        case .ServerError(let res):
+            let err = (res as NSError).description
+            return "A server error occurred. \(err)"
         }
         
     }
