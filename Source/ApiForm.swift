@@ -81,7 +81,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public func updateFromForm(formParameters: NSDictionary) {
         model.modifyStoredObject {
-            self.model.updateFromDictionaryWithMapping(formParameters as! [String:AnyObject], mapping: ModelType.fromJSONMapping())
+            self.model.updateFromDictionary(formParameters as! [String:AnyObject])
         }
     }
     
@@ -92,7 +92,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         
         if let responseObject = response.responseObject {
             model.modifyStoredObject {
-                self.model.updateFromDictionaryWithMapping(responseObject, mapping: ModelType.fromJSONMapping())
+                self.model.updateFromDictionary(responseObject)
             }
         }
         
@@ -103,7 +103,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public class func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
         let newModel = ModelType()
-        newModel.updateFromDictionaryWithMapping(apiResponse, mapping: ModelType.fromJSONMapping())
+        newModel.updateFromDictionary(apiResponse)
         return newModel
     }
     

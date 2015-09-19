@@ -3,7 +3,7 @@ import Foundation
 public class NSDateTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?) -> AnyObject {
+    public func perform(value: AnyObject?) -> AnyObject? {
         if let dateValue = value as? NSDate {
             return dateValue
         }
@@ -24,7 +24,7 @@ public class NSDateTransform: Transform {
             }
         }
 
-        return NSDate()
+        return nil
     }
 
     func toLocalTimezone(date: NSDate) -> NSDate {

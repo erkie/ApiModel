@@ -4,7 +4,7 @@ import RealmSwift
 public class ModelTransform<T: Object where T:ApiTransformable>: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?) -> AnyObject {
+    public func perform(value: AnyObject?) -> AnyObject? {
         if let value = value as? [String:AnyObject] {
             let model = T()
             let mapping = T.fromJSONMapping()

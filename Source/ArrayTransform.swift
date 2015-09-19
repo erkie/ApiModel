@@ -4,7 +4,7 @@ import RealmSwift
 public class ArrayTransform<T: Object where T:ApiTransformable>: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?) -> AnyObject {
+    public func perform(value: AnyObject?) -> AnyObject? {
         if let values = value as? [[String:AnyObject]] {
             var models: [AnyObject] = []
             for nestedData in values {
