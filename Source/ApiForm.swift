@@ -91,16 +91,8 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
         
         if let responseObject = response.responseObject {
-            // TODO: This logic should be moved to updateFromDictionary
-            if let pk = ModelType.primaryKey(),
-                let modelPk = model[pk] as? ApiId,
-                let responsePrimaryKey = responseObject[pk] as? ApiId
-                where responsePrimaryKey != modelPk {
-                    print("WARNING: Responded object was not of same primary key, ignoring update.")
-            } else {
-                model.modifyStoredObject {
-                    self.model.updateFromDictionary(responseObject)
-                }
+            model.modifyStoredObject {
+                self.model.updateFromDictionary(responseObject)
             }
         }
         
