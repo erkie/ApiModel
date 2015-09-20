@@ -91,8 +91,16 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
         
         if let responseObject = response.responseObject {
-            model.modifyStoredObject {
-                self.model.updateFromDictionary(responseObject)
+            // TODO: This logic should be moved to updateFromDictionary
+            if let pk = ModelType.primaryKey(),
+                let modelPk = model[pk] as? ApiId,
+                let responsePrimaryKey = responseObject[pk] as? ApiId
+                where responsePrimaryKey != modelPk {
+                    print("WARNING: Responded object was not of same primary key, ignoring update.")
+            } else {
+                model.modifyStoredObject {
+                    self.model.updateFromDictionary(responseObject)
+                }
             }
         }
         
@@ -208,37 +216,37 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             call.method,
             path: call.path,
             parameters: call.parameters
-        ) { data, error in
-            let response = ApiFormResponse<ModelType>()
-            response.rawResponse = data
-            
-            if let errors = self.errorFromResponse(nil, error: error) {
-                response.errors = errors
-            }
-            
-            if let data: AnyObject = data?.parsedResponse {
-                response.responseData = data as? [String:AnyObject]
+            ) { data, error in
+                let response = ApiFormResponse<ModelType>()
+                response.rawResponse = data
                 
-                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseObject = responseObject
-                    response.object = self.fromApi(responseObject)
+                if let errors = self.errorFromResponse(nil, error: error) {
+                    response.errors = errors
+                }
+                
+                if let data: AnyObject = data?.parsedResponse {
+                    response.responseData = data as? [String:AnyObject]
                     
-                    if let errors = self.errorFromResponse(responseObject, error: error) {
-                        response.errors = errors
-                    }
-                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseArray = arrayData
-                    response.array = []
-                    
-                    for modelData in arrayData {
-                        if let modelDictionary = modelData as? [String:AnyObject] {
-                            response.array?.append(self.fromApi(modelDictionary))
+                    if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                        response.responseObject = responseObject
+                        response.object = self.fromApi(responseObject)
+                        
+                        if let errors = self.errorFromResponse(responseObject, error: error) {
+                            response.errors = errors
+                        }
+                    } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                        response.responseArray = arrayData
+                        response.array = []
+                        
+                        for modelData in arrayData {
+                            if let modelDictionary = modelData as? [String:AnyObject] {
+                                response.array?.append(self.fromApi(modelDictionary))
+                            }
                         }
                     }
                 }
-            }
-            
-            callback?(response)
+                
+                callback?(response)
         }
     }
     
