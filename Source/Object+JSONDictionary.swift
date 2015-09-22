@@ -14,19 +14,6 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [Stri
     for (var key, value) in data {
         key = camelizedString(key)
         
-        if let primaryKey = realmObject.dynamicType.primaryKey(),
-            let modelsPrimaryKey = realmObject[primaryKey] as? ApiId,
-            let responsePrimaryKey = value as? ApiId
-            where key == primaryKey && !modelsPrimaryKey.isEmpty
-        {
-            if modelsPrimaryKey == responsePrimaryKey {
-                continue
-            } else {
-                print("APIMODEL WARNING: Api responded with different ID than stored. Changing this crashes Realm. Skipping (Tried to change \(modelsPrimaryKey) to \(responsePrimaryKey))")
-                continue
-            }
-        }
-        
         if let transform = mapping[key] {
             var optionalValue: AnyObject? = value as AnyObject?
             
@@ -34,7 +21,22 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [Stri
                 optionalValue = nil
             }
             
-            realmObject[key] = transform.perform(optionalValue)
+            let transformedValue = transform.perform(optionalValue)
+            
+            if let primaryKey = realmObject.dynamicType.primaryKey(),
+                let modelsPrimaryKey = realmObject[primaryKey] as? ApiId,
+                let responsePrimaryKey = transformedValue as? ApiId
+                where key == primaryKey && !modelsPrimaryKey.isEmpty
+            {
+                if modelsPrimaryKey == responsePrimaryKey {
+                    continue
+                } else {
+                    print("APIMODEL WARNING: Api responded with different ID than stored. Changing this crashes Realm. Skipping (Tried to change \(modelsPrimaryKey) to \(responsePrimaryKey))")
+                    continue
+                }
+            }
+            
+            realmObject[key] = transformedValue
         }
     }
 }
