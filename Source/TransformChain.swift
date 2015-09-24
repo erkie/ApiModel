@@ -7,7 +7,7 @@ public class TransformChain: Transform {
         self.transforms = transforms
     }
 
-    public func perform(value: AnyObject?) -> AnyObject {
+    public func perform(value: AnyObject?) -> AnyObject? {
         return transforms.reduce(value!) { $1.perform($0) }
     }
 }

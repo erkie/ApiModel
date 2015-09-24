@@ -48,7 +48,8 @@ extension Object {
 
     public func modifyStoredObject(modifyingBlock: () -> ()) {
         if let realm = realm {
-            realm.write(modifyingBlock)
+            // This is up for discussion, ideally the user should handle this, but in the short term would require too much error logic
+            try! realm.write(modifyingBlock)
         } else {
             modifyingBlock()
         }
@@ -85,17 +86,15 @@ extension Object {
             }
         }
 
-        return "".join(pathComponents)
+        return pathComponents.joinWithSeparator("")
     }
 
     public func apiUrlForRoute(resource: String) -> String {
         return "\(api().configuration.host)\(apiRouteWithReplacements(resource))"
     }
     
-    /*
-    Not possible because calling methods on protocol types is not implmented yet.
     public func apiUrlForRoute(resource: ApiRoutesAction) -> String {
         let apiRoutes = (self.dynamicType as! ApiTransformable).dynamicType.apiRoutes()
         return apiUrlForRoute(apiRoutes.getAction(resource))
-    }*/
+    }
 }

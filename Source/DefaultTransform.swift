@@ -7,11 +7,11 @@ public class DefaultTransform: Transform {
         self.defaultValue = defaultValue
     }
 
-    public func perform(value: AnyObject?) -> AnyObject {
-        if value == nil {
-            return defaultValue
+    public func perform(value: AnyObject?) -> AnyObject? {
+        if let value = value {
+            return value
         } else {
-            return value!
+            return defaultValue
         }
     }
 }

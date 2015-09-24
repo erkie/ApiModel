@@ -34,6 +34,9 @@
 		0370B7BF1AAF82630085F048 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A81AAF82630085F048 /* Utils.swift */; };
 		0370B7C01AAF82D50085F048 /* Object+JSONDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A21AAF82630085F048 /* Object+JSONDictionary.swift */; };
 		038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CAB181B17C21D00440808 /* ApiRoutes.swift */; };
+		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; settings = {ASSET_TAGS = (); }; };
+		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; settings = {ASSET_TAGS = (); }; };
+		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; settings = {ASSET_TAGS = (); }; };
 		6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */; };
 		6DE1A3261AFB6035002CB25E /* Object+ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE1A3251AFB6035002CB25E /* Object+ApiModel.swift */; };
 		BE7938AC4C471E976B2F7384 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB40266BE10F16D08FF30F4 /* Pods.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -79,6 +82,9 @@
 		0370B7A71AAF82630085F048 /* Transform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transform.swift; sourceTree = "<group>"; };
 		0370B7A81AAF82630085F048 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		038CAB181B17C21D00440808 /* ApiRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRoutes.swift; sourceTree = "<group>"; };
+		03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTransform.swift; sourceTree = "<group>"; };
+		03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatTransform.swift; sourceTree = "<group>"; };
+		03E79CEE1BAD5D20001258A2 /* TransformChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformChain.swift; sourceTree = "<group>"; };
 		2D5BA2758CD4A8B5313DB805 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		401654F7FCB7720D7CB61B36 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleTransform.swift; sourceTree = "<group>"; };
@@ -137,6 +143,8 @@
 			children = (
 				0370B79D1AAF82630085F048 /* ModelTransform.swift */,
 				0370B7A71AAF82630085F048 /* Transform.swift */,
+				03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */,
+				03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */,
 				0370B7A61AAF82630085F048 /* StringTransform.swift */,
 				0370B7981AAF82630085F048 /* ArrayTransform.swift */,
 				0370B7991AAF82630085F048 /* BoolTransform.swift */,
@@ -144,6 +152,7 @@
 				0370B79E1AAF82630085F048 /* NSDateTransform.swift */,
 				0370B79F1AAF82630085F048 /* PercentageTransform.swift */,
 				6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */,
+				03E79CEE1BAD5D20001258A2 /* TransformChain.swift */,
 			);
 			name = Transforms;
 			sourceTree = "<group>";
@@ -301,7 +310,9 @@
 		03C60D831AAB5B9A00FE99EA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					033E79161B7C9F78008E2A4D = {
 						CreatedOnToolsVersion = 6.4;
@@ -311,7 +322,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */;
+			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -404,6 +415,7 @@
 				6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */,
 				0370B7B21AAF82630085F048 /* IntTransform.swift in Sources */,
 				033E23F91AF62EB600F1C171 /* README.md in Sources */,
+				03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */,
 				0370B7BD1AAF82630085F048 /* StringTransform.swift in Sources */,
 				033DEF221B1CDEBE00266453 /* JSONParser.swift in Sources */,
 				0370B7BE1AAF82630085F048 /* Transform.swift in Sources */,
@@ -418,6 +430,8 @@
 				0370B7B01AAF82630085F048 /* BoolTransform.swift in Sources */,
 				0370B7AD1AAF82630085F048 /* ApiForm.swift in Sources */,
 				033E23EC1AF6284E00F1C171 /* ApiRequest.swift in Sources */,
+				03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */,
+				03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */,
 				0370B7B61AAF82630085F048 /* PercentageTransform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -473,6 +487,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rootof.ApiModel.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -513,6 +528,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rootof.ApiModel.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -569,6 +585,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rootof.ApiModel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -623,6 +640,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rootof.ApiModel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -642,6 +660,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEFINES_MODULE = YES;
+				ENABLE_TESTABILITY = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -675,6 +694,7 @@
 				033E79221B7C9F78008E2A4D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0366A4961AAF66ED00506F50 /* Build configuration list for PBXNativeTarget "ApiModel" */ = {
 			isa = XCConfigurationList;
@@ -685,7 +705,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */ = {
+		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03C60D871AAB5B9A00FE99EA /* Debug */,

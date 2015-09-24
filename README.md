@@ -6,6 +6,24 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 
 ## Getting started
 
+Add `APIModel` to your `Podfile`:
+
+```ruby
+pod 'APIModel', '~> 0.9.0'
+```
+
+### NOTE! The master branch currently contains the Swift 2.0 version
+
+**Installation requires the following dependencies explicitly added to your Podfile:**
+
+```ruby
+pod 'Realm', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
+pod 'RealmSwift', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
+pod 'SwiftyJSON', git: 'https://github.com/SwiftyJSON/SwiftyJSON.git', branch: 'master'
+```
+
+And run `pod install`.
+
 The key part is to implement the `ApiTransformable` protocol.
 
 ```swift
@@ -17,7 +35,7 @@ class Post: Object, ApiTransformable {
     dynamic var id = ""
 	dynamic var title = ""
 	dynamic var contents = ""
-	dynamic var createdAt = NSDate()
+	dynamic lazy var createdAt = NSDate()
 
 	override class func primaryKey() -> String {
         return "id"

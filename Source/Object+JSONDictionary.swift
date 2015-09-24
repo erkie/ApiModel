@@ -11,29 +11,54 @@ func camelizedString(string: String) -> String {
 }
 
 func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [String:AnyObject], mapping: JSONMapping) {
-    for (var key, var value) in data {
+    for (var key, value) in data {
         key = camelizedString(key)
-
+        
         if let transform = mapping[key] {
             var optionalValue: AnyObject? = value as AnyObject?
-
+            
             if value.isKindOfClass(NSNull) {
                 optionalValue = nil
             }
- 
-            realmObject[key] = transform.perform(optionalValue)
+            
+            let transformedValue = transform.perform(optionalValue)
+            
+            if let primaryKey = realmObject.dynamicType.primaryKey(),
+                let modelsPrimaryKey = realmObject[primaryKey] as? ApiId,
+                let responsePrimaryKey = transformedValue as? ApiId
+                where key == primaryKey && !modelsPrimaryKey.isEmpty
+            {
+                if modelsPrimaryKey == responsePrimaryKey {
+                    continue
+                } else {
+                    print("APIMODEL WARNING: Api responded with different ID than stored. Changing this crashes Realm. Skipping (Tried to change \(modelsPrimaryKey) to \(responsePrimaryKey))")
+                    continue
+                }
+            }
+            
+            realmObject[key] = transformedValue
         }
     }
 }
 
 extension Object {
+    public func updateFromForm(data: NSDictionary) {
+        let mapping = (self as! ApiTransformable).dynamicType.fromJSONMapping()
+        updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
+    }
+    
     // We need to pass in JSONMapping manually because of problems in Swift
     // It's impossible to cast Objects to "Object that conforms to ApiTransformable" currently...
     public func updateFromForm(data: NSDictionary, mapping: JSONMapping) {
         updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
     }
-
+    
+    public func updateFromDictionary(data: [String:AnyObject]) {
+        let mapping = (self as! ApiTransformable).dynamicType.fromJSONMapping()
+        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping)
+    }
+    
     public func updateFromDictionaryWithMapping(data: [String:AnyObject], mapping: JSONMapping) {
-        updateRealmObjectFromDictionaryWithMapping(self, data, mapping)
+        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping)
     }
 }

@@ -33,7 +33,7 @@ public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> 
     public var rawResponse: ApiResponse?
     
     public var isSuccessful: Bool {
-        for (key, errorsForKey) in errors ?? [:] {
+        for (_, errorsForKey) in errors ?? [:] {
             if !errorsForKey.isEmpty {
                 return false
             }
@@ -81,7 +81,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public func updateFromForm(formParameters: NSDictionary) {
         model.modifyStoredObject {
-            self.model.updateFromDictionaryWithMapping(formParameters as! [String:AnyObject], mapping: ModelType.fromJSONMapping())
+            self.model.updateFromDictionary(formParameters as! [String:AnyObject])
         }
     }
     
@@ -92,7 +92,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         
         if let responseObject = response.responseObject {
             model.modifyStoredObject {
-                self.model.updateFromDictionaryWithMapping(responseObject, mapping: ModelType.fromJSONMapping())
+                self.model.updateFromDictionary(responseObject)
             }
         }
         
@@ -103,7 +103,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public class func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
         let newModel = ModelType()
-        newModel.updateFromDictionaryWithMapping(apiResponse, mapping: ModelType.fromJSONMapping())
+        newModel.updateFromDictionary(apiResponse)
         return newModel
     }
     
@@ -208,37 +208,37 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
             call.method,
             path: call.path,
             parameters: call.parameters
-        ) { data, error in
-            var response = ApiFormResponse<ModelType>()
-            response.rawResponse = data
-            
-            if let errors = self.errorFromResponse(nil, error: error) {
-                response.errors = errors
-            }
-            
-            if let data: AnyObject = data?.parsedResponse {
-                response.responseData = data as? [String:AnyObject]
+            ) { data, error in
+                let response = ApiFormResponse<ModelType>()
+                response.rawResponse = data
                 
-                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseObject = responseObject
-                    response.object = self.fromApi(responseObject)
+                if let errors = self.errorFromResponse(nil, error: error) {
+                    response.errors = errors
+                }
+                
+                if let data: AnyObject = data?.parsedResponse {
+                    response.responseData = data as? [String:AnyObject]
                     
-                    if let errors = self.errorFromResponse(responseObject, error: error) {
-                        response.errors = errors
-                    }
-                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseArray = arrayData
-                    response.array = []
-                    
-                    for modelData in arrayData {
-                        if let modelDictionary = modelData as? [String:AnyObject] {
-                            response.array?.append(self.fromApi(modelDictionary))
+                    if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                        response.responseObject = responseObject
+                        response.object = self.fromApi(responseObject)
+                        
+                        if let errors = self.errorFromResponse(responseObject, error: error) {
+                            response.errors = errors
+                        }
+                    } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                        response.responseArray = arrayData
+                        response.array = []
+                        
+                        for modelData in arrayData {
+                            if let modelDictionary = modelData as? [String:AnyObject] {
+                                response.array?.append(self.fromApi(modelDictionary))
+                            }
                         }
                     }
                 }
-            }
-            
-            callback?(response)
+                
+                callback?(response)
         }
     }
     
@@ -250,7 +250,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         return (data[namespace] as? [AnyObject]) ?? (data[namespace.pluralize()] as? [AnyObject])
     }
     
-    private class func errorFromResponse(response: [String:AnyObject]?, error: NSError?) -> [String:[String]]? {
+    private class func errorFromResponse(response: [String:AnyObject]?, error: ApiResponseError?) -> [String:[String]]? {
         if let errors = response?["errors"] as? [String:[String]] {
             return errors
         } else if let errors = response?["errors"] as? [String] {
