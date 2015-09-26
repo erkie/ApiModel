@@ -1,6 +1,6 @@
 import Alamofire
 
-public class ApiConfiguration {
+public class ApiConfig {
     public var host: String = ""
     public var parser: ApiParser = JSONParser()
     public var encoding: ParameterEncoding = .URL
@@ -8,7 +8,6 @@ public class ApiConfiguration {
     public var rootNamespace = ""
 
     public required init() {
-
     }
 
     public convenience init(host: String) {

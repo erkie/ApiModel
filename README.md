@@ -105,7 +105,7 @@ To set it up:
 
 ```
 // Put this somewhere in your AppDelegate or together with other initialization code
-var apiConfig = ApiConfiguration(host: "https://service.io/api/v1/")
+var apiConfig = ApiConfig(host: "https://service.io/api/v1/")
 
 ApiSingleton.setInstance(API(configuration: apiConfig))
 ```
@@ -350,10 +350,10 @@ Some API's wrap all their responses in an "envelope", a container that is generi
 }
 ```
 
-To deal with this gracefully there is a configuration option on the `ApiConfiguration` class called `rootNamespace`. This is a dot-separated path that is traversed for each response. To deal with the above example you would simply:
+To deal with this gracefully there is a configuration option on the `ApiConfig` class called `rootNamespace`. This is a dot-separated path that is traversed for each response. To deal with the above example you would simply:
 
 ```swift
-let config = ApiConfiguration()
+let config = ApiConfig()
 config.rootNamespace = "data"
 ```
 
@@ -376,7 +376,7 @@ It can also be more complex, for example if the envelope looked something like t
 This would then convert into the `rootNamespace`:
 
 ```swift
-let config = ApiConfiguration()
+let config = ApiConfig()
 config.rootNamespace = "JsonResponseEnvelope.SuccessFullJsonResponse.SoapResponseContainer.EnterpriseBeanData"
 ```
 

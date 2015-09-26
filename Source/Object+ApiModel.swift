@@ -5,6 +5,28 @@ extension Object {
     public class func localId() -> ApiId {
         return "APIMODELLOCAL-\(NSUUID().UUIDString)"
     }
+    
+    public var isLocal: Bool {
+        if let pk = self.dynamicType.primaryKey() {
+            if let id = self[pk] as? NSString {
+                return id.rangeOfString("APIMODELLOCAL-").location == 0
+            }
+        }
+        
+        return false
+    }
+    
+    public var unlocalId: ApiId {
+        if isLocal {
+            return ""
+        } else if let
+            pk = self.dynamicType.primaryKey(),
+            id = self[pk] as? ApiId {
+                return id
+        } else {
+            return ""
+        }
+    }
 
     public func isApiSaved() -> Bool {
         if let pk = self.dynamicType.primaryKey() {
@@ -17,32 +39,6 @@ extension Object {
             }
         } else {
             return false
-        }
-    }
-
-    public var isLocal: Bool {
-        get {
-            if let pk = self.dynamicType.primaryKey() {
-                if let id = self[pk] as? NSString {
-                    return id.rangeOfString("APIMODELLOCAL-").location == 0
-                }
-            }
-
-            return false
-        }
-    }
-
-    public var unlocalId: ApiId {
-        get {
-            if isLocal {
-                return ""
-            } else if let
-                pk = self.dynamicType.primaryKey(),
-                id = self[pk] as? ApiId {
-                return id
-            } else {
-                return ""
-            }
         }
     }
 
@@ -90,7 +86,7 @@ extension Object {
     }
 
     public func apiUrlForRoute(resource: String) -> String {
-        return "\(api().configuration.host)\(apiRouteWithReplacements(resource))"
+        return "\(api().config.host)\(apiRouteWithReplacements(resource))"
     }
     
     public func apiUrlForRoute(resource: ApiRoutesAction) -> String {
