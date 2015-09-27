@@ -99,6 +99,8 @@ public class API {
             }
             response.status = alamofireResponse?.statusCode
             
+            print("BoDY \(response.responseBody)")
+            
             for hook in self.afterRequestHooks {
                 hook(request, response)
             }
