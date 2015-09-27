@@ -14,4 +14,17 @@ public class ApiConfig {
         self.init()
         self.host = host
     }
+    
+    public convenience init(apiConfig: ApiConfig) {
+        self.init()
+        self.host = apiConfig.host
+        self.parser = apiConfig.parser
+        self.encoding = apiConfig.encoding
+        self.requestLogging = apiConfig.requestLogging
+        self.rootNamespace = apiConfig.rootNamespace
+    }
+    
+    public func copy() -> ApiConfig {
+        return ApiConfig(apiConfig: self)
+    }
 }

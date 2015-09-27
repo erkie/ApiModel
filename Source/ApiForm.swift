@@ -87,7 +87,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public static func apiConfigForType() -> ApiConfig {
         if let configurable = ModelType.self as? ApiConfigurable.Type {
-            return configurable.apiConfig(api().config)
+            return configurable.apiConfig(api().config.copy())
         } else {
             return api().config
         }
