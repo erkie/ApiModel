@@ -9,21 +9,37 @@
 import Foundation
 import Alamofire
 
-func formDataEncoding(request: URLRequestConvertible, parameters: [String: AnyObject]?) -> (NSMutableURLRequest, NSError?) {
-    let boundary = "Boundary-ERIKSAWESOMEBOUNDARYWIEEEEEEEEEEEEEEEEEEE"
+public class FileUpload {
+    public var fileName: String
+    public var mimeType: String
+    public var data: NSData
     
+    public init(fileName: String, mimeType: String, data: NSData) {
+        self.fileName = fileName
+        self.mimeType = mimeType
+        self.data = data
+    }
+}
+
+func formDataEncoding(request: URLRequestConvertible, parameters: [String: AnyObject]?) -> (NSMutableURLRequest, NSError?) {
     let request = request.URLRequest
     
-    let fullData = NSMutableData()
-    addParametersToData(parameters ?? [:], outputData: fullData, withBoundary: boundary)
+    let formData = MultipartFormData()
     
-    fullData.appendData("--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+    addParametersToData(parameters ?? [:], formData: formData)
+    
+    let fullData: NSData
+    do {
+        fullData = try formData.encode()
+    } catch let error as NSError {
+        return (request, error)
+    }
+    
+    request.setValue(formData.contentType, forHTTPHeaderField: "Content-Type")
+    request.setValue(String(formData.contentLength), forHTTPHeaderField: "Content-Length")
     
     request.HTTPBody = fullData
     request.HTTPShouldHandleCookies = true
-    
-    request.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
-    request.setValue(String(fullData.length), forHTTPHeaderField: "Content-Length")
     
     return (request, nil)
 }
@@ -34,70 +50,31 @@ public extension ApiRequest {
     }
 }
 
-func addParametersToData(parameters: [String:AnyObject], outputData: NSMutableData, withBoundary boundary: String, keyPrefix: String = "") {
-    let header = "--\(boundary)".dataUsingEncoding(NSUTF8StringEncoding)!
-    let footer = "--\(boundary)".dataUsingEncoding(NSUTF8StringEncoding)!
-    let sep = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-    
+func addParametersToData(parameters: [String:AnyObject], formData: MultipartFormData, keyPrefix: String = "") {
     for (key, value) in parameters {
-        let formKey: String
-        if keyPrefix.isEmpty {
-            formKey = "\(keyPrefix)\(key)"
-        } else {
-            formKey = "\(keyPrefix)[\(key)]"
-        }
+        let formKey = keyPrefix.isEmpty ? key : "\(keyPrefix)[\(key)]"
         
-        if let valueData = value as? NSData {
-            outputData.appendData(sep)
-            outputData.appendData(header)
-            outputData.appendData(sep)
-            
-            outputData.appendData(dataToFormDataField(formKey, data: valueData, boundary: boundary, fileName: "file.jpg", contentType: "image/jpg"))
-            
-            outputData.appendData(footer)
+        // FileUpload
+        if let fileUpload = value as? FileUpload {
+            formData.appendBodyPart(data: fileUpload.data, name: formKey, fileName: fileUpload.fileName, mimeType: fileUpload.mimeType)
+        // NSData
+        } else if let valueData = value as? NSData {
+            formData.appendBodyPart(data: valueData, name: formKey, fileName: "data.dat", mimeType: "application/octet-stream")
+        // Nested hash
         } else if let nestedParameters = value as? [String:AnyObject] {
-            addParametersToData(nestedParameters, outputData: outputData, withBoundary: boundary, keyPrefix: formKey)
+            addParametersToData(nestedParameters, formData: formData, keyPrefix: formKey)
+        // Nested array
         } else if let arrayData = value as? [AnyObject] {
+            var asHash: [String:AnyObject] = [:]
             
-        } else {
-            outputData.appendData(sep)
-            outputData.appendData(header)
-            outputData.appendData(sep)
+            for (index, arrayValue) in arrayData.enumerate() {
+                asHash[String(index)] = arrayValue
+            }
             
-            outputData.appendData(stringToFromDataField(formKey, data: String(value), boundary: boundary))
-            
-            outputData.appendData(footer)
+            addParametersToData(asHash, formData: formData, keyPrefix: formKey)
+        // Anything else, cast it to a string
+        } else if let dataString = String(value).dataUsingEncoding(NSUTF8StringEncoding) {
+            formData.appendBodyPart(data: dataString, name: key)
         }
     }
-}
-
-func dataToFormDataField(key: String, data: NSData, boundary: String, fileName: String?, contentType: String?) -> NSData {
-    let fullData = NSMutableData()
-    
-    let fileNameField: String
-    if let fileName = fileName {
-        fileNameField = "filename=\"\(fileName)\""
-    } else {
-        fileNameField = ""
-    }
-    
-    let contentTypeField: String
-    if let contentType = contentType {
-        contentTypeField = "Content-Type: \(contentType)\r\n"
-    } else {
-        contentTypeField = ""
-    }
-    
-    let header = "Content-Disposition: form-data; name=\"\(key)\"; \(fileNameField)\r\n" +
-        "\(contentTypeField)\r\n"
-    
-    fullData.appendData(header.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
-    fullData.appendData(data)
-    
-    return fullData
-}
-
-func stringToFromDataField(key: String, data: String, boundary: String) -> NSData {
-    let stringData = data.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-    return dataToFormDataField(key, data: stringData, boundary: boundary, fileName: nil, contentType: nil)
 }
