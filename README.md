@@ -124,7 +124,7 @@ apiConfig.requestLogging = false
 
 For the most part an API is consistent across endpoints, however in the real world, conventions usually differ wildly. The global configuration is the one set by calling `ApiSingleton.setInstance(API(configuration: apiConfig))`.
 
-To have a model-local configuration your model needs to implement the `ApiConfigurable` protocol, which consists of a single method:
+To have a model-local configuration a model needs to implement the `ApiConfigurable` protocol, which consists of a single method:
 
 ```swift
 public protocol ApiConfigurable {
@@ -132,7 +132,7 @@ public protocol ApiConfigurable {
 }
 ```
 
-Implement the `apiConfig` method, input is the root base configuration and output is the model's config object. The object passed in is a copy of the root configuration, so you are free to modify that object without any side-effects.
+Input is the root base configuration and output is the model's own config object. The object passed in is a copy of the root configuration, so you are free to modify that object without any side-effects.
 
 ```swift
 static func apiConfig(config: ApiConfig) -> ApiConfig {
@@ -158,6 +158,7 @@ ApiForm<Post>.get("/v1/posts.json") { response in
 }
 
 // Other supported methods:
+
 ApiForm<Post>.get(path, parameters: [String:AnyObject]) { response // ...
 ApiForm<Post>.post(path, parameters: [String:AnyObject]) { response // ...
 ApiForm<Post>.put(path, parameters: [String:AnyObject]) { response // ...
@@ -169,6 +170,12 @@ ApiForm<Post>.get(path) { response // ...
 ApiForm<Post>.post(path) { response // ...
 ApiForm<Post>.put(path) { response // ...
 ApiForm<Post>.delete(path) { response // ...
+
+// You can also pass in custom `ApiConfig` into each of the above mentioned methods:
+ApiForm<Post>.get(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.post(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.put(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.delete(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
 ```
 
 Most of the time you'll want to use the `ActiveRecord`-style verbs `index/show/create/update` for interacting with a REST API, as described below.

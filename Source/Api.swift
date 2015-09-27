@@ -14,7 +14,7 @@ public class API {
             if self.config.requestLogging {
                 request.userInfo["requestStartedAt"] = NSDate()
                 
-                //print("ApiModel: \(request.method.rawValue) \(request.path) with params: \(request.parameters) \(request.headers)")
+                print("ApiModel: \(request.method.rawValue) \(request.path) with headers: \(request.headers)")
             }
         }
         
@@ -98,8 +98,6 @@ public class API {
                 response.error = ApiResponseError.ServerError(error)
             }
             response.status = alamofireResponse?.statusCode
-            
-            print("BoDY \(response.responseBody)")
             
             for hook in self.afterRequestHooks {
                 hook(request, response)
