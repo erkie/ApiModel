@@ -17,6 +17,7 @@ pod 'APIModel', '~> 0.9.0'
 **Installation requires the following dependencies explicitly added to your Podfile:**
 
 ```ruby
+pod 'APIModel', git: 'https://github.com/erkie/APIModel.git'
 pod 'Realm', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
 pod 'RealmSwift', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
 pod 'SwiftyJSON', git: 'https://github.com/SwiftyJSON/SwiftyJSON.git', branch: 'master'
@@ -94,6 +95,8 @@ class Post: Object, ApiTransformable {
     * [Dealing with IDs](#dealing-with-ids)
     * [Namespaces and envelopes](#namespaces-and-envelopes)
     * [Caching and storage](#caching-and-storage)
+    * [File uploads](#file-uploads)
+      * [FileUpload](#fileupload)
   * [Thanks to](#thanks-to)
   * [License](#license)
 
@@ -383,6 +386,92 @@ config.rootNamespace = "JsonResponseEnvelope.SuccessFullJsonResponse.SoapRespons
 ## Caching and storage
 
 It is up to you to cache and store the results of any calls. ApiModel does not do that for you, and will not do that, since strategies vary wildly depending on needs.
+
+## File uploads
+
+Just as the `JSONDictionary` can return a dictionary of parameters to be sent to the server, it can also contain `NSData` values that can be uploaded to a server. For example you could convert `UIImage`s to `NSData` and upload them for profile images.
+
+The standard way of uploading files on the web is using the content-type `multipart/form-data`, which is slightly different from JSON. If you have a model that should be able to support file uploads, you can configure the model to encode it's `JSONDictionary` into `multipart/form-data`.
+
+The following example illustrates a `UserAvatar` model:
+
+```swift
+import RealmSwift
+import ApiModel
+import UIKit
+
+class UserAvatar: Object, ApiTransformable, ApiConfigurable {
+  dynamic var userId = ApiId()
+  dynamic var url = String() // generated on the server
+
+  var imageData: NSData?
+
+  class func apiConfig(config: ApiConfig) -> ApiConfig {
+    // ApiRequest.FormDataEncoding is where the magic happens
+    // It tells ApiModel to encode everything with `multipart/form-data`
+    config.encoding = ApiRequest.FormDataEncoding
+    return config
+  }
+
+  // Important because the `imageData` property cannot be represented by Realm
+  override class func ignoredProperties() -> [String] {
+    return ["imageData"]
+  }
+
+  override class func primaryKey() -> String {
+    return "userId"
+  }
+
+  class func apiNamespace() -> String {
+    return "user_avatar"
+  }
+
+  class func apiRoutes() -> ApiRoutes {
+    return ApiRoutes.resource("/user/avatar.json")
+  }
+
+  class func fromJSONMapping() -> JSONMapping {
+    return [
+      "userId": ApiIdTransform(),
+      "url": StringTransform()
+    ]
+  }
+
+  func JSONDictionary() -> [String:AnyObject] {
+    return [
+      "image": FileUpload(fileName: "avatar.jpg", mimeType: "image/jpg", data: imageData!)
+    ]
+  }    
+}
+
+func upload() {
+  let image = UIImage(named: "me.jpg")!
+
+  let userAvatar = UserAvatar()
+  userAvatar.userId = "1"
+  userAvatar.imageData = UIImageJPEGRepresentation(image, 1)!
+
+  ApiForm(model: userAvatar).save { form in
+    if form.hasErrors {
+      print("Could not upload file: " + form.errorMessages.joinWithSeparator("\n"))
+    } else {
+      print("File uploaded! URL: \(userAvatar.url)")
+    }
+  }
+}
+```
+
+### FileUpload
+
+You can upload any file this way, not only images. Any NSData can be uploaded. The default mime type for uploaded files is `application/octet-stream`. If you need to configure this there is a special object you need to construct called `FileUpload`.
+
+The constructor is illustrated above, and takes the file name the server receives, mimetype of the file, and the data.
+
+```swift
+FileUpload(fileName: "document.pdf", mimeType: "application/pdf", data: documentData)
+```
+
+This should be put in the `JSONDictionary` dictionary. ApiModel will detect it and encode it accordingly.
 
 # Thanks to
 
