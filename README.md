@@ -85,6 +85,7 @@ class Post: Object, ApiTransformable {
     * [Getting started](#getting-started)
     * [Table of Contents](#table-of-contents)
     * [Configuring the API](#configuring-the-api)
+      * [Global and Model-local configurations](#global-and-model-local-configurations)
     * [Interacting with APIs](#interacting-with-apis)
       * [Basic REST verbs](#basic-rest-verbs)
       * [Fetching objects](#fetching-objects)
@@ -118,6 +119,26 @@ If you would like to disable request logging, you can do so by setting `requestL
 ```swift
 apiConfig.requestLogging = false
 ```
+
+### Global and Model-local configurations
+
+For the most part an API is consistent across endpoints, however in the real world, conventions usually differ wildly. The global configuration is the one set by calling `ApiSingleton.setInstance(API(configuration: apiConfig))`.
+
+To have a model-local configuration your model needs to implement the `ApiConfigurable` protocol, which consists of a single method:
+
+```swift
+public protocol ApiConfigurable {
+    static func apiConfig(config: ApiConfig) -> ApiConfig
+}
+```
+
+Implement the `apiConfig` method, input is the root base configuration and output is the model's config object. The object passed in is a copy of the root configuration, so you are free to modify that object without any side-effects.
+
+```swift
+static func apiConfig(config: ApiConfig) -> ApiConfig {
+  config.encoding = ApiRequest.FormDataEncoding
+  return config
+}```
 
 ## Interacting with APIs
 
