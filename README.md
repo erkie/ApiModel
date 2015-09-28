@@ -17,6 +17,7 @@ pod 'APIModel', '~> 0.9.0'
 **Installation requires the following dependencies explicitly added to your Podfile:**
 
 ```ruby
+pod 'APIModel', git: 'https://github.com/erkie/APIModel.git'
 pod 'Realm', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
 pod 'RealmSwift', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
 pod 'SwiftyJSON', git: 'https://github.com/SwiftyJSON/SwiftyJSON.git', branch: 'master'
@@ -84,6 +85,7 @@ class Post: Object, ApiTransformable {
     * [Getting started](#getting-started)
     * [Table of Contents](#table-of-contents)
     * [Configuring the API](#configuring-the-api)
+      * [Global and Model-local configurations](#global-and-model-local-configurations)
     * [Interacting with APIs](#interacting-with-apis)
       * [Basic REST verbs](#basic-rest-verbs)
       * [Fetching objects](#fetching-objects)
@@ -94,6 +96,8 @@ class Post: Object, ApiTransformable {
     * [Dealing with IDs](#dealing-with-ids)
     * [Namespaces and envelopes](#namespaces-and-envelopes)
     * [Caching and storage](#caching-and-storage)
+    * [File uploads](#file-uploads)
+      * [FileUpload](#fileupload)
   * [Thanks to](#thanks-to)
   * [License](#license)
 
@@ -105,7 +109,7 @@ To set it up:
 
 ```
 // Put this somewhere in your AppDelegate or together with other initialization code
-var apiConfig = ApiConfiguration(host: "https://service.io/api/v1/")
+var apiConfig = ApiConfig(host: "https://service.io/api/v1/")
 
 ApiSingleton.setInstance(API(configuration: apiConfig))
 ```
@@ -115,6 +119,26 @@ If you would like to disable request logging, you can do so by setting `requestL
 ```swift
 apiConfig.requestLogging = false
 ```
+
+### Global and Model-local configurations
+
+For the most part an API is consistent across endpoints, however in the real world, conventions usually differ wildly. The global configuration is the one set by calling `ApiSingleton.setInstance(API(configuration: apiConfig))`.
+
+To have a model-local configuration a model needs to implement the `ApiConfigurable` protocol, which consists of a single method:
+
+```swift
+public protocol ApiConfigurable {
+    static func apiConfig(config: ApiConfig) -> ApiConfig
+}
+```
+
+Input is the root base configuration and output is the model's own config object. The object passed in is a copy of the root configuration, so you are free to modify that object without any side-effects.
+
+```swift
+static func apiConfig(config: ApiConfig) -> ApiConfig {
+  config.encoding = ApiRequest.FormDataEncoding
+  return config
+}```
 
 ## Interacting with APIs
 
@@ -134,6 +158,7 @@ ApiForm<Post>.get("/v1/posts.json") { response in
 }
 
 // Other supported methods:
+
 ApiForm<Post>.get(path, parameters: [String:AnyObject]) { response // ...
 ApiForm<Post>.post(path, parameters: [String:AnyObject]) { response // ...
 ApiForm<Post>.put(path, parameters: [String:AnyObject]) { response // ...
@@ -145,6 +170,12 @@ ApiForm<Post>.get(path) { response // ...
 ApiForm<Post>.post(path) { response // ...
 ApiForm<Post>.put(path) { response // ...
 ApiForm<Post>.delete(path) { response // ...
+
+// You can also pass in custom `ApiConfig` into each of the above mentioned methods:
+ApiForm<Post>.get(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.post(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.put(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+ApiForm<Post>.delete(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
 ```
 
 Most of the time you'll want to use the `ActiveRecord`-style verbs `index/show/create/update` for interacting with a REST API, as described below.
@@ -350,10 +381,10 @@ Some API's wrap all their responses in an "envelope", a container that is generi
 }
 ```
 
-To deal with this gracefully there is a configuration option on the `ApiConfiguration` class called `rootNamespace`. This is a dot-separated path that is traversed for each response. To deal with the above example you would simply:
+To deal with this gracefully there is a configuration option on the `ApiConfig` class called `rootNamespace`. This is a dot-separated path that is traversed for each response. To deal with the above example you would simply:
 
 ```swift
-let config = ApiConfiguration()
+let config = ApiConfig()
 config.rootNamespace = "data"
 ```
 
@@ -376,13 +407,99 @@ It can also be more complex, for example if the envelope looked something like t
 This would then convert into the `rootNamespace`:
 
 ```swift
-let config = ApiConfiguration()
+let config = ApiConfig()
 config.rootNamespace = "JsonResponseEnvelope.SuccessFullJsonResponse.SoapResponseContainer.EnterpriseBeanData"
 ```
 
 ## Caching and storage
 
 It is up to you to cache and store the results of any calls. ApiModel does not do that for you, and will not do that, since strategies vary wildly depending on needs.
+
+## File uploads
+
+Just as the `JSONDictionary` can return a dictionary of parameters to be sent to the server, it can also contain `NSData` values that can be uploaded to a server. For example you could convert `UIImage`s to `NSData` and upload them for profile images.
+
+The standard way of uploading files on the web is using the content-type `multipart/form-data`, which is slightly different from JSON. If you have a model that should be able to support file uploads, you can configure the model to encode it's `JSONDictionary` into `multipart/form-data`.
+
+The following example illustrates a `UserAvatar` model:
+
+```swift
+import RealmSwift
+import ApiModel
+import UIKit
+
+class UserAvatar: Object, ApiTransformable, ApiConfigurable {
+  dynamic var userId = ApiId()
+  dynamic var url = String() // generated on the server
+
+  var imageData: NSData?
+
+  class func apiConfig(config: ApiConfig) -> ApiConfig {
+    // ApiRequest.FormDataEncoding is where the magic happens
+    // It tells ApiModel to encode everything with `multipart/form-data`
+    config.encoding = ApiRequest.FormDataEncoding
+    return config
+  }
+
+  // Important because the `imageData` property cannot be represented by Realm
+  override class func ignoredProperties() -> [String] {
+    return ["imageData"]
+  }
+
+  override class func primaryKey() -> String {
+    return "userId"
+  }
+
+  class func apiNamespace() -> String {
+    return "user_avatar"
+  }
+
+  class func apiRoutes() -> ApiRoutes {
+    return ApiRoutes.resource("/user/avatar.json")
+  }
+
+  class func fromJSONMapping() -> JSONMapping {
+    return [
+      "userId": ApiIdTransform(),
+      "url": StringTransform()
+    ]
+  }
+
+  func JSONDictionary() -> [String:AnyObject] {
+    return [
+      "image": FileUpload(fileName: "avatar.jpg", mimeType: "image/jpg", data: imageData!)
+    ]
+  }    
+}
+
+func upload() {
+  let image = UIImage(named: "me.jpg")!
+
+  let userAvatar = UserAvatar()
+  userAvatar.userId = "1"
+  userAvatar.imageData = UIImageJPEGRepresentation(image, 1)!
+
+  ApiForm(model: userAvatar).save { form in
+    if form.hasErrors {
+      print("Could not upload file: " + form.errorMessages.joinWithSeparator("\n"))
+    } else {
+      print("File uploaded! URL: \(userAvatar.url)")
+    }
+  }
+}
+```
+
+### FileUpload
+
+You can upload any file this way, not only images. Any NSData can be uploaded. The default mime type for uploaded files is `application/octet-stream`. If you need to configure this there is a special object you need to construct called `FileUpload`.
+
+The constructor is illustrated above, and takes the file name the server receives, mimetype of the file, and the data.
+
+```swift
+FileUpload(fileName: "document.pdf", mimeType: "application/pdf", data: documentData)
+```
+
+This should be put in the `JSONDictionary` dictionary. ApiModel will detect it and encode it accordingly.
 
 # Thanks to
 

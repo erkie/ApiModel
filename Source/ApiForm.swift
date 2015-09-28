@@ -53,6 +53,7 @@ public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> 
 public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     public typealias ResponseCallback = (ApiFormResponse<ModelType>) -> Void
     
+    public var apiConfig: ApiConfig
     public var status: ApiFormModelStatus = .None
     public var errors: [String:[String]] = [:]
     public var model: ModelType
@@ -75,8 +76,21 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         return !errors.isEmpty
     }
     
-    public init(model: ModelType) {
+    public required init(model: ModelType, apiConfig: ApiConfig) {
         self.model = model
+        self.apiConfig = apiConfig
+    }
+    
+    public convenience init(model: ModelType) {
+        self.init(model: model, apiConfig: self.dynamicType.apiConfigForType())
+    }
+    
+    public static func apiConfigForType() -> ApiConfig {
+        if let configurable = ModelType.self as? ApiConfigurable.Type {
+            return configurable.apiConfig(api().config.copy())
+        } else {
+            return api().config
+        }
     }
     
     public func updateFromForm(formParameters: NSDictionary) {
@@ -109,36 +123,57 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     // api-model style methods
     
+    public class func performWithMethod(method: Alamofire.Method, path: String, parameters: RequestParameters, apiConfig: ApiConfig, callback: ResponseCallback?) {
+        let call = ApiCall(method: method, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
+        perform(call, apiConfig: apiConfig, callback: callback)
+    }
+    
+    // GET
+    public class func get(path: String, parameters: RequestParameters, apiConfig: ApiConfig, callback: ResponseCallback?) {
+        performWithMethod(.GET, path: path, parameters: parameters, apiConfig: apiConfig, callback: callback)
+    }
+    
     public class func get(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .GET, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
-        perform(call, callback: callback)
+        get(path, parameters: parameters, apiConfig: apiConfigForType(), callback: callback)
     }
     
     public class func get(path: String, callback: ResponseCallback?) {
         get(path, parameters: [:], callback: callback)
     }
     
+    // POST
+    public class func post(path: String, parameters: RequestParameters, apiConfig: ApiConfig, callback: ResponseCallback?) {
+        performWithMethod(.POST, path: path, parameters: parameters, apiConfig: apiConfig, callback: callback)
+    }
+    
     public class func post(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .POST, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
-        perform(call, callback: callback)
+        post(path, parameters: parameters, apiConfig: apiConfigForType(), callback: callback)
     }
     
     public class func post(path: String, callback: ResponseCallback?) {
         post(path, parameters: [:], callback: callback)
     }
     
+    // DELETE
+    public class func delete(path: String, parameters: RequestParameters, apiConfig: ApiConfig, callback: ResponseCallback?) {
+        performWithMethod(.DELETE, path: path, parameters: parameters, apiConfig: apiConfig, callback: callback)
+    }
+    
     public class func delete(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .DELETE, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
-        perform(call, callback: callback)
+        delete(path, parameters: parameters, apiConfig: apiConfigForType(), callback: callback)
     }
     
     public class func delete(path: String, callback: ResponseCallback?) {
         delete(path, parameters: [:], callback: callback)
     }
     
+    // PUT
+    public class func put(path: String, parameters: RequestParameters, apiConfig: ApiConfig, callback: ResponseCallback?) {
+        performWithMethod(.PUT, path: path, parameters: parameters, apiConfig: apiConfig, callback: callback)
+    }
+    
     public class func put(path: String, parameters: RequestParameters, callback: ResponseCallback?) {
-        let call = ApiCall(method: .PUT, path: path, parameters: parameters, namespace: ModelType.apiNamespace())
-        perform(call, callback: callback)
+        put(path, parameters: parameters, apiConfig: apiConfigForType(), callback: callback)
     }
     
     public class func put(path: String, callback: ResponseCallback?) {
@@ -203,42 +238,43 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public class func perform(call: ApiCall, callback: ResponseCallback?) {
+    public class func perform(call: ApiCall, apiConfig: ApiConfig, callback: ResponseCallback?) {
         api().request(
             call.method,
             path: call.path,
-            parameters: call.parameters
-            ) { data, error in
-                let response = ApiFormResponse<ModelType>()
-                response.rawResponse = data
+            parameters: call.parameters,
+            apiConfig: apiConfig
+        ) { data, error in
+            let response = ApiFormResponse<ModelType>()
+            response.rawResponse = data
+            
+            if let errors = self.errorFromResponse(nil, error: error) {
+                response.errors = errors
+            }
+            
+            if let data: AnyObject = data?.parsedResponse {
+                response.responseData = data as? [String:AnyObject]
                 
-                if let errors = self.errorFromResponse(nil, error: error) {
-                    response.errors = errors
-                }
-                
-                if let data: AnyObject = data?.parsedResponse {
-                    response.responseData = data as? [String:AnyObject]
+                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseObject = responseObject
+                    response.object = self.fromApi(responseObject)
                     
-                    if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                        response.responseObject = responseObject
-                        response.object = self.fromApi(responseObject)
-                        
-                        if let errors = self.errorFromResponse(responseObject, error: error) {
-                            response.errors = errors
-                        }
-                    } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                        response.responseArray = arrayData
-                        response.array = []
-                        
-                        for modelData in arrayData {
-                            if let modelDictionary = modelData as? [String:AnyObject] {
-                                response.array?.append(self.fromApi(modelDictionary))
-                            }
+                    if let errors = self.errorFromResponse(responseObject, error: error) {
+                        response.errors = errors
+                    }
+                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
+                    response.responseArray = arrayData
+                    response.array = []
+                    
+                    for modelData in arrayData {
+                        if let modelDictionary = modelData as? [String:AnyObject] {
+                            response.array?.append(self.fromApi(modelDictionary))
                         }
                     }
                 }
-                
-                callback?(response)
+            }
+            
+            callback?(response)
         }
     }
     
