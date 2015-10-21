@@ -12,17 +12,6 @@ Add `APIModel` to your `Podfile`:
 pod 'APIModel', '~> 0.9.0'
 ```
 
-### NOTE! The master branch currently contains the Swift 2.0 version
-
-**Installation requires the following dependencies explicitly added to your Podfile:**
-
-```ruby
-pod 'APIModel', git: 'https://github.com/erkie/APIModel.git'
-pod 'Realm', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
-pod 'RealmSwift', git: 'https://github.com/realm/realm-cocoa.git', branch: 'swift-2.0'
-pod 'SwiftyJSON', git: 'https://github.com/SwiftyJSON/SwiftyJSON.git', branch: 'master'
-```
-
 And run `pod install`.
 
 The key part is to implement the `ApiTransformable` protocol.
