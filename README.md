@@ -6,13 +6,11 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 
 ## Getting started
 
-Add `APIModel` to your `Podfile`:
+Add `APIModel` to your `Podfile`, and run `pod install`:
 
 ```ruby
 pod 'APIModel', '~> 0.9.0'
 ```
-
-And run `pod install`.
 
 The key part is to implement the `ApiModel` protocol.
 
