@@ -86,11 +86,11 @@ extension Object {
     }
 
     public func apiUrlForRoute(resource: String) -> String {
-        return "\(api().config.host)\(apiRouteWithReplacements(resource))"
+        return "\(apiManager().config.host)\(apiRouteWithReplacements(resource))"
     }
     
     public func apiUrlForRoute(resource: ApiRoutesAction) -> String {
-        let apiRoutes = (self.dynamicType as! ApiTransformable).dynamicType.apiRoutes()
+        let apiRoutes = (self.dynamicType as! ApiModel).dynamicType.apiRoutes()
         return apiUrlForRoute(apiRoutes.getAction(resource))
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public class API {
+public class ApiManager {
     public var config: ApiConfig
     
     public var beforeRequestHooks: [((ApiRequest) -> Void)] = []
@@ -117,13 +117,13 @@ public class API {
 }
 
 public struct ApiSingleton {
-    static var instance: API = API(config: ApiConfig())
+    static var instance: ApiManager = ApiManager(config: ApiConfig())
     
-    public static func setInstance(apiInstance: API) {
+    public static func setInstance(apiInstance: ApiManager) {
         instance = apiInstance
     }
 }
 
-public func api() -> API {
+public func apiManager() -> ApiManager {
     return ApiSingleton.instance
 }

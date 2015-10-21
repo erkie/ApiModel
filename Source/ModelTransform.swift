@@ -1,7 +1,7 @@
 import Foundation
 import RealmSwift
 
-public class ModelTransform<T: Object where T:ApiTransformable>: Transform {
+public class ModelTransform<T: Object where T:ApiModel>: Transform {
     public init() {}
 
     public func perform(value: AnyObject?) -> AnyObject? {

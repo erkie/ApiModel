@@ -14,13 +14,13 @@ pod 'APIModel', '~> 0.9.0'
 
 And run `pod install`.
 
-The key part is to implement the `ApiTransformable` protocol.
+The key part is to implement the `ApiModel` protocol.
 
 ```swift
 import RealmSwift
 import ApiModel
 
-class Post: Object, ApiTransformable {
+class Post: Object, ApiModel {
     // Standard Realm boilerplate
     dynamic var id = ""
 	dynamic var title = ""
@@ -92,7 +92,7 @@ class Post: Object, ApiTransformable {
 
 ## Configuring the API
 
-To represent the API itself, you have to create an object of the `API` class. This holds a `ApiConfiguration` object defining the host URL for all requests. After it has been created it can be accessed from the `func api() -> API` singleton function.
+To represent the API itself, you have to create an object of the `ApiManager` class. This holds a `ApiConfiguration` object defining the host URL for all requests. After it has been created it can be accessed from the `func apiManager() -> ApiManager` singleton function.
 
 To set it up:
 
@@ -100,7 +100,7 @@ To set it up:
 // Put this somewhere in your AppDelegate or together with other initialization code
 var apiConfig = ApiConfig(host: "https://service.io/api/v1/")
 
-ApiSingleton.setInstance(API(configuration: apiConfig))
+ApiSingleton.setInstance(ApiManager(configuration: apiConfig))
 ```
 
 If you would like to disable request logging, you can do so by setting `requestLogging` to `false`:
@@ -111,7 +111,7 @@ apiConfig.requestLogging = false
 
 ### Global and Model-local configurations
 
-For the most part an API is consistent across endpoints, however in the real world, conventions usually differ wildly. The global configuration is the one set by calling `ApiSingleton.setInstance(API(configuration: apiConfig))`.
+For the most part an API is consistent across endpoints, however in the real world, conventions usually differ wildly. The global configuration is the one set by calling `ApiSingleton.setInstance(ApiManager(configuration: apiConfig))`.
 
 To have a model-local configuration a model needs to implement the `ApiConfigurable` protocol, which consists of a single method:
 
@@ -131,7 +131,7 @@ static func apiConfig(config: ApiConfig) -> ApiConfig {
 
 ## Interacting with APIs
 
-The base of `ApiModel` is the `ApiForm` wrapper class. This class wraps an `Object` type and takes care of fetching objects, saving objects and dealing with validation errors.
+The base of `ApiModel` is the `Api` wrapper class. This class wraps an `Object` type and takes care of fetching objects, saving objects and dealing with validation errors.
 
 ### Basic REST verbs
 
@@ -139,7 +139,7 @@ The base of `ApiModel` is the `ApiForm` wrapper class. This class wraps an `Obje
 
 ```swift
 // GET call without parameters
-ApiForm<Post>.get("/v1/posts.json") { response in
+Api<Post>.get("/v1/posts.json") { response in
     println("response.isSuccessful: \(response.isSuccessful)")
     println("Response as an array: \(response.array)")
     println("Response as a dictionary: \(response.dictionary)")
@@ -148,23 +148,23 @@ ApiForm<Post>.get("/v1/posts.json") { response in
 
 // Other supported methods:
 
-ApiForm<Post>.get(path, parameters: [String:AnyObject]) { response // ...
-ApiForm<Post>.post(path, parameters: [String:AnyObject]) { response // ...
-ApiForm<Post>.put(path, parameters: [String:AnyObject]) { response // ...
-ApiForm<Post>.delete(path, parameters: [String:AnyObject]) { response // ...
+Api<Post>.get(path, parameters: [String:AnyObject]) { response // ...
+Api<Post>.post(path, parameters: [String:AnyObject]) { response // ...
+Api<Post>.put(path, parameters: [String:AnyObject]) { response // ...
+Api<Post>.delete(path, parameters: [String:AnyObject]) { response // ...
 
 // no parameters
 
-ApiForm<Post>.get(path) { response // ...
-ApiForm<Post>.post(path) { response // ...
-ApiForm<Post>.put(path) { response // ...
-ApiForm<Post>.delete(path) { response // ...
+Api<Post>.get(path) { response // ...
+Api<Post>.post(path) { response // ...
+Api<Post>.put(path) { response // ...
+Api<Post>.delete(path) { response // ...
 
 // You can also pass in custom `ApiConfig` into each of the above mentioned methods:
-ApiForm<Post>.get(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
-ApiForm<Post>.post(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
-ApiForm<Post>.put(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
-ApiForm<Post>.delete(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+Api<Post>.get(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+Api<Post>.post(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+Api<Post>.put(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
+Api<Post>.delete(path, parameters: [String:AnyObject], apiConfig: ApiConfig) { response // ...
 ```
 
 Most of the time you'll want to use the `ActiveRecord`-style verbs `index/show/create/update` for interacting with a REST API, as described below.
@@ -175,7 +175,7 @@ Using the `index` of a REST resource:
 
 `GET /posts.json`
 ```swift
-ApiForm<Post>.findArray { posts in
+Api<Post>.findArray { posts in
     for post in posts {
         println("... \(post.title)")
     }
@@ -186,7 +186,7 @@ Using the `show` of a REST resource:
 
 `GET /user.json`
 ```swift
-ApiForm<User>.find { userResponse in
+Api<User>.find { userResponse in
     if let user = userResponse {
         println("User is: \(user.email)")
     } else {
@@ -203,7 +203,7 @@ post.title = "Hello world - A prologue"
 post.contents = "Hello!"
 post.createdAt = NSDate()
 
-var form = ApiForm<Post>(model: post)
+var form = Api<Post>(model: post)
 form.save { _ in
     if form.hasErrors {
         println("Could not save:")
@@ -216,7 +216,7 @@ form.save { _ in
 }
 ```
 
-`ApiForm` will know that the object is not persisted, since it does not have an `id`  set (or which ever field is defined as `primaryKey` in Realm). So a `POST` request will be made as follows:
+`Api` will know that the object is not persisted, since it does not have an `id`  set (or which ever field is defined as `primaryKey` in Realm). So a `POST` request will be made as follows:
 
 `POST /posts.json`
 ```json
@@ -286,7 +286,7 @@ This takes an object and attempts to convert it into an integer. If that fails, 
 Transforms can be quite complex, and even convert nested models. For example:
 
 ```swift
-class User: Object, ApiTransformable {
+class User: Object, ApiModel {
     dynamic var id = ApiId()
     dynamic var email = ""
     let posts = List<Post>()
@@ -298,7 +298,7 @@ class User: Object, ApiTransformable {
     }
 }
 
-ApiForm<User>.find { response in
+Api<User>.find { response in
     let user = response!.model
 
     println("User: \(user.email)")
@@ -417,7 +417,7 @@ import RealmSwift
 import ApiModel
 import UIKit
 
-class UserAvatar: Object, ApiTransformable, ApiConfigurable {
+class UserAvatar: Object, ApiModel, ApiConfigurable {
   dynamic var userId = ApiId()
   dynamic var url = String() // generated on the server
 
@@ -468,7 +468,7 @@ func upload() {
   userAvatar.userId = "1"
   userAvatar.imageData = UIImageJPEGRepresentation(image, 1)!
 
-  ApiForm(model: userAvatar).save { form in
+  Api(model: userAvatar).save { form in
     if form.hasErrors {
       print("Could not upload file: " + form.errorMessages.joinWithSeparator("\n"))
     } else {

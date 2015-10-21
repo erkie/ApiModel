@@ -1,7 +1,7 @@
 import RealmSwift
 import Alamofire
 
-public enum ApiFormModelStatus {
+public enum ApiModelStatus {
     case None
     case Successful(Int)
     case Unauthorized(Int)
@@ -23,7 +23,7 @@ public enum ApiFormModelStatus {
     }
 }
 
-public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> {
+public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
     public var responseData: [String:AnyObject]?
     public var responseObject: [String:AnyObject]?
     public var responseArray: [AnyObject]?
@@ -41,20 +41,20 @@ public class ApiFormResponse<ModelType:Object where ModelType:ApiTransformable> 
         return true
     }
     
-    public var responseStatus: ApiFormModelStatus {
+    public var responseStatus: ApiModelStatus {
         if let status = rawResponse?.status {
-            return ApiFormModelStatus(statusCode: status)
+            return ApiModelStatus(statusCode: status)
         } else {
             return .None
         }
     }
 }
 
-public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
-    public typealias ResponseCallback = (ApiFormResponse<ModelType>) -> Void
+public class Api<ModelType:Object where ModelType:ApiModel> {
+    public typealias ResponseCallback = (ApiModelResponse<ModelType>) -> Void
     
     public var apiConfig: ApiConfig
-    public var status: ApiFormModelStatus = .None
+    public var status: ApiModelStatus = .None
     public var errors: [String:[String]] = [:]
     public var model: ModelType
     
@@ -87,9 +87,9 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     
     public static func apiConfigForType() -> ApiConfig {
         if let configurable = ModelType.self as? ApiConfigurable.Type {
-            return configurable.apiConfig(api().config.copy())
+            return configurable.apiConfig(apiManager().config.copy())
         } else {
-            return api().config
+            return apiManager().config
         }
     }
     
@@ -99,9 +99,9 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public func updateFromResponse(response: ApiFormResponse<ModelType>) {
+    public func updateFromResponse(response: ApiModelResponse<ModelType>) {
         if let statusCode = response.rawResponse?.status {
-            self.status = ApiFormModelStatus(statusCode: statusCode)
+            self.status = ApiModelStatus(statusCode: statusCode)
         }
         
         if let responseObject = response.responseObject {
@@ -210,7 +210,7 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public func save(callback: (ApiForm) -> Void) {
+    public func save(callback: (Api) -> Void) {
         let parameters: [String: AnyObject] = [
             ModelType.apiNamespace(): model.JSONDictionary()
         ]
@@ -227,11 +227,11 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
         }
     }
     
-    public func destroy(callback: (ApiForm) -> Void) {
+    public func destroy(callback: (Api) -> Void) {
         destroy([:], callback: callback)
     }
     
-    public func destroy(parameters: RequestParameters, callback: (ApiForm) -> Void) {
+    public func destroy(parameters: RequestParameters, callback: (Api) -> Void) {
         self.dynamicType.delete(model.apiRouteWithReplacements(ModelType.apiRoutes().destroy), parameters: parameters) { response in
             self.updateFromResponse(response)
             callback(self)
@@ -239,13 +239,13 @@ public class ApiForm<ModelType:Object where ModelType:ApiTransformable> {
     }
     
     public class func perform(call: ApiCall, apiConfig: ApiConfig, callback: ResponseCallback?) {
-        api().request(
+        apiManager().request(
             call.method,
             path: call.path,
             parameters: call.parameters,
             apiConfig: apiConfig
         ) { data, error in
-            let response = ApiFormResponse<ModelType>()
+            let response = ApiModelResponse<ModelType>()
             response.rawResponse = data
             
             if let errors = self.errorFromResponse(nil, error: error) {

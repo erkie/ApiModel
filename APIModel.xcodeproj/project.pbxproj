@@ -17,7 +17,7 @@
 		033E791C1B7C9F78008E2A4D /* RootNamespaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E791B1B7C9F78008E2A4D /* RootNamespaceTests.swift */; };
 		033E791D1B7C9F78008E2A4D /* ApiModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0366A4831AAF66ED00506F50 /* ApiModel.framework */; };
 		033E79231B7C9FBB008E2A4D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A81AAF82630085F048 /* Utils.swift */; };
-		0370B7A91AAF82630085F048 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7921AAF82630085F048 /* Api.swift */; };
+		0370B7A91AAF82630085F048 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7921AAF82630085F048 /* ApiManager.swift */; };
 		0370B7AA1AAF82630085F048 /* ApiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7931AAF82630085F048 /* ApiCall.swift */; };
 		0370B7AB1AAF82630085F048 /* ApiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7941AAF82630085F048 /* ApiConfig.swift */; };
 		0370B7AC1AAF82630085F048 /* ApiId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7951AAF82630085F048 /* ApiId.swift */; };
@@ -25,7 +25,7 @@
 		0370B7AF1AAF82630085F048 /* ArrayTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7981AAF82630085F048 /* ArrayTransform.swift */; };
 		0370B7B01AAF82630085F048 /* BoolTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7991AAF82630085F048 /* BoolTransform.swift */; };
 		0370B7B21AAF82630085F048 /* IntTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79B1AAF82630085F048 /* IntTransform.swift */; };
-		0370B7B31AAF82630085F048 /* ApiTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79C1AAF82630085F048 /* ApiTransformable.swift */; };
+		0370B7B31AAF82630085F048 /* ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79C1AAF82630085F048 /* ApiModel.swift */; };
 		0370B7B41AAF82630085F048 /* ModelTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79D1AAF82630085F048 /* ModelTransform.swift */; };
 		0370B7B51AAF82630085F048 /* NSDateTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79E1AAF82630085F048 /* NSDateTransform.swift */; };
 		0370B7B61AAF82630085F048 /* PercentageTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B79F1AAF82630085F048 /* PercentageTransform.swift */; };
@@ -67,7 +67,7 @@
 		033E791A1B7C9F78008E2A4D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		033E791B1B7C9F78008E2A4D /* RootNamespaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNamespaceTests.swift; sourceTree = "<group>"; };
 		0366A4831AAF66ED00506F50 /* ApiModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ApiModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0370B7921AAF82630085F048 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
+		0370B7921AAF82630085F048 /* ApiManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
 		0370B7931AAF82630085F048 /* ApiCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiCall.swift; sourceTree = "<group>"; };
 		0370B7941AAF82630085F048 /* ApiConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiConfig.swift; sourceTree = "<group>"; };
 		0370B7951AAF82630085F048 /* ApiId.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiId.swift; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 		0370B7981AAF82630085F048 /* ArrayTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransform.swift; sourceTree = "<group>"; };
 		0370B7991AAF82630085F048 /* BoolTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoolTransform.swift; sourceTree = "<group>"; };
 		0370B79B1AAF82630085F048 /* IntTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntTransform.swift; sourceTree = "<group>"; };
-		0370B79C1AAF82630085F048 /* ApiTransformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiTransformable.swift; sourceTree = "<group>"; };
+		0370B79C1AAF82630085F048 /* ApiModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiModel.swift; sourceTree = "<group>"; };
 		0370B79D1AAF82630085F048 /* ModelTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelTransform.swift; sourceTree = "<group>"; };
 		0370B79E1AAF82630085F048 /* NSDateTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateTransform.swift; sourceTree = "<group>"; };
 		0370B79F1AAF82630085F048 /* PercentageTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PercentageTransform.swift; sourceTree = "<group>"; };
@@ -228,7 +228,8 @@
 		03C60D891AAB5C0100FE99EA /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				0370B7921AAF82630085F048 /* Api.swift */,
+				0370B79C1AAF82630085F048 /* ApiModel.swift */,
+				0370B7921AAF82630085F048 /* ApiManager.swift */,
 				033E23EB1AF6284E00F1C171 /* ApiRequest.swift */,
 				033E23EE1AF628FF00F1C171 /* ApiResponse.swift */,
 				0370B7931AAF82630085F048 /* ApiCall.swift */,
@@ -236,7 +237,6 @@
 				0370B7951AAF82630085F048 /* ApiId.swift */,
 				0370B7961AAF82630085F048 /* ApiForm.swift */,
 				038CAB181B17C21D00440808 /* ApiRoutes.swift */,
-				0370B79C1AAF82630085F048 /* ApiTransformable.swift */,
 				038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */,
 				033DEF1E1B1CDE1D00266453 /* ApiParser.swift */,
 				0370B7A81AAF82630085F048 /* Utils.swift */,
@@ -425,7 +425,7 @@
 				0370B7B41AAF82630085F048 /* ModelTransform.swift in Sources */,
 				0370B7AC1AAF82630085F048 /* ApiId.swift in Sources */,
 				033E23EF1AF628FF00F1C171 /* ApiResponse.swift in Sources */,
-				0370B7B31AAF82630085F048 /* ApiTransformable.swift in Sources */,
+				0370B7B31AAF82630085F048 /* ApiModel.swift in Sources */,
 				6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */,
 				0370B7B21AAF82630085F048 /* IntTransform.swift in Sources */,
 				033E23F91AF62EB600F1C171 /* README.md in Sources */,
@@ -435,7 +435,7 @@
 				033DEF221B1CDEBE00266453 /* JSONParser.swift in Sources */,
 				0370B7BE1AAF82630085F048 /* Transform.swift in Sources */,
 				0326C5161AFB7B79005FC057 /* Pluralize.swift in Sources */,
-				0370B7A91AAF82630085F048 /* Api.swift in Sources */,
+				0370B7A91AAF82630085F048 /* ApiManager.swift in Sources */,
 				0370B7B51AAF82630085F048 /* NSDateTransform.swift in Sources */,
 				0370B7AB1AAF82630085F048 /* ApiConfig.swift in Sources */,
 				038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */,

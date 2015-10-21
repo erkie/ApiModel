@@ -43,18 +43,18 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [Stri
 
 extension Object {
     public func updateFromForm(data: NSDictionary) {
-        let mapping = (self as! ApiTransformable).dynamicType.fromJSONMapping()
+        let mapping = (self as! ApiModel).dynamicType.fromJSONMapping()
         updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
     }
     
     // We need to pass in JSONMapping manually because of problems in Swift
-    // It's impossible to cast Objects to "Object that conforms to ApiTransformable" currently...
+    // It's impossible to cast Objects to "Object that conforms to ApiModel" currently...
     public func updateFromForm(data: NSDictionary, mapping: JSONMapping) {
         updateFromDictionaryWithMapping(data as! [String:AnyObject], mapping: mapping)
     }
     
     public func updateFromDictionary(data: [String:AnyObject]) {
-        let mapping = (self as! ApiTransformable).dynamicType.fromJSONMapping()
+        let mapping = (self as! ApiModel).dynamicType.fromJSONMapping()
         updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping)
     }
     
