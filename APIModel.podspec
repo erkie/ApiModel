@@ -13,12 +13,13 @@ Pod::Spec.new do |s|
 
   s.license = "MIT"
   s.author = { "Erik Rothoff Andersson" => "erik.rothoff@gmail.com" }
-  s.platform = :ios, "8.0"
+  s.ios.deployment_target = '8.0'
+  s.tvos.deployment_target = '9.0'
   s.source = { git: "https://github.com/erkie/ApiModel.git", tag: s.version }
   s.source_files  = "Source/**/*"
 
   s.requires_arc = true
-  s.dependency "Alamofire", "~> 2.0"
+  s.dependency "Alamofire", "~> 3.0"
   s.dependency "SwiftyJSON", "~> 2.3.0"
   s.dependency "RealmSwift", "~> 0.96.1"
 end
