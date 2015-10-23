@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name = "APIModel"
   s.module_name = "ApiModel"
-  s.version = "0.9.0"
+  s.version = "0.10.0"
   s.summary = "Easy API integrations using Realm and Swift"
 
   s.description  = <<-DESC

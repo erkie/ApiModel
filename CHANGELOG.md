@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.10.0
+Breaking changes:
+
+- Rename `API` to `ApiManager`
+- Rename `api()` to `apiManager()`
+- Rename `ApiForm` to `Api`
+- Rename `ApiFormResponse` to `ApiModelResponse`
+- Rename `ApiConfiguration` to `ApiConfig`
+- Upgrade `RealmSwift` to `0.96` which might be breaking for your app. [Please read the Realm blog post for more details](https://realm.io/news/realm-objc-swift-0.96.0-beta/)
+- Upgrade `Alamofire` to `3.0.0` which might require upgrades of your app.
+
+## 0.9.0
+
+(This version was never released to cocoapods.org)
+
+- Implement file uploads. Please se `README.md` for more details.
+
 ## 0.8.3
 - Fix crash caused by SwiftyJSON when running on device
 
