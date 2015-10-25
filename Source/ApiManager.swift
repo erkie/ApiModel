@@ -92,12 +92,12 @@ public class ApiManager {
             encoding: request.encoding,
             headers: request.headers
         )
-        .responseString { _, alamofireResponse, result in
-            response.responseBody = result.value
-            if let error = result.error {
+        .responseString { alamofireResponse in
+            response.responseBody = alamofireResponse.result.value
+            if let error = alamofireResponse.result.error {
                 response.error = ApiResponseError.ServerError(error)
             }
-            response.status = alamofireResponse?.statusCode
+            response.status = alamofireResponse.response?.statusCode
             
             for hook in self.afterRequestHooks {
                 hook(request, response)
