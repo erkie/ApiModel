@@ -9,7 +9,7 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 Add `APIModel` to your `Podfile`, and run `pod install`:
 
 ```ruby
-pod 'APIModel', '~> 0.10.0'
+pod 'APIModel', '~> 0.10.1'
 ```
 
 The key part is to implement the `ApiModel` protocol.
@@ -456,7 +456,7 @@ class UserAvatar: Object, ApiModel, ApiConfigurable {
     return [
       "image": FileUpload(fileName: "avatar.jpg", mimeType: "image/jpg", data: imageData!)
     ]
-  }    
+  }
 }
 
 func upload() {
