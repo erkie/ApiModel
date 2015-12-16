@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1
+
+- Update to `RealmSwift 0.96.3`
+
 ## 0.10.0
 Breaking changes:
 
