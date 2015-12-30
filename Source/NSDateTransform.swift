@@ -11,7 +11,7 @@ public class NSDateTransform: Transform {
         // Rails dates with time and zone
         if let stringValue = value as? String {
             let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
             if let date = dateFormatter.dateFromString("\(stringValue)") {
                 return toLocalTimezone(date)
             }
