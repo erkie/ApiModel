@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.2
+
+- Fixes #22. Code for `rootNamespace` had been broken since a bad rebase. Included tests to verify fix.
+
 ## 0.10.1
 
 - Update to `RealmSwift 0.96.3`
