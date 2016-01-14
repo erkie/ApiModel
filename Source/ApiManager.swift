@@ -67,19 +67,39 @@ public class ApiManager {
         
         performRequest(request) { response in
             parser.parse(response.responseBody ?? "") { parsedResponse in
-                // if response is either nil or NSNull and the request was not 200 it is an error
-                if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isSuccessful {
-                    response.error = ApiResponseError.BadRequest(code: response.status ?? 0)
-                }
+                let (finalResponse, errors) = self.handleResponse(
+                    response,
+                    parsedResponse: parsedResponse,
+                    apiConfig: apiConfig
+                )
                 
-                if response.isInvalid {
-                    response.error = ApiResponseError.InvalidRequest(code: response.status ?? 0)
-                }
-                
-                response.parsedResponse = parsedResponse
-                responseHandler(response, response.error)
+                responseHandler(finalResponse, errors)
             }
         }
+    }
+    
+    public func handleResponse(
+        response: ApiResponse,
+        parsedResponse: AnyObject?,
+        apiConfig: ApiConfig
+    ) -> (ApiResponse?, ApiResponseError?) {
+        // if response is either nil or NSNull and the request was not 200 it is an error
+        if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isSuccessful {
+            response.error = ApiResponseError.BadRequest(code: response.status ?? 0)
+        }
+        
+        if response.isInvalid {
+            response.error = ApiResponseError.InvalidRequest(code: response.status ?? 0)
+        }
+        
+        response.parsedResponse = parsedResponse
+        if let nestedResponse = parsedResponse as? [String:AnyObject] where !apiConfig.rootNamespace.isEmpty {
+            response.parsedResponse = fetchPathFromDictionary(apiConfig.rootNamespace, dictionary: nestedResponse)
+        } else {
+            response.parsedResponse = parsedResponse
+        }
+        
+        return (response, response.error)
     }
     
     func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {

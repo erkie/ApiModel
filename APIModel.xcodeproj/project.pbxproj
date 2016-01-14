@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03088EE91C36B54200F02288 /* ApiManagerRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03088EE81C36B54200F02288 /* ApiManagerRequestTests.swift */; };
 		030C6B361B010BE100F72ECC /* ApiModel.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 030C6B351B010BE100F72ECC /* ApiModel.podspec */; };
 		0326C5161AFB7B79005FC057 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0326C5121AFB7B79005FC057 /* Pluralize.swift */; };
 		033DEF1F1B1CDE1D00266453 /* ApiParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033DEF1E1B1CDE1D00266453 /* ApiParser.swift */; };
@@ -33,12 +34,12 @@
 		0370B7BE1AAF82630085F048 /* Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A71AAF82630085F048 /* Transform.swift */; };
 		0370B7BF1AAF82630085F048 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A81AAF82630085F048 /* Utils.swift */; };
 		0370B7C01AAF82D50085F048 /* Object+JSONDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0370B7A21AAF82630085F048 /* Object+JSONDictionary.swift */; };
-		038436CB1BB691A400DCCCF0 /* FormDataEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CA1BB691A400DCCCF0 /* FormDataEncoding.swift */; settings = {ASSET_TAGS = (); }; };
-		038436CD1BB69D4300DCCCF0 /* ApiConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */; settings = {ASSET_TAGS = (); }; };
+		038436CB1BB691A400DCCCF0 /* FormDataEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CA1BB691A400DCCCF0 /* FormDataEncoding.swift */; };
+		038436CD1BB69D4300DCCCF0 /* ApiConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */; };
 		038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CAB181B17C21D00440808 /* ApiRoutes.swift */; };
-		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; settings = {ASSET_TAGS = (); }; };
-		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; settings = {ASSET_TAGS = (); }; };
-		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; settings = {ASSET_TAGS = (); }; };
+		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; };
+		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; };
+		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; };
 		6D47F25F1AF786C8007DEF9A /* DoubleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D47F25E1AF786C8007DEF9A /* DoubleTransform.swift */; };
 		6DE1A3261AFB6035002CB25E /* Object+ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE1A3251AFB6035002CB25E /* Object+ApiModel.swift */; };
 		BE7938AC4C471E976B2F7384 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB40266BE10F16D08FF30F4 /* Pods.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -55,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03088EE81C36B54200F02288 /* ApiManagerRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiManagerRequestTests.swift; sourceTree = "<group>"; };
 		030C6B351B010BE100F72ECC /* ApiModel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ApiModel.podspec; sourceTree = SOURCE_ROOT; };
 		0326C5121AFB7B79005FC057 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		033DEF1E1B1CDE1D00266453 /* ApiParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiParser.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				033E791B1B7C9F78008E2A4D /* RootNamespaceTests.swift */,
+				03088EE81C36B54200F02288 /* ApiManagerRequestTests.swift */,
 				033E79191B7C9F78008E2A4D /* Supporting Files */,
 			);
 			path = Tests;
@@ -336,7 +339,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */;
+			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -412,6 +415,7 @@
 			files = (
 				033E791C1B7C9F78008E2A4D /* RootNamespaceTests.swift in Sources */,
 				033E79231B7C9FBB008E2A4D /* Utils.swift in Sources */,
+				03088EE91C36B54200F02288 /* ApiManagerRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,7 +725,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */ = {
+		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03C60D871AAB5B9A00FE99EA /* Debug */,
