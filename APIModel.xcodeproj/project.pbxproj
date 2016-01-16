@@ -37,6 +37,7 @@
 		038436CB1BB691A400DCCCF0 /* FormDataEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CA1BB691A400DCCCF0 /* FormDataEncoding.swift */; };
 		038436CD1BB69D4300DCCCF0 /* ApiConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */; };
 		038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CAB181B17C21D00440808 /* ApiRoutes.swift */; };
+		03B4078E1C3BB57000E46AD3 /* NSDateTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */; };
 		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; };
 		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; };
 		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; };
@@ -93,6 +94,7 @@
 		038436CA1BB691A400DCCCF0 /* FormDataEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataEncoding.swift; sourceTree = "<group>"; };
 		038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiConfigurable.swift; sourceTree = "<group>"; };
 		038CAB181B17C21D00440808 /* ApiRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRoutes.swift; sourceTree = "<group>"; };
+		03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateTransformTests.swift; sourceTree = "<group>"; };
 		03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTransform.swift; sourceTree = "<group>"; };
 		03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatTransform.swift; sourceTree = "<group>"; };
 		03E79CEE1BAD5D20001258A2 /* TransformChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformChain.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				2052AD4E1C4850A900C54C6A /* ApiManagerResponseTests.swift */,
 				033E791B1B7C9F78008E2A4D /* RootNamespaceTests.swift */,
 				03088EE81C36B54200F02288 /* ApiManagerRequestTests.swift */,
+				03B4078C1C3BB55F00E46AD3 /* Transforms */,
 				033E79191B7C9F78008E2A4D /* Supporting Files */,
 			);
 			path = Tests;
@@ -231,6 +234,14 @@
 				038436CA1BB691A400DCCCF0 /* FormDataEncoding.swift */,
 			);
 			name = "Parameter Encodings";
+			sourceTree = "<group>";
+		};
+		03B4078C1C3BB55F00E46AD3 /* Transforms */ = {
+			isa = PBXGroup;
+			children = (
+				03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */,
+			);
+			name = Transforms;
 			sourceTree = "<group>";
 		};
 		03C60D821AAB5B9A00FE99EA = {
@@ -370,7 +381,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */;
+			buildConfigurationList = 03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -496,6 +507,7 @@
 				207552BC1C484AD4009D519A /* Post.swift in Sources */,
 				2052AD511C485AB900C54C6A /* ApiFormTests.swift in Sources */,
 				2052AD4F1C4850A900C54C6A /* ApiManagerResponseTests.swift in Sources */,
+				03B4078E1C3BB57000E46AD3 /* NSDateTransformTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -807,7 +819,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "APIModel" */ = {
+		03C60D861AAB5B9A00FE99EA /* Build configuration list for PBXProject "ApiModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03C60D871AAB5B9A00FE99EA /* Debug */,

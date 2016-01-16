@@ -320,6 +320,75 @@ Default transforms are:
 
 However, it is really easy to define your own. Go nuts!
 
+#### NSDateTransform
+
+Date and time parsing is always a bit complex and has a lot of subtle nuances. The `NSDateTransform` takes a string and tries to convert it into an `NSDate` object. If it can't it returns `nil`.
+
+Dates come in plenty of different formats. The default format `ApiModel` and `NSDateTransform` uses is called [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+
+```swift
+class Post: Object, APIModel {
+  class func fromJSONMapping() -> JSONMapping {
+    return [
+      "createdAt": NSDateTransform()
+    ]
+  }
+}
+
+// Example of a valid string:
+// "2015-12-30T12:12:33.000Z"
+```
+
+In the real world you will come across many wildly different date formats and many APIs will have different opinions on how to represent a date. Therefor you can also pass in a custom format string into `NSDateTransform`:
+
+```swift
+class Post: Object, APIModel {
+  class func fromJSONMapping() -> JSONMapping {
+    return [
+      "createdAt": NSDateTransform(dateFormat: "yyyy-MM-dd")
+    ]
+  }
+}
+
+// Example of a valid string:
+// "2015-12-30"
+```
+
+[For a complete reference on date format specifiers, visit the unicode reference.](http://unicode.org/reports/tr35/tr35-6.html#Date_Format_Patterns)
+
+##### A note on time zones
+
+Internally `NSDate` stores the date as seconds from a specific reference date. That means it will not store any information about the time zone, __even if one is provided by the date string__. For example, let's assume this string is returned from the API: `2015-12-30T18:12:33.000-05:00`. `NSDate` only uses the provided offset to offset the resulting time correctly, then it is thrown away.
+
+What you need to do as an app developer is to make sure to always pass in the correct time zone when you wish to display the timestamp. Normally using an `NSDateFormatter`. By default `NSDateFormatter` uses the user time zone, so you should never need to worry about that. Check the following example for reference:
+
+```swift
+let dateString = "2015-12-30T18:12:33.000-05:00"
+
+// Parse as ISO 8601
+let dateFormatter = NSDateFormatter()
+dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+
+let date = dateFormatter.dateFromString(dateString)!
+
+let outputFormatter = NSDateFormatter()
+outputFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+
+// prints "2015-12-30 23:12"
+outputFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+print(outputFormatter.stringFromDate(date))
+
+// prints "2015-12-31 00:12"
+outputFormatter.timeZone = NSTimeZone(abbreviation: "Europe/Stockholm") // +02:00
+print(outputFormatter.stringFromDate(date))
+
+// prints "2015-12-30 18:12"
+outputFormatter.timeZone = NSTimeZone(abbreviation: "EST") // -05:00 SAME AS INPUT
+print(outputFormatter.stringFromDate(date))
+```
+
+Rule of thumb: You should only think about time zones when displaying `NSDate`s.
+
 ## Hooks
 
 `ApiModel` uses [Alamofire](https://github.com/alamofire/alamofire) for sending and receiving requests. To hook into this, the `API` class currently has `before`- and `after`-hooks that you can use to modify or log the requests. An example of sending user credentials with each request:
