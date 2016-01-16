@@ -1,0 +1,13 @@
+{
+    "post": [{
+        "id": "1",
+        "title": "This is a party post",
+        "contents": "Hello!",
+        "created_at": "2015-03-08T14:19:31-01:00"
+    }, {
+        "id": "2",
+        "title": "Hello world - A prologue",
+        "contents": "Hello!",
+        "created_at": "2015-03-08T14:19:31-01:00"
+    }]
+}

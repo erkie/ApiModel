@@ -128,7 +128,7 @@ public class ApiManager {
     }
     
     public func beforeRequest(hook: ((ApiRequest) -> Void)) {
-        beforeRequestHooks.append(hook)
+        beforeRequestHooks.insert(hook, atIndex: 0)
     }
     
     public func afterRequest(hook: ((ApiRequest, ApiResponse) -> Void)) {
