@@ -17,6 +17,7 @@ class NSDateTransformTests: XCTestCase {
     
     override func setUp() {
         calendar.timeZone = utcTimeZone
+        yyyyMMDDDateFormatter.timeZone = utcTimeZone
         yyyyMMDDDateFormatter.dateFormat = "yyyy-MM-dd"
     }
     
@@ -25,6 +26,7 @@ class NSDateTransformTests: XCTestCase {
         let res = transform.perform("2015-12-30T12:12:33.000Z") as? NSDate
         
         let referenceDateCreator = NSDateComponents()
+        referenceDateCreator.timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
@@ -42,6 +44,7 @@ class NSDateTransformTests: XCTestCase {
         let res = transform.perform("2015-12-30T12:12:33.000-05:00") as? NSDate
         
         let referenceDateCreator = NSDateComponents()
+        referenceDateCreator.timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
@@ -59,6 +62,7 @@ class NSDateTransformTests: XCTestCase {
         let res = transform.perform("2015-12-30") as? NSDate
         
         let referenceDateCreator = NSDateComponents()
+        referenceDateCreator.timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
