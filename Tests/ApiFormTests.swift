@@ -39,7 +39,7 @@ class ApiFormTests: XCTestCase {
         OHHTTPStubs.removeAllStubs()
     }
     
-    func testFindArrayWithServerFailure() {
+    func testSimpleFindArray() {
         
         var theResponse: [Post]?
         let readyExpectation = self.expectationWithDescription("ready")
@@ -65,6 +65,114 @@ class ApiFormTests: XCTestCase {
             // By the time we reach this code, the while loop has exited
             // so the response has arrived or the test has timed out
             XCTAssertNotNil(theResponse, "Received data should not be nil")
+        }
+    }
+    
+    func testGetWithServerFailure() {
+        
+        var theResponse: ApiModelResponse<Post>?
+        let readyExpectation = self.expectationWithDescription("ready")
+        
+        
+        stub({_ in true}) { request in
+            return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
+        }
+        
+        Api<Post>.get("/v1/posts.json") { response in
+            theResponse = response
+            
+            XCTAssertEqual(response.errors!, ["base" : ["An unexpected server error occurred"]])
+            
+            readyExpectation.fulfill()
+            OHHTTPStubs.removeAllStubs()
+        }
+
+        self.waitForExpectationsWithTimeout(self.timeout) { err in
+            // By the time we reach this code, the while loop has exited
+            // so the response has arrived or the test has timed out
+            XCTAssertNotNil(theResponse, "Received data should not be nil")
+        }
+    }
+    
+    func testFindArrayWithServerFailure() {
+        
+        var theResponse: [Post]?
+        let readyExpectation = self.expectationWithDescription("ready")
+        
+        
+        stub({_ in true}) { request in
+            return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
+        }
+        
+        Api<Post>.findArray { response in
+            theResponse = response
+            
+            XCTAssertNotNil(response)
+            
+            XCTAssertEqual(response.count, 0)
+            
+            readyExpectation.fulfill()
+            OHHTTPStubs.removeAllStubs()
+        }
+
+        self.waitForExpectationsWithTimeout(self.timeout) { err in
+            // By the time we reach this code, the while loop has exited
+            // so the response has arrived or the test has timed out
+            XCTAssertNotNil(theResponse, "Received data should not be nil")
+        }
+    }
+    
+    func testFindWithServerFailure() {
+        
+        let readyExpectation = self.expectationWithDescription("ready")
+        
+        stub({_ in true}) { request in
+            return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
+        }
+        
+        Api<Post>.find { response in
+
+            XCTAssertNil(response)
+            
+            readyExpectation.fulfill()
+            OHHTTPStubs.removeAllStubs()
+        }
+        
+        self.waitForExpectationsWithTimeout(self.timeout) { err in
+            // By the time we reach this code, the while loop has exited
+            // so the response has arrived or the test has timed out
+            XCTAssertNil(err, "Received data should be nil")
+        }
+    }
+    
+    func testSaveWithModelValidationErrors() {
+        
+        let readyExpectation = self.expectationWithDescription("ready")
+        
+        stub({_ in true}) { request in
+            let stubPath = OHPathForFile("post_with_error.json", self.dynamicType)
+            return fixture(stubPath!, status: 422, headers: ["Content-Type":"application/json"])
+        }
+        
+        let post = Post()
+
+        var form = Api<Post>(model: post)
+        
+        form.save { _ in
+            XCTAssertTrue(form.hasErrors)
+            
+            // But what happened? - the server returned meaningful validations but are lost!
+            XCTAssertEqual(form.errorMessages, ["An unexpected server error occurred"])
+
+            readyExpectation.fulfill()
+            
+            OHHTTPStubs.removeAllStubs()
+        }
+        
+        self.waitForExpectationsWithTimeout(self.timeout) { err in
+            // By the time we reach this code, the while loop has exited
+            // so the response has arrived or the test has timed out
+            XCTAssertNil(err, "Received data should be nil")
         }
     }
 }
