@@ -156,7 +156,7 @@ class ApiFormTests: XCTestCase {
         
         let post = Post()
 
-        var form = Api<Post>(model: post)
+        let form = Api<Post>(model: post)
         
         form.save { _ in
             XCTAssertTrue(form.hasErrors)
