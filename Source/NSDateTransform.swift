@@ -1,4 +1,5 @@
 import Foundation
+import RealmSwift
 
 let standardTimeZone = NSTimeZone(forSecondsFromGMT: 0)
 
@@ -22,7 +23,7 @@ public class NSDateTransform: Transform {
         dateFormatters.insert(userDefinedDateFormatter, atIndex: 0)
     }
     
-    public func perform(value: AnyObject?) -> AnyObject? {
+    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
         if let dateValue = value as? NSDate {
             return dateValue
         }

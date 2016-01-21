@@ -1,9 +1,10 @@
 import Foundation
+import RealmSwift
 
 public class BoolTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?) -> AnyObject? {
+    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
         if let stringValue = value?.stringValue {
             switch stringValue.lowercaseString {
             case "true": return true

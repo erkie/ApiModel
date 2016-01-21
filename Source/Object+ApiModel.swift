@@ -19,24 +19,20 @@ extension Object {
     public var unlocalId: ApiId {
         if isLocal {
             return ""
-        } else if let
-            pk = self.dynamicType.primaryKey(),
-            id = self[pk] as? ApiId {
-                return id
+        } else if let pk = self.dynamicType.primaryKey(),
+            id = convertToApiId(self[pk])
+        {
+            return id
         } else {
             return ""
         }
     }
 
     public func isApiSaved() -> Bool {
-        if let pk = self.dynamicType.primaryKey() {
-            if let idValue = self[pk] as? String {
-                return !idValue.isEmpty
-            } else if let idValue = self[pk] as? Int {
-                return idValue != 0
-            } else {
-                return false
-            }
+        if let pk = self.dynamicType.primaryKey(),
+            let idValue = convertToApiId(self[pk])
+        {
+            return !idValue.isEmpty
         } else {
             return false
         }

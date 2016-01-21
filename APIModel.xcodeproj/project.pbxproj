@@ -38,6 +38,9 @@
 		038436CD1BB69D4300DCCCF0 /* ApiConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */; };
 		038CAB191B17C21D00440808 /* ApiRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CAB181B17C21D00440808 /* ApiRoutes.swift */; };
 		03B4078E1C3BB57000E46AD3 /* NSDateTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */; };
+		03CA2D901C503F51008F0AF1 /* ModelTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CA2D8F1C503F51008F0AF1 /* ModelTransformTests.swift */; };
+		03CA2D931C50469D008F0AF1 /* ArrayTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CA2D921C50469D008F0AF1 /* ArrayTransformTests.swift */; };
+		03CA2D951C50D3DD008F0AF1 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CA2D941C50D3DD008F0AF1 /* Feed.swift */; };
 		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; };
 		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; };
 		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; };
@@ -96,6 +99,9 @@
 		038436CC1BB69D4300DCCCF0 /* ApiConfigurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiConfigurable.swift; sourceTree = "<group>"; };
 		038CAB181B17C21D00440808 /* ApiRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRoutes.swift; sourceTree = "<group>"; };
 		03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateTransformTests.swift; sourceTree = "<group>"; };
+		03CA2D8F1C503F51008F0AF1 /* ModelTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelTransformTests.swift; sourceTree = "<group>"; };
+		03CA2D921C50469D008F0AF1 /* ArrayTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformTests.swift; sourceTree = "<group>"; };
+		03CA2D941C50D3DD008F0AF1 /* Feed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTransform.swift; sourceTree = "<group>"; };
 		03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatTransform.swift; sourceTree = "<group>"; };
 		03E79CEE1BAD5D20001258A2 /* TransformChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformChain.swift; sourceTree = "<group>"; };
@@ -243,6 +249,8 @@
 			isa = PBXGroup;
 			children = (
 				03B4078D1C3BB57000E46AD3 /* NSDateTransformTests.swift */,
+				03CA2D8F1C503F51008F0AF1 /* ModelTransformTests.swift */,
+				03CA2D921C50469D008F0AF1 /* ArrayTransformTests.swift */,
 			);
 			name = Transforms;
 			sourceTree = "<group>";
@@ -288,6 +296,7 @@
 			isa = PBXGroup;
 			children = (
 				207552BB1C484AD4009D519A /* Post.swift */,
+				03CA2D941C50D3DD008F0AF1 /* Feed.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -506,9 +515,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				033E791C1B7C9F78008E2A4D /* RootNamespaceTests.swift in Sources */,
+				03CA2D951C50D3DD008F0AF1 /* Feed.swift in Sources */,
 				033E79231B7C9FBB008E2A4D /* Utils.swift in Sources */,
 				03088EE91C36B54200F02288 /* ApiManagerRequestTests.swift in Sources */,
 				207552BC1C484AD4009D519A /* Post.swift in Sources */,
+				03CA2D931C50469D008F0AF1 /* ArrayTransformTests.swift in Sources */,
+				03CA2D901C503F51008F0AF1 /* ModelTransformTests.swift in Sources */,
 				2052AD511C485AB900C54C6A /* ApiFormTests.swift in Sources */,
 				2052AD4F1C4850A900C54C6A /* ApiManagerResponseTests.swift in Sources */,
 				03B4078E1C3BB57000E46AD3 /* NSDateTransformTests.swift in Sources */,

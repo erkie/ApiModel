@@ -10,7 +10,7 @@ func camelizedString(string: String) -> String {
     return camelCase
 }
 
-func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [String:AnyObject], mapping: JSONMapping) {
+func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [String:AnyObject], mapping: JSONMapping, originRealm: Realm?) {
     for (var key, value) in data {
         key = camelizedString(key)
         
@@ -21,11 +21,11 @@ func updateRealmObjectFromDictionaryWithMapping(realmObject: Object, data: [Stri
                 optionalValue = nil
             }
             
-            let transformedValue = transform.perform(optionalValue)
+            let transformedValue = transform.perform(optionalValue, realm: originRealm)
             
             if let primaryKey = realmObject.dynamicType.primaryKey(),
-                let modelsPrimaryKey = realmObject[primaryKey] as? ApiId,
-                let responsePrimaryKey = transformedValue as? ApiId
+                let modelsPrimaryKey = convertToApiId(realmObject[primaryKey]),
+                let responsePrimaryKey = convertToApiId(transformedValue)
                 where key == primaryKey && !modelsPrimaryKey.isEmpty
             {
                 if modelsPrimaryKey == responsePrimaryKey {
@@ -55,10 +55,10 @@ extension Object {
     
     public func updateFromDictionary(data: [String:AnyObject]) {
         let mapping = (self as! ApiModel).dynamicType.fromJSONMapping()
-        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping)
+        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping, originRealm: realm)
     }
     
     public func updateFromDictionaryWithMapping(data: [String:AnyObject], mapping: JSONMapping) {
-        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping)
+        updateRealmObjectFromDictionaryWithMapping(self, data: data, mapping: mapping, originRealm: realm)
     }
 }

@@ -268,8 +268,10 @@ Transforms are used to convert attributes from JSON responses to rich types. The
 `ApiModel` comes with a host of standard transforms. An example is the `IntTransform`:
 
 ```swift
+import RealmSwift
+
 class IntTransform: Transform {
-    func perform(value: AnyObject?) -> AnyObject {
+    func perform(value: AnyObject?, realm: Realm?) -> AnyObject {
         if let asInt = value?.integerValue {
             return asInt
         } else {

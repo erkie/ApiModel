@@ -1,4 +1,5 @@
 import Foundation
+import RealmSwift
 
 public class DefaultTransform: Transform {
     var defaultValue: AnyObject
@@ -7,7 +8,7 @@ public class DefaultTransform: Transform {
         self.defaultValue = defaultValue
     }
 
-    public func perform(value: AnyObject?) -> AnyObject? {
+    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
         if let value = value {
             return value
         } else {

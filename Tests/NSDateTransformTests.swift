@@ -23,7 +23,7 @@ class NSDateTransformTests: XCTestCase {
     
     func testISO8601WithoutTimezone() {
         let transform = NSDateTransform()
-        let res = transform.perform("2015-12-30T12:12:33.000Z") as? NSDate
+        let res = transform.perform("2015-12-30T12:12:33.000Z", realm: nil) as? NSDate
         
         let referenceDateCreator = NSDateComponents()
         referenceDateCreator.timeZone = utcTimeZone
@@ -41,7 +41,7 @@ class NSDateTransformTests: XCTestCase {
     
     func testISO8601WithTimezone() {
         let transform = NSDateTransform()
-        let res = transform.perform("2015-12-30T12:12:33.000-05:00") as? NSDate
+        let res = transform.perform("2015-12-30T12:12:33.000-05:00", realm: nil) as? NSDate
         
         let referenceDateCreator = NSDateComponents()
         referenceDateCreator.timeZone = utcTimeZone
@@ -59,7 +59,7 @@ class NSDateTransformTests: XCTestCase {
     
     func testUserDefinedDateFormat() {
         let transform = NSDateTransform(dateFormat: "yyyy-MM-dd")
-        let res = transform.perform("2015-12-30") as? NSDate
+        let res = transform.perform("2015-12-30", realm: nil) as? NSDate
         
         let referenceDateCreator = NSDateComponents()
         referenceDateCreator.timeZone = utcTimeZone
@@ -75,7 +75,7 @@ class NSDateTransformTests: XCTestCase {
     
     func testInvalidDate() {
         let transform = NSDateTransform()
-        let res = transform.perform("i am not a date") as? NSDate
+        let res = transform.perform("i am not a date", realm: nil) as? NSDate
         XCTAssertNil(res)
     }
 }

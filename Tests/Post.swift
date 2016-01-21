@@ -15,7 +15,7 @@ class Post: Object, ApiModel {
     dynamic var id = ""
     dynamic var title = ""
     dynamic var contents = ""
-    dynamic lazy var createdAt = NSDate()
+    dynamic var createdAt = NSDate()
     
     override class func primaryKey() -> String {
         return "id"
