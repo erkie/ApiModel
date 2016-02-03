@@ -27,8 +27,6 @@ public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
     public var responseData: [String:AnyObject]?
     public var responseObject: [String:AnyObject]?
     public var responseArray: [AnyObject]?
-    public var object: ModelType?
-    public var array: [ModelType]?
     public var errors: [String:[String]]?
     public var rawResponse: ApiResponse?
     
@@ -47,6 +45,51 @@ public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
         } else {
             return .None
         }
+    }
+    
+    var _object: ModelType?
+    var _parsedObject = false
+    
+    public var object: ModelType? {
+        if _parsedObject {
+            return _object
+        }
+        
+        _parsedObject = true
+        
+        if let responseObject = responseObject {
+            _object = fromApi(responseObject)
+        }
+        
+        return _object
+    }
+    
+    var _array: [ModelType]? = nil
+    var _parsedArray = false
+    
+    public var array: [ModelType]? {
+        if _parsedArray {
+            return _array
+        }
+        _parsedArray = true
+        
+        if let arrayData = responseArray {
+            _array = []
+            
+            for modelData in arrayData {
+                if let modelDictionary = modelData as? [String:AnyObject] {
+                    _array!.append(fromApi(modelDictionary))
+                }
+            }
+        }
+        
+        return _array
+    }
+    
+    func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
+        let newModel = ModelType()
+        newModel.updateFromDictionary(apiResponse)
+        return newModel
     }
 }
 
@@ -113,12 +156,6 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
         if let errors = response.errors {
             self.errors = errors
         }
-    }
-    
-    public class func fromApi(apiResponse: [String:AnyObject]) -> ModelType {
-        let newModel = ModelType()
-        newModel.updateFromDictionary(apiResponse)
-        return newModel
     }
     
     // api-model style methods
@@ -257,20 +294,12 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
                 
                 if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
                     response.responseObject = responseObject
-                    response.object = self.fromApi(responseObject)
                     
                     if let errors = self.errorFromResponse(responseObject, error: error) {
                         response.errors = errors
                     }
                 } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
                     response.responseArray = arrayData
-                    response.array = []
-                    
-                    for modelData in arrayData {
-                        if let modelDictionary = modelData as? [String:AnyObject] {
-                            response.array?.append(self.fromApi(modelDictionary))
-                        }
-                    }
                 }
             }
             

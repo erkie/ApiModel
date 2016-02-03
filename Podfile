@@ -5,8 +5,8 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
 pod 'Alamofire', '~> 3.0.0'
-pod 'Realm', '~> 0.96.3'
-pod 'RealmSwift', '~> 0.96.3'
+pod 'Realm', '~> 0.97.0'
+pod 'RealmSwift', '~> 0.97.0'
 pod 'SwiftyJSON', '~> 2.3.0'
 
 
