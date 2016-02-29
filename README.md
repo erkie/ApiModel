@@ -94,7 +94,7 @@ To represent the API itself, you have to create an object of the `ApiManager` cl
 
 To set it up:
 
-```
+```swift
 // Put this somewhere in your AppDelegate or together with other initialization code
 var apiConfig = ApiConfig(host: "https://service.io/api/v1/")
 
@@ -110,16 +110,15 @@ apiConfig.requestLogging = false
 If you would like ApiModel to use a NSURLSessionConfiguration, you can set it like in the following example:
 
 ```swift
-    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-    configuration.timeoutIntervalForRequest = 15 // shorten default timeout
-    configuration.timeoutIntervalForResource = 15 // shorten default timeout
+let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+configuration.timeoutIntervalForRequest = 15 // shorten default timeout
+configuration.timeoutIntervalForResource = 15 // shorten default timeout
         
-    ApiSingleton.setInstance(ApiManager(config: ApiConfig(host: "http://feed.myapi.com", urlSessionConfig:configuration)))
+ApiSingleton.setInstance(ApiManager(config: ApiConfig(host: "http://feed.myapi.com", urlSessionConfig:configuration)))
 
-    // or
-    //...
-    apiConfig.urlSessionConfig = configuration
-
+// or
+//...
+apiConfig.urlSessionConfig = configuration
 ```
 
 ### Global and Model-local configurations
@@ -140,7 +139,8 @@ Input is the root base configuration and output is the model's own config object
 static func apiConfig(config: ApiConfig) -> ApiConfig {
   config.encoding = ApiRequest.FormDataEncoding
   return config
-}```
+}
+```
 
 ## Interacting with APIs
 
