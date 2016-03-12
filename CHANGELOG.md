@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.0
+
+Dependency upgrade:
+
+- This release bumps Realm to version `0.98.4`, which should not break your app installs.
+
 ## 0.10.2
 
 - Fixes #22. Code for `rootNamespace` had been broken since a bad rebase. Included tests to verify fix.

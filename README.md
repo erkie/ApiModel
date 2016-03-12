@@ -9,7 +9,7 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 Add `APIModel` to your `Podfile`, and run `pod install`:
 
 ```ruby
-pod 'APIModel', '~> 0.10.1'
+pod 'APIModel', '~> 0.11.0'
 ```
 
 The key part is to implement the `ApiModel` protocol.
@@ -113,7 +113,7 @@ If you would like ApiModel to use a NSURLSessionConfiguration, you can set it li
 let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
 configuration.timeoutIntervalForRequest = 15 // shorten default timeout
 configuration.timeoutIntervalForResource = 15 // shorten default timeout
-        
+
 ApiSingleton.setInstance(ApiManager(config: ApiConfig(host: "http://feed.myapi.com", urlSessionConfig:configuration)))
 
 // or
