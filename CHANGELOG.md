@@ -2,6 +2,16 @@
 
 ## 0.11.0
 
+Breaking changes:
+
+- Changed the interface for `Transform`. The `perform`-method now includes a second parameter:
+
+```swift
+func perform(value: AnyObject?, realm: Realm?) -> AnyObject?
+```
+
+This will be the Realm object that will be associated with any newly created objects. For example in `ModelTransform` or `ArrayTransform`.
+
 Dependency upgrade:
 
 - This release bumps Realm to version `0.98.4`, which should not break your app installs.
