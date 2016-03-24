@@ -51,7 +51,8 @@ extension Object {
         modifyStoredObject {}
     }
 
-    public func removeEmpty(fieldsToRemoveIfEmpty: [String], var data: [String:AnyObject]) -> [String:AnyObject] {
+    public func removeEmpty(fieldsToRemoveIfEmpty: [String], data: [String:AnyObject]) -> [String:AnyObject] {
+        var data = data
         for field in fieldsToRemoveIfEmpty {
             if data[field] == nil {
                 data.removeValueForKey(field)
