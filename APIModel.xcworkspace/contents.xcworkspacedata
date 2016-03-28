@@ -2,12 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ApiModel.xcodeproj">
+      location = "group:APIModel.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:APIModel.xcodeproj">
    </FileRef>
 </Workspace>

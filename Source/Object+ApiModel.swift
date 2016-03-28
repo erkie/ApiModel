@@ -74,7 +74,7 @@ extension Object {
             }
 
             let methodName = pieces.removeAtIndex(0)
-            if let value: AnyObject = self[methodName] {
+            if let value = self[methodName] {
                 pathComponents.append(value.description)
             }
         }
