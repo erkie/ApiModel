@@ -3,6 +3,7 @@ import Alamofire
 public class ApiConfig {
     public var host: String = ""
     public var parser: ApiParser = JSONParser()
+    public var builder: Builder = Builder()
     public var encoding: ParameterEncoding = .URL
     public var requestLogging: Bool = true
     public var rootNamespace = ""
@@ -31,6 +32,12 @@ public class ApiConfig {
         self.rootNamespace = apiConfig.rootNamespace
         self.urlSessionConfig = apiConfig.urlSessionConfig
     }
+    
+    public convenience init(builder: Builder) {
+        self.init()
+        self.builder = builder;
+    }
+
     
     public func copy() -> ApiConfig {
         return ApiConfig(apiConfig: self)

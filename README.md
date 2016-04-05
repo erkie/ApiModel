@@ -78,6 +78,7 @@ class Post: Object, ApiModel {
       * [Fetching objects](#fetching-objects)
       * [Storing objects](#storing-objects)
     * [Transforms](#transforms)
+    * [Builders](#builders)
     * [Hooks](#hooks)
     * [URLs](#urls)
     * [Dealing with IDs](#dealing-with-ids)
@@ -280,7 +281,7 @@ form.errorMessages // -> [String]
 
 Transforms are used to convert attributes from JSON responses to rich types. The easiest way to explain is to show a simple transform.
 
-`ApiModel` comes with a host of standard transforms. An example is the `IntTransform`:
+`ApiModel` comes w  ith a host of standard transforms. An example is the `IntTransform`:
 
 ```swift
 import RealmSwift
@@ -405,6 +406,43 @@ print(outputFormatter.stringFromDate(date))
 ```
 
 Rule of thumb: You should only think about time zones when displaying `NSDate`s.
+
+## Builders
+
+Builders are classes that encapsulate the messy work of converting objects into nice and consistent APIModel objects.
+
+```swift
+import APIModel
+
+class MyBuilder: Builder {
+  // You can override different entry points
+  // 1. being for a single object response
+  override func build(data: [String:AnyObject?]) -> AnyObject? {
+    // In builders you have an arsenal of tools to help you map the djungle of APIs
+    // `buildObject` is one (and also an override point) that generates the Realm object itself
+    return buildObject
+  }
+
+  // 2. being for an array response. be careful to always handle nil cases
+  override func build(data: [AnyObject?]) -> AnyObject? {
+    return data.map { datum in
+      if let object = datum as [String:AnyObject?] {
+        return buildObject(object)
+      } else {
+        return nil
+      }
+    }
+  }
+
+  // 3. creation of realm objects
+  override func buildObject(data: [String:AnyObject?]) -> AnyObject? {
+    let post = Post()
+    post.id = data["_ID"]
+    return post
+  }
+}
+
+```
 
 ## Hooks
 

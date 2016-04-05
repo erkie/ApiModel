@@ -29,6 +29,11 @@ public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
     public var responseArray: [AnyObject]?
     public var errors: [String:[String]]?
     public var rawResponse: ApiResponse?
+    var builder: Builder
+
+    init(builder: Builder) {
+        self.builder = builder
+    }
     
     public var isSuccessful: Bool {
         for (_, errorsForKey) in errors ?? [:] {
@@ -282,7 +287,7 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
             parameters: call.parameters,
             apiConfig: apiConfig
         ) { data, error in
-            let response = ApiModelResponse<ModelType>()
+            let response = ApiModelResponse<ModelType>(builder: apiConfig.builder)
             response.rawResponse = data
             
             if let errors = self.errorFromResponse(nil, error: error) {
