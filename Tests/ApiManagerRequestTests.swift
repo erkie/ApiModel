@@ -29,7 +29,7 @@ class ApiManagerRequestTests: XCTestCase {
         let apiRequest = ApiRequest(config: config, method: .GET, path: "/example.json")
         
         let response = ApiResponse(request: apiRequest)
-        let parsedResponse = [
+        let parsedResponse: ApiObject = [
             "post": [
                 "id": "1"
             ]
@@ -43,8 +43,8 @@ class ApiManagerRequestTests: XCTestCase {
         )
         
         // then
-        let responseObject = finalResponse!.parsedResponse as! [String:AnyObject]
-        XCTAssertEqual(responseObject["post"]!["id"], "1")
+        let responseObject = finalResponse!.parsedResponse
+        XCTAssertEqual(responseObject?["post"]["id"].stringValue, "1")
     }
 
     func testSimpleRootNamespace() {
@@ -57,7 +57,7 @@ class ApiManagerRequestTests: XCTestCase {
         let apiRequest = ApiRequest(config: config, method: .GET, path: "/example.json")
         
         let response = ApiResponse(request: apiRequest)
-        let parsedResponse = [
+        let parsedResponse: ApiObject = [
             "data": [
                 "post": [
                     "id": "1"
@@ -73,8 +73,8 @@ class ApiManagerRequestTests: XCTestCase {
         )
         
         // then
-        let responseObject = finalResponse!.parsedResponse as! [String:AnyObject]
-        XCTAssertEqual(responseObject["id"] as? String, "1")
+        let responseObject = finalResponse!.parsedResponse
+        XCTAssertEqual(responseObject?["id"].stringValue, "1")
     }
 
 }

@@ -45,6 +45,7 @@
 		03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */; };
 		03E79CED1BAD5CE9001258A2 /* FloatTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */; };
 		03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E79CEE1BAD5D20001258A2 /* TransformChain.swift */; };
+		03E7F6531CB55F7400CF3560 /* ApiObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E7F6521CB55F7400CF3560 /* ApiObject.swift */; };
 		201EF9A17EC7785246D41D4C /* Pods_ApiModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7687DC70C47878D10BC3D8BC /* Pods_ApiModel.framework */; };
 		2052AD4F1C4850A900C54C6A /* ApiManagerResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2052AD4E1C4850A900C54C6A /* ApiManagerResponseTests.swift */; };
 		2052AD511C485AB900C54C6A /* ApiFormTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2052AD501C485AB900C54C6A /* ApiFormTests.swift */; };
@@ -108,6 +109,7 @@
 		03E79CEA1BAD5CE9001258A2 /* DefaultTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTransform.swift; sourceTree = "<group>"; };
 		03E79CEB1BAD5CE9001258A2 /* FloatTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatTransform.swift; sourceTree = "<group>"; };
 		03E79CEE1BAD5D20001258A2 /* TransformChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransformChain.swift; sourceTree = "<group>"; };
+		03E7F6521CB55F7400CF3560 /* ApiObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiObject.swift; sourceTree = "<group>"; };
 		16971884E004B5FA04204239 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		2052AD4E1C4850A900C54C6A /* ApiManagerResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiManagerResponseTests.swift; sourceTree = "<group>"; };
 		2052AD501C485AB900C54C6A /* ApiFormTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiFormTests.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				0370B7921AAF82630085F048 /* ApiManager.swift */,
 				033E23EB1AF6284E00F1C171 /* ApiRequest.swift */,
 				033E23EE1AF628FF00F1C171 /* ApiResponse.swift */,
+				03E7F6521CB55F7400CF3560 /* ApiObject.swift */,
 				0370B7931AAF82630085F048 /* ApiCall.swift */,
 				0370B7941AAF82630085F048 /* ApiConfig.swift */,
 				0370B7951AAF82630085F048 /* ApiId.swift */,
@@ -563,6 +566,7 @@
 				0321573C1CB45D1C0020E869 /* Builder.swift in Sources */,
 				038436CB1BB691A400DCCCF0 /* FormDataEncoding.swift in Sources */,
 				0370B7AD1AAF82630085F048 /* ApiForm.swift in Sources */,
+				03E7F6531CB55F7400CF3560 /* ApiObject.swift in Sources */,
 				033E23EC1AF6284E00F1C171 /* ApiRequest.swift in Sources */,
 				03E79CEC1BAD5CE9001258A2 /* DefaultTransform.swift in Sources */,
 				03E79CEF1BAD5D20001258A2 /* TransformChain.swift in Sources */,

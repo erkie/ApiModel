@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol ApiParser {
-    func parse(responseString: String, completionHandler: (AnyObject?) -> Void)
+    func parse(responseString: String, completionHandler: (ApiObject) -> Void)
 }

@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 
 public class JSONParser: ApiParser {
-    public func parse(responseString: String, completionHandler: (AnyObject?) -> Void) {
+    public func parse(responseString: String, completionHandler: (ApiObject) -> Void) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             
             var responseJSON: JSON
@@ -25,7 +25,7 @@ public class JSONParser: ApiParser {
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                completionHandler(responseJSON.dictionaryObject ?? responseJSON.arrayObject ?? NSNull())
+                completionHandler(responseJSON)
             })
         })
     }

@@ -84,7 +84,12 @@ class ApiManagerResponseTests: XCTestCase {
         Api<Post>.get("/v1/posts.json") { response in
             
             XCTAssertEqual(response.rawResponse!.status!, 500, "A response should have a status of 500")
-            XCTAssertEqual(String(response.rawResponse!.error!),"BadRequest(500)")
+            
+            if let error = response.rawResponse?.error {
+                XCTAssertEqual(String(error), "BadRequest(500)")
+            } else {
+                XCTAssert(false);
+            }
             
             theResponse = response
             

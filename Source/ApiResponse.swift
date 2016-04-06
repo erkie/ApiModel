@@ -30,7 +30,7 @@ public class ApiResponse {
     public var responseBody: String?
     public var error: ApiResponseError?
     public var status: Int?
-    public var parsedResponse: AnyObject?
+    public var parsedResponse: ApiObject?
     
     public var isSuccessful: Bool {
         if let status = status {

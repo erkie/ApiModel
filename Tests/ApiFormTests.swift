@@ -81,7 +81,11 @@ class ApiFormTests: XCTestCase {
         Api<Post>.get("/v1/posts.json") { response in
             theResponse = response
             
-            XCTAssertEqual(response.errors!, ["base" : ["An unexpected server error occurred"]])
+            if let errors = response.errors {
+                XCTAssertEqual(errors, ["base" : ["An unexpected server error occurred"]])
+            } else {
+                XCTAssert(false)
+            }
             
             readyExpectation.fulfill()
             OHHTTPStubs.removeAllStubs()

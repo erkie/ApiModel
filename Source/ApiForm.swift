@@ -24,7 +24,7 @@ public enum ApiModelStatus {
 }
 
 public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
-    public var responseData: [String:AnyObject]?
+    public var responseData: ApiObject?
     public var responseObject: [String:AnyObject]?
     public var responseArray: [AnyObject]?
     public var errors: [String:[String]]?
@@ -294,17 +294,19 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
                 response.errors = errors
             }
             
-            if let data: AnyObject = data?.parsedResponse {
-                response.responseData = data as? [String:AnyObject]
+            if let data = data?.parsedResponse {
+                response.responseData = data
                 
-                if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseObject = responseObject
+                let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace)
+                
+                if let dictionaryObject = responseObject.dictionaryObject {
+                    response.responseObject = dictionaryObject
                     
                     if let errors = self.errorFromResponse(responseObject, error: error) {
                         response.errors = errors
                     }
-                } else if let arrayData = self.arrayFromResponseForNamespace(data, namespace: call.namespace) {
-                    response.responseArray = arrayData
+                } else if let arrayObject = responseObject.arrayObject {
+                    response.responseArray = arrayObject
                 }
             }
             
@@ -312,18 +314,20 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
         }
     }
     
-    private class func objectFromResponseForNamespace(data: AnyObject, namespace: String) -> [String:AnyObject]? {
-        return (data[namespace] as? [String:AnyObject]) ?? (data[namespace.pluralize()] as? [String:AnyObject])
+    private class func objectFromResponseForNamespace(data: ApiObject, namespace: String) -> ApiObject {
+        if data[namespace].isExists() {
+            return data[namespace]
+        } else if data[namespace.pluralize()].isExists() {
+            return data[namespace.pluralize()]
+        } else {
+            return nil as ApiObject
+        }
     }
     
-    private class func arrayFromResponseForNamespace(data: AnyObject, namespace: String) -> [AnyObject]? {
-        return (data[namespace] as? [AnyObject]) ?? (data[namespace.pluralize()] as? [AnyObject])
-    }
-    
-    private class func errorFromResponse(response: [String:AnyObject]?, error: ApiResponseError?) -> [String:[String]]? {
-        if let errors = response?["errors"] as? [String:[String]] {
+    private class func errorFromResponse(response: ApiObject, error: ApiResponseError?) -> [String:[String]]? {
+        if let errors = response["errors"].dictionaryObject as? [String:[String]] {
             return errors
-        } else if let errors = response?["errors"] as? [String] {
+        } else if let errors = response["errors"].arrayObject as? [String] {
             return ["base": errors]
         } else if error != nil {
             return ["base": ["An unexpected server error occurred"]]
