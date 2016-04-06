@@ -9,23 +9,16 @@
 import XCTest
 import ApiModel
 import OHHTTPStubs
+import SwiftyJSON
 
 class BuilderTests: XCTestCase {
     
     class IdRenameBuilder: Builder {
-        override func build(data: [String:AnyObject?]) -> AnyObject? {
-            return buildObject([
-                "id": data["_ID"] ?? nil,
-                "title": data["object.member.TITLE"] ?? nil
+        override func build(data: JSON) -> JSON {
+            return JSON(object: [
+                "id": data["_ID"].string,
+                "title": data["object.member.TITLE"].string
             ])
-        }
-        
-        override func buildObject(data: [String : AnyObject?]) -> AnyObject? {
-            let post = Post()
-            for (key, value) in data {
-                post[key] = value
-            }
-            return post
         }
     }
     
@@ -38,37 +31,40 @@ class BuilderTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        
+        stub({_ in true}) { request in
+            let data = self.wonkyStringApiResponse.dataUsingEncoding(NSUTF8StringEncoding)!
+            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: [:])
+        }
     }
     
     override func tearDown() {
+        OHHTTPStubs.removeAllStubs()
+        
         super.tearDown()
     }
 
     func testSimpleCustomBuilder() {
         let idBuilder = IdRenameBuilder()
         
-        let post = idBuilder.build(wonkyApiResponse) as! Post
+        let post = idBuilder.build(JSON(object: wonkyApiResponse))
             
-        XCTAssertEqual(post.id, "1")
-        XCTAssertEqual(post.title, "hello world")
+        XCTAssertEqual(post["id"].string, "1")
+        XCTAssertEqual(post["title"].string, "hello world")
     }
     
     func testIntegrationSimpleCustomBuilder() {
         let readyExpectation = self.expectationWithDescription("ready")
         
-        stub({_ in true}) { request in
-            let data = self.wonkyStringApiResponse.dataUsingEncoding(NSUTF8StringEncoding)!
-            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: [:])
-        }
-        
         Api<Post>.get("/post-id", parameters: [:]) { response in
-            let post = response.object!
+            let post = response.object
             
-            XCTAssertEqual(post.id, "1")
-            XCTAssertEqual(post.title, "hello world")
+            XCTAssertNotNil(post)
+            
+            XCTAssertEqual(post?.id, "1")
+            XCTAssertEqual(post?.title, "hello world")
             
             readyExpectation.fulfill()
-            OHHTTPStubs.removeAllStubs()
         }
         
         waitForExpectationsWithTimeout(1000) { err in

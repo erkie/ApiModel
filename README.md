@@ -415,30 +415,11 @@ Builders are classes that encapsulate the messy work of converting objects into 
 import APIModel
 
 class MyBuilder: Builder {
-  // You can override different entry points
-  // 1. being for a single object response
-  override func build(data: [String:AnyObject?]) -> AnyObject? {
+  override func build(data: JSON) -> JSON? {
     // In builders you have an arsenal of tools to help you map the djungle of APIs
-    // `buildObject` is one (and also an override point) that generates the Realm object itself
+    // ... convertKeys
+    // ... iterateValues
     return buildObject
-  }
-
-  // 2. being for an array response. be careful to always handle nil cases
-  override func build(data: [AnyObject?]) -> AnyObject? {
-    return data.map { datum in
-      if let object = datum as [String:AnyObject?] {
-        return buildObject(object)
-      } else {
-        return nil
-      }
-    }
-  }
-
-  // 3. creation of realm objects
-  override func buildObject(data: [String:AnyObject?]) -> AnyObject? {
-    let post = Post()
-    post.id = data["_ID"]
-    return post
   }
 }
 
