@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.0
+
+Breaking changes:
+
+- Update to Realm 1.0.0 🎈🎈🎈
+
 ## 0.11.0
 
 Breaking changes:
