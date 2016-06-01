@@ -21,8 +21,8 @@ class ArrayTransformTests: XCTestCase {
     }
     
     override func tearDown() {
-        if let path = realm.configuration.path {
-            try! NSFileManager.defaultManager().removeItemAtPath(path)
+        if let fileURL = realm.configuration.fileURL {
+            try! NSFileManager.defaultManager().removeItemAtURL(fileURL)
         }
     }
     

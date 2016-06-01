@@ -5,8 +5,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
 def realm_dep
-  pod 'RealmSwift', '~> 0.98.6'
-
+  pod 'RealmSwift', '~> 1.0.0'
 end
 
 target :ApiModel do
