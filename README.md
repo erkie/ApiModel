@@ -9,7 +9,7 @@ This project is very much inspired by [@idlefingers'](https://github.com/idlefin
 Add `APIModel` to your `Podfile`, and run `pod install`:
 
 ```ruby
-pod 'APIModel', '~> 0.12.0'
+pod 'APIModel', '~> 0.13.0'
 ```
 
 The key part is to implement the `ApiModel` protocol.
@@ -188,7 +188,7 @@ Using the `index` of a REST resource:
 
 `GET /posts.json`
 ```swift
-Api<Post>.findArray { posts in
+Api<Post>.findArray { posts, response in
     for post in posts {
         println("... \(post.title)")
     }
@@ -199,8 +199,8 @@ Using the `show` of a REST resource:
 
 `GET /user.json`
 ```swift
-Api<User>.find { userResponse in
-    if let user = userResponse {
+Api<User>.find { user, response in
+    if let user = user {
         println("User is: \(user.email)")
     } else {
         println("Error loading user")
@@ -313,9 +313,7 @@ class User: Object, ApiModel {
     }
 }
 
-Api<User>.find { response in
-    let user = response!.model
-
+Api<User>.find { user, response in
     println("User: \(user.email)")
     for post in user.posts {
         println("\(post.title)")

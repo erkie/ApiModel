@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.13.0
+
+Breaking changes:
+
+- Change Rails-style callback methods to include the response `ApiModelResponse` instance in the callback parameters. This affects:
+  - Api.find
+  - Api.findArray
+  - Api.update
+  - Api.create
+
+This makes it possible to get the error messages from the request, but also lets the caller know more about the request.
+
+For example, with the new parameters:
+
+### New way
+
+```swift
+Api<Post>.find { post, response in
+  if let post = post {
+    print("Got post \(post.title)")
+  } else if let errors = response.errorMessages {
+    print("got errors: \(errors.join("\n"))")
+  }
+}
+```
+
+### Old way
+
+```swift
+Api<Post>.find { post in
+  if let post = post {
+    print("Got post \(post.title)")
+  } else {
+    print("error?")
+  }
+}
+```
+
 ## 0.12.0
 
 Breaking changes:
