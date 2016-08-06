@@ -130,10 +130,10 @@ class ApiFormTests: XCTestCase {
             return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
         }
         
-        Api<Post>.find { response, error in
+        Api<Post>.find { post, response in
 
-            XCTAssertEqual("An unexpected server error occurred", error?.messages?.first ?? "")
-            XCTAssertNil(response)
+            XCTAssertEqual("An unexpected server error occurred", response.errorMessages?.first ?? "")
+            XCTAssertNil(post)
             
             readyExpectation.fulfill()
             OHHTTPStubs.removeAllStubs()
@@ -155,10 +155,10 @@ class ApiFormTests: XCTestCase {
             return OHHTTPStubsResponse(data:"{\"post\": {\"errors\": [\"Something went wrong!\"]}}".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
         }
         
-        Api<Post>.find { response, error in
+        Api<Post>.find { post, response in
             
-            XCTAssertEqual("Something went wrong!", error?.messages?.first ?? "")
-            XCTAssertNotNil(response)
+            XCTAssertEqual("Something went wrong!", response.errorMessages?.first ?? "")
+            XCTAssertNotNil(post)
             
             readyExpectation.fulfill()
             OHHTTPStubs.removeAllStubs()

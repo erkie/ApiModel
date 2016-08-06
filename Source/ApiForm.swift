@@ -59,14 +59,6 @@ public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
         }
     }
     
-    public var responseError: ApiError? {
-        if isSuccessful {
-            return nil
-        } else {
-            return ApiError(status: responseStatus, messages: errorMessages)
-        }
-    }
-    
     var _object: ModelType?
     var _parsedObject = false
     
@@ -110,21 +102,6 @@ public class ApiModelResponse<ModelType:Object where ModelType:ApiModel> {
         let newModel = ModelType()
         newModel.updateFromDictionary(apiResponse)
         return newModel
-    }
-}
-
-public class ApiError {
-    public var status: ApiModelStatus
-    public var messages: [String]?
-    
-    init(status: ApiModelStatus, messages: [String]?) {
-        self.status = status
-        self.messages = messages
-    }
-    
-    init(status: ApiModelStatus) {
-        self.status = status
-        self.messages = nil
     }
 }
 
@@ -254,31 +231,31 @@ public class Api<ModelType:Object where ModelType:ApiModel> {
     
     // active record (rails) style methods
     
-    public class func find(callback: (ModelType?, ApiError?) -> Void) {
+    public class func find(callback: (ModelType?, ApiModelResponse<ModelType>) -> Void) {
         get(ModelType.apiRoutes().index) { response in
-            callback(response.object, response.responseError)
+            callback(response.object, response)
         }
     }
     
-    public class func findArray(callback: ([ModelType], ApiError?) -> Void) {
+    public class func findArray(callback: ([ModelType], ApiModelResponse<ModelType>) -> Void) {
         findArray(ModelType.apiRoutes().index, callback: callback)
     }
     
-    public class func findArray(path: String, callback: ([ModelType], ApiError?) -> Void) {
+    public class func findArray(path: String, callback: ([ModelType], ApiModelResponse<ModelType>) -> Void) {
         get(path) { response in
-            callback(response.array ?? [], response.responseError)
+            callback(response.array ?? [], response)
         }
     }
     
-    public class func create(parameters: RequestParameters, callback: (ModelType?, ApiError?) -> Void) {
+    public class func create(parameters: RequestParameters, callback: (ModelType?, ApiModelResponse<ModelType>) -> Void) {
         post(ModelType.apiRoutes().create, parameters: parameters) { response in
-            callback(response.object, response.responseError)
+            callback(response.object, response)
         }
     }
     
-    public class func update(parameters: RequestParameters, callback: (ModelType?, ApiError?) -> Void) {
+    public class func update(parameters: RequestParameters, callback: (ModelType?, ApiModelResponse<ModelType>) -> Void) {
         put(ModelType.apiRoutes().update, parameters: parameters) { response in
-            callback(response.object, response.responseError)
+            callback(response.object, response)
         }
     }
     
