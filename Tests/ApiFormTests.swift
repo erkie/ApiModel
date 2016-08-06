@@ -49,7 +49,7 @@ class ApiFormTests: XCTestCase {
             return fixture(stubPath!, headers: ["Content-Type":"application/json"])
         }
         
-        Api<Post>.findArray { response in
+        Api<Post>.findArray { response, _ in
             theResponse = response
             
             XCTAssertEqual(response.count, 2)
@@ -104,7 +104,7 @@ class ApiFormTests: XCTestCase {
             return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
         }
         
-        Api<Post>.findArray { response in
+        Api<Post>.findArray { response, _ in
             theResponse = response
             
             XCTAssertNotNil(response)
@@ -130,9 +130,35 @@ class ApiFormTests: XCTestCase {
             return OHHTTPStubsResponse(data:"Something went wrong!".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
         }
         
-        Api<Post>.find { response in
+        Api<Post>.find { response, error in
 
+            XCTAssertEqual("An unexpected server error occurred", error?.messages?.first ?? "")
             XCTAssertNil(response)
+            
+            readyExpectation.fulfill()
+            OHHTTPStubs.removeAllStubs()
+        }
+        
+        self.waitForExpectationsWithTimeout(self.timeout) { err in
+            // By the time we reach this code, the while loop has exited
+            // so the response has arrived or the test has timed out
+            XCTAssertNil(err, "Received data should be nil")
+        }
+    }
+    
+    
+    func testFindWithServerFailureWithErrorMessage() {
+        
+        let readyExpectation = self.expectationWithDescription("ready")
+        
+        stub({_ in true}) { request in
+            return OHHTTPStubsResponse(data:"{\"post\": {\"errors\": [\"Something went wrong!\"]}}".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
+        }
+        
+        Api<Post>.find { response, error in
+            
+            XCTAssertEqual("Something went wrong!", error?.messages?.first ?? "")
+            XCTAssertNotNil(response)
             
             readyExpectation.fulfill()
             OHHTTPStubs.removeAllStubs()
