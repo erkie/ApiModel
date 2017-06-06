@@ -139,7 +139,7 @@ class ApiFormTests: XCTestCase {
             OHHTTPStubs.removeAllStubs()
         }
         
-        self.waitForExpectationsWithTimeout(self.timeout) { err in
+        self.waitForExpectations(timeout: self.timeout) { err in
             // By the time we reach this code, the while loop has exited
             // so the response has arrived or the test has timed out
             XCTAssertNil(err, "Received data should be nil")
@@ -149,10 +149,10 @@ class ApiFormTests: XCTestCase {
     
     func testFindWithServerFailureWithErrorMessage() {
         
-        let readyExpectation = self.expectationWithDescription("ready")
+        let readyExpectation = self.expectation(description: "ready")
         
-        stub({_ in true}) { request in
-            return OHHTTPStubsResponse(data:"{\"post\": {\"errors\": [\"Something went wrong!\"]}}".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 500, headers: nil)
+        stub(condition: {_ in true}) { request in
+            return OHHTTPStubsResponse(data:"{\"post\": {\"errors\": [\"Something went wrong!\"]}}".data(using: String.Encoding.utf8)!, statusCode: 500, headers: nil)
         }
         
         Api<Post>.find { post, response in
