@@ -114,8 +114,8 @@ open class ApiManager {
         let response = ApiResponse(request: request)
         
         self.alamoFireManager.request(
-    
             request.url,
+            method: request.method,
             parameters: request.parameters,
             encoding: request.encoding,
             headers: request.headers

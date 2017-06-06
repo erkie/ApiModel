@@ -89,7 +89,7 @@ open class ApiModelResponse<ModelType:Object> where ModelType:ApiModel {
             _array = []
             
             for modelData in arrayData {
-                if let modelDictionary = modelData as? [String:AnyObject] {
+                if let modelDictionary = modelData as? [String:Any] {
                     _array!.append(fromApi(modelDictionary))
                 }
             }
@@ -150,7 +150,7 @@ open class Api<ModelType:Object> where ModelType:ApiModel {
     
     open func updateFromForm(_ formParameters: NSDictionary) {
         model.modifyStoredObject {
-            self.model.updateFromDictionary(formParameters as! [String:AnyObject])
+            self.model.updateFromDictionary(formParameters as! [String:Any])
         }
     }
     
@@ -260,8 +260,8 @@ open class Api<ModelType:Object> where ModelType:ApiModel {
     }
     
     open func save(_ callback: @escaping (Api) -> Void) {
-        let parameters: [String: AnyObject] = [
-            ModelType.apiNamespace(): model.JSONDictionary() as AnyObject
+        let parameters: [String: Any] = [
+            ModelType.apiNamespace(): model.JSONDictionary() as Any
         ]
         
         let responseCallback: ResponseCallback = { response in
@@ -270,9 +270,9 @@ open class Api<ModelType:Object> where ModelType:ApiModel {
         }
         
         if model.isApiSaved() {
-            type(of: self).put(model.apiRouteWithReplacements(ModelType.apiRoutes().update), parameters: parameters, callback: responseCallback)
+            type(of: self).put(model.apiRouteWithReplacements(ModelType.apiRoutes().update), parameters: parameters as RequestParameters, callback: responseCallback)
         } else {
-            type(of: self).post(model.apiRouteWithReplacements(ModelType.apiRoutes().create), parameters: parameters, callback: responseCallback)
+            type(of: self).post(model.apiRouteWithReplacements(ModelType.apiRoutes().create), parameters: parameters as RequestParameters, callback: responseCallback)
         }
     }
     
@@ -302,7 +302,7 @@ open class Api<ModelType:Object> where ModelType:ApiModel {
             }
             
             if let data: Any = data?.parsedResponse {
-                response.responseData = data as? [String:AnyObject]
+                response.responseData = data as? [String:Any]
                 
                 if let responseObject = self.objectFromResponseForNamespace(data, namespace: call.namespace) {
                     response.responseObject = responseObject

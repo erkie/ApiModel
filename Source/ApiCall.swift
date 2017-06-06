@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public typealias RequestParameters = [String:AnyObject]
+public typealias RequestParameters = [String:Any]
 
 open class ApiCall {
     open var method: Alamofire.HTTPMethod
