@@ -1,25 +1,25 @@
 import Alamofire
 
-public class ApiRequest {
-    public var config: ApiConfig
-    public var method: Alamofire.Method
-    public var path: String
-    public var parameters: [String:AnyObject] = [:]
-    public var headers: [String:String] = [:]
-    public var userInfo: [String:AnyObject] = [:]
+open class ApiRequest {
+    open var config: ApiConfig
+    open var method: Alamofire.HTTPMethod
+    open var path: String
+    open var parameters: [String:Any] = [:]
+    open var headers: [String:String] = [:]
+    open var userInfo: [String:Any] = [:]
     
-    public var encoding: ParameterEncoding {
+    open var encoding: ParameterEncoding {
         return config.encoding
     }
     
-    public init(config: ApiConfig, method: Alamofire.Method, path: String) {
+    public init(config: ApiConfig, method: Alamofire.HTTPMethod, path: String) {
         self.config = config
         self.method = method
         self.path = path
     }
     
-    public var url: String {
-        if NSURL(string: path)?.scheme.isEmpty ?? true {
+    open var url: String {
+        if NSURL(string: path)?.scheme?.isEmpty ?? true {
             return config.host + path
         } else {
             return path

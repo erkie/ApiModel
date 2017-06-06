@@ -10,7 +10,7 @@ import UIKit
 import XCTest
 
 class RootNamespaceTests: XCTestCase {
-    let nestedObject = [
+    let nestedObject: [String:Any] = [
         "foo": [
             "bar": [
                 "baz": [
@@ -20,10 +20,10 @@ class RootNamespaceTests: XCTestCase {
         ]
     ]
     
-    let notNested = ["foo": 43]
-    let singleNesting = ["foo": ["bar": 44]]
+    let notNested: [String:Any] = ["foo": 43]
+    let singleNesting: [String:Any] = ["foo": ["bar": 44]]
     
-    let nestedButNotDictionary = [
+    let nestedButNotDictionary: [String:Any] = [
         "foo": [
             "bar": [1, 2, 3]
         ]

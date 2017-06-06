@@ -15,7 +15,7 @@ class Post: Object, ApiModel {
     dynamic var id = ""
     dynamic var title = ""
     dynamic var contents = ""
-    dynamic var createdAt = NSDate()
+    dynamic var createdAt: Date? = Date()
     
     override class func primaryKey() -> String {
         return "id"
@@ -42,17 +42,17 @@ class Post: Object, ApiModel {
             "id": ApiIdTransform(),
             "title": StringTransform(),
             "contents": StringTransform(),
-            "createdAt": NSDateTransform()
+            "createdAt": DateTransform()
         ]
     }
     
     // Define how this object is to be serialized back into a server response format
-    func JSONDictionary() -> [String:AnyObject] {
+    func JSONDictionary() -> [String:Any] {
         return [
-            "id": id,
-            "title": title,
-            "contents": contents,
-            "created_at": createdAt
+            "id": id as AnyObject,
+            "title": title as AnyObject,
+            "contents": contents as AnyObject,
+            "created_at": createdAt as AnyObject
         ]
     }
 }

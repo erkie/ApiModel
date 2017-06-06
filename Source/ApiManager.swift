@@ -1,47 +1,47 @@
 import Foundation
 import Alamofire
 
-public class ApiManager {
-    public var config: ApiConfig
+open class ApiManager {
+    open var config: ApiConfig
     
-    public var beforeRequestHooks: [((ApiRequest) -> Void)] = []
-    public var afterRequestHooks: [((ApiRequest, ApiResponse) -> Void)] = []
+    open var beforeRequestHooks: [((ApiRequest) -> Void)] = []
+    open var afterRequestHooks: [((ApiRequest, ApiResponse) -> Void)] = []
     
-    private var alamoFireManager : Alamofire.Manager
+    fileprivate var alamoFireManager : Alamofire.SessionManager
     
     public init(config: ApiConfig) {
         self.config = config
         
         if let sessionConfig = config.urlSessionConfig {
-            self.alamoFireManager = Alamofire.Manager(configuration: sessionConfig)
+            self.alamoFireManager = Alamofire.SessionManager(configuration: sessionConfig)
         }else{
-            self.alamoFireManager = Alamofire.Manager()
+            self.alamoFireManager = Alamofire.SessionManager.default
         }
         
         beforeRequest { request in
             if self.config.requestLogging {
-                request.userInfo["requestStartedAt"] = NSDate()
+                request.userInfo["requestStartedAt"] = Date() as Any?
                 
-                print("ApiModel: \(request.method.rawValue) \(request.path) with headers: \(request.headers)")
+                print("ApiModel: \(request.method) \(request.path) with headers: \(request.headers)")
             }
         }
         
         afterRequest { request, response in
             if self.config.requestLogging {
                 let duration: String
-                if let requestStartedAt = request.userInfo["requestStartedAt"] as? NSDate {
-                    let formatter = NSNumberFormatter()
+                if let requestStartedAt = request.userInfo["requestStartedAt"] as? Date {
+                    let formatter = NumberFormatter()
                     formatter.minimumFractionDigits = 2
                     formatter.maximumFractionDigits = 2
                     formatter.minimumIntegerDigits = 1
                     
-                    let requestDuration = NSDate().timeIntervalSinceDate(requestStartedAt)
-                    duration = formatter.stringFromNumber(requestDuration) ?? "\(requestDuration)"
+                    let requestDuration = Date().timeIntervalSince(requestStartedAt)
+                    duration = formatter.string(from: requestDuration as NSNumber) ?? "\(requestDuration)"
                 } else {
                     duration = "?"
                 }
                 
-                print("ApiModel: \(request.method.rawValue) \(request.path) finished in \(duration) seconds with status \(response.status ?? 0)")
+                print("ApiModel: \(request.method) \(request.path) finished in \(duration) seconds with status \(response.status ?? 0)")
                 
                 if let error = response.error {
                     print("... Error \(error.description())")
@@ -50,13 +50,13 @@ public class ApiManager {
         }
     }
     
-    public func request(
-        method: Alamofire.Method,
+    open func request(
+        _ method: Alamofire.HTTPMethod,
         path: String,
-        parameters: [String: AnyObject] = [:],
+        parameters: [String: Any] = [:],
         headers: [String: String] = [:],
         apiConfig: ApiConfig,
-        responseHandler: (ApiResponse?, ApiResponseError?) -> Void
+        responseHandler: @escaping (ApiResponse?, ApiResponseError?) -> Void
     ) {
         let parser = apiConfig.parser
         
@@ -86,22 +86,22 @@ public class ApiManager {
         }
     }
     
-    public func handleResponse(
-        response: ApiResponse,
-        parsedResponse: AnyObject?,
+    open func handleResponse(
+        _ response: ApiResponse,
+        parsedResponse: Any?,
         apiConfig: ApiConfig
     ) -> (ApiResponse?, ApiResponseError?) {
         // if response is either nil or NSNull and the request was not 200 it is an error
         if (parsedResponse == nil || (parsedResponse as? NSNull) != nil) && !response.isSuccessful {
-            response.error = ApiResponseError.BadRequest(code: response.status ?? 0)
+            response.error = ApiResponseError.badRequest(code: response.status ?? 0)
         }
         
         if response.isInvalid {
-            response.error = ApiResponseError.InvalidRequest(code: response.status ?? 0)
+            response.error = ApiResponseError.invalidRequest(code: response.status ?? 0)
         }
         
         response.parsedResponse = parsedResponse
-        if let nestedResponse = parsedResponse as? [String:AnyObject] where !apiConfig.rootNamespace.isEmpty {
+        if let nestedResponse = parsedResponse as? [String:Any], !apiConfig.rootNamespace.isEmpty {
             response.parsedResponse = fetchPathFromDictionary(apiConfig.rootNamespace, dictionary: nestedResponse)
         } else {
             response.parsedResponse = parsedResponse
@@ -110,11 +110,11 @@ public class ApiManager {
         return (response, response.error)
     }
     
-    func performRequest(request: ApiRequest, responseHandler: (ApiResponse) -> Void) {
+    func performRequest(_ request: ApiRequest, responseHandler: @escaping (ApiResponse) -> Void) {
         let response = ApiResponse(request: request)
         
         self.alamoFireManager.request(
-            request.method,
+    
             request.url,
             parameters: request.parameters,
             encoding: request.encoding,
@@ -123,7 +123,7 @@ public class ApiManager {
         .responseString { alamofireResponse in
             response.responseBody = alamofireResponse.result.value
             if let error = alamofireResponse.result.error {
-                response.error = ApiResponseError.ServerError(error)
+                response.error = ApiResponseError.serverError(error)
             }
             response.status = alamofireResponse.response?.statusCode
             
@@ -135,11 +135,11 @@ public class ApiManager {
         }
     }
     
-    public func beforeRequest(hook: ((ApiRequest) -> Void)) {
-        beforeRequestHooks.insert(hook, atIndex: 0)
+    open func beforeRequest(_ hook: @escaping ((ApiRequest) -> Void)) {
+        beforeRequestHooks.insert(hook, at: 0)
     }
     
-    public func afterRequest(hook: ((ApiRequest, ApiResponse) -> Void)) {
+    open func afterRequest(_ hook: @escaping ((ApiRequest, ApiResponse) -> Void)) {
         afterRequestHooks.append(hook)
     }
 }
@@ -147,7 +147,7 @@ public class ApiManager {
 public struct ApiSingleton {
     static var instance: ApiManager = ApiManager(config: ApiConfig())
     
-    public static func setInstance(apiInstance: ApiManager) {
+    public static func setInstance(_ apiInstance: ApiManager) {
         instance = apiInstance
     }
 }

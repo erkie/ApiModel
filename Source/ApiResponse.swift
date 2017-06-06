@@ -1,23 +1,23 @@
 import Foundation
 
-public enum ApiResponseError: ErrorType {
-    case None
-    case ParseError
-    case BadRequest(code: Int)
-    case InvalidRequest(code: Int)
-    case ServerError(ErrorType)
+public enum ApiResponseError: Error {
+    case none
+    case parseError
+    case badRequest(code: Int)
+    case invalidRequest(code: Int)
+    case serverError(Error)
     
     func description() -> String {
         switch self {
-        case .None:
+        case .none:
             return ""
-        case .ParseError:
+        case .parseError:
             return "An error occurred when parsing the response"
-        case .BadRequest(let code):
+        case .badRequest(let code):
             return "Bad request according from server. HTTP Code: \(code)"
-        case .InvalidRequest(let code):
+        case .invalidRequest(let code):
             return "Server could not parse request. HTTP Code: \(code)"
-        case .ServerError(let res):
+        case .serverError(let res):
             let err = (res as NSError).description
             return "A server error occurred. \(err)"
         }
@@ -25,14 +25,14 @@ public enum ApiResponseError: ErrorType {
     }
 }
 
-public class ApiResponse {
-    public var request: ApiRequest
-    public var responseBody: String?
-    public var error: ApiResponseError?
-    public var status: Int?
-    public var parsedResponse: AnyObject?
+open class ApiResponse {
+    open var request: ApiRequest
+    open var responseBody: String?
+    open var error: ApiResponseError?
+    open var status: Int?
+    open var parsedResponse: Any?
     
-    public var isSuccessful: Bool {
+    open var isSuccessful: Bool {
         if let status = status {
             return status >= 200 && status <= 299
         } else {
@@ -40,7 +40,7 @@ public class ApiResponse {
         }
     }
     
-    public var isInvalid: Bool {
+    open var isInvalid: Bool {
         if let status = status {
             return status >= 400 && status <= 499
         } else {

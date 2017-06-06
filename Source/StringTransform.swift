@@ -1,15 +1,15 @@
 import Foundation
 import RealmSwift
 
-public class StringTransform: Transform {
+open class StringTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
         if value is String {
             return value!
         } else if let intValue = value as? Int {
             return String(intValue)
-        } else if let stringValue = value?.stringValue {
+        } else if let stringValue = (value as AnyObject?)?.stringValue {
             return stringValue
         } else {
             return ""

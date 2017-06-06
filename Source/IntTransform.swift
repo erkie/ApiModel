@@ -1,11 +1,11 @@
 import Foundation
 import RealmSwift
 
-public class IntTransform: Transform {
+open class IntTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
-        if let asInt = value?.integerValue {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
+        if let asInt = (value as AnyObject).int64Value {
             return asInt
         } else {
             return 0

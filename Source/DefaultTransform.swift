@@ -1,14 +1,14 @@
 import Foundation
 import RealmSwift
 
-public class DefaultTransform: Transform {
-    var defaultValue: AnyObject
+open class DefaultTransform: Transform {
+    var defaultValue: Any
 
-    public init(defaultValue: AnyObject) {
+    public init(defaultValue: Any) {
         self.defaultValue = defaultValue
     }
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
         if let value = value {
             return value
         } else {

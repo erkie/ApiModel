@@ -22,7 +22,7 @@ class ModelTransformTests: XCTestCase {
     
     override func tearDown() {
         if let fileURL = realm.configuration.fileURL {
-            try! NSFileManager.defaultManager().removeItemAtURL(fileURL)
+            try! FileManager.default.removeItem(at: fileURL)
         }
     }
     
@@ -30,7 +30,7 @@ class ModelTransformTests: XCTestCase {
         let response = [
             "id": 1,
             "title": "Taking over the world"
-        ]
+        ] as [String : Any]
         
         let post = postTransform.perform(response, realm: nil) as? Post
         

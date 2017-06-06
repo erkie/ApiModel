@@ -1,14 +1,14 @@
 import Foundation
 import RealmSwift
 
-public class TransformChain: Transform {
-    public var transforms: [Transform] = []
+open class TransformChain: Transform {
+    open var transforms: [Transform] = []
 
     public init(transforms: Transform...) {
         self.transforms = transforms
     }
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
         return transforms.reduce(value!) { $1.perform($0, realm: realm) }
     }
 }

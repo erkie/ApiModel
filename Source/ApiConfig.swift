@@ -1,17 +1,17 @@
 import Alamofire
 
-public class ApiConfig {
-    public var host: String = ""
-    public var parser: ApiParser = JSONParser()
-    public var encoding: ParameterEncoding = .URL
-    public var requestLogging: Bool = true
-    public var rootNamespace = ""
-    public var urlSessionConfig: NSURLSessionConfiguration?
+open class ApiConfig {
+    open var host: String = ""
+    open var parser: ApiParser = JSONParser()
+    open var encoding: ParameterEncoding = URLEncoding.default
+    open var requestLogging: Bool = true
+    open var rootNamespace = ""
+    open var urlSessionConfig: URLSessionConfiguration?
     
     public required init() {
     }
     
-    public convenience init(host: String, urlSessionConfig: NSURLSessionConfiguration) {
+    public convenience init(host: String, urlSessionConfig: URLSessionConfiguration) {
         self.init()
         self.host = host
         self.urlSessionConfig = urlSessionConfig
@@ -32,7 +32,7 @@ public class ApiConfig {
         self.urlSessionConfig = apiConfig.urlSessionConfig
     }
     
-    public func copy() -> ApiConfig {
+    open func copy() -> ApiConfig {
         return ApiConfig(apiConfig: self)
     }
 }

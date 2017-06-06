@@ -22,7 +22,7 @@ class ArrayTransformTests: XCTestCase {
     
     override func tearDown() {
         if let fileURL = realm.configuration.fileURL {
-            try! NSFileManager.defaultManager().removeItemAtURL(fileURL)
+            try! FileManager.default.removeItem(at: fileURL)
         }
     }
     
@@ -56,7 +56,7 @@ class ArrayTransformTests: XCTestCase {
             ],
             
             "This api sucks"
-        ]
+        ] as [Any]
         
         let posts = postsTransform.perform(response, realm: nil) as? [Post]
         
@@ -167,7 +167,7 @@ class ArrayTransformTests: XCTestCase {
                     "title": "World hello hello"
                 ]
             ]
-        ]
+        ] as [String : Any]
         
         let feedTransform = ModelTransform<Feed>()
     

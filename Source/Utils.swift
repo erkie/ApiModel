@@ -2,7 +2,7 @@ import Foundation
 import RealmSwift
 import SwiftyJSON
 
-public func toArray<T: Object>(realmArray: List<T>) -> [T] {
+public func toArray<T: Object>(_ realmArray: List<T>) -> [T] {
     var retArray: [T] = []
     for obj in realmArray {
         retArray.append(obj)
@@ -10,7 +10,7 @@ public func toArray<T: Object>(realmArray: List<T>) -> [T] {
     return retArray
 }
 
-public func toArray<T: Object>(realmResult: Results<T>) -> [T] {
+public func toArray<T: Object>(_ realmResult: Results<T>) -> [T] {
     var retArray: [T] = []
     for obj in realmResult {
         retArray.append(obj)
@@ -19,18 +19,18 @@ public func toArray<T: Object>(realmResult: Results<T>) -> [T] {
 }
 
 // Traverse a nested dictionary using dot-notation path
-public func fetchPathFromDictionary(namespace: String, dictionary: [String:AnyObject]) -> AnyObject? {
-    var pieces = namespace.componentsSeparatedByString(".")
+public func fetchPathFromDictionary(_ namespace: String, dictionary: [String:Any]) -> Any? {
+    var pieces = namespace.components(separatedBy: ".")
     
-    var current: [String:AnyObject] = dictionary
+    var current: [String:Any] = dictionary
     
     while !pieces.isEmpty {
-        let piece = pieces.removeAtIndex(0)
+        let piece = pieces.remove(at: 0)
         if pieces.isEmpty {
             return current[piece]
         }
         
-        if let nextDictionary = current[piece] as? [String:AnyObject] {
+        if let nextDictionary = current[piece] as? [String:Any] {
             current = nextDictionary
         } else {
             return nil

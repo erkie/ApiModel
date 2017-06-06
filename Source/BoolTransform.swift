@@ -1,12 +1,12 @@
 import Foundation
 import RealmSwift
 
-public class BoolTransform: Transform {
+open class BoolTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
-        if let stringValue = value?.stringValue {
-            switch stringValue.lowercaseString {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
+        if let stringValue = (value as AnyObject?)?.stringValue {
+            switch stringValue.lowercased() {
             case "true": return true
             case "1": return true
             case "false": return false
@@ -15,18 +15,18 @@ public class BoolTransform: Transform {
             }
         }
 
-        if let integerValue = value?.integerValue {
+        if let integerValue = (value as AnyObject?)?.int64Value {
             if integerValue == 0 {
-                return false
+                return false as AnyObject
             } else {
-                return true
+                return true as AnyObject
             }
         }
 
         if value == nil {
-            return false
+            return false as AnyObject
         }
 
-        return true
+        return true as AnyObject
     }
 }

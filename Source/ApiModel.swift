@@ -6,5 +6,5 @@ public protocol ApiModel {
     static func apiNamespace() -> String
     static func apiRoutes() -> ApiRoutes
     static func fromJSONMapping() -> JSONMapping
-    func JSONDictionary() -> [String:AnyObject]
+    func JSONDictionary() -> [String:Any]
 }

@@ -1,14 +1,14 @@
 import Foundation
 import RealmSwift
 
-let standardTimeZone = NSTimeZone(forSecondsFromGMT: 0)
+let standardTimeZone = TimeZone(secondsFromGMT: 0)
 
-public class NSDateTransform: Transform {
-    var dateFormatters: [NSDateFormatter] = []
+open class DateTransform: Transform {
+    var dateFormatters: [DateFormatter] = []
     
     public init() {
         // ISO 8601 dates with time and zone
-        let iso8601Formatter = NSDateFormatter()
+        let iso8601Formatter = DateFormatter()
         iso8601Formatter.timeZone = standardTimeZone
         iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
@@ -16,21 +16,21 @@ public class NSDateTransform: Transform {
     }
     
     public init(dateFormat: String) {
-        let userDefinedDateFormatter = NSDateFormatter()
+        let userDefinedDateFormatter = DateFormatter()
         userDefinedDateFormatter.timeZone = standardTimeZone
         userDefinedDateFormatter.dateFormat = dateFormat
         
-        dateFormatters.insert(userDefinedDateFormatter, atIndex: 0)
+        dateFormatters.insert(userDefinedDateFormatter, at: 0)
     }
     
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
-        if let dateValue = value as? NSDate {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
+        if let dateValue = value as? Date {
             return dateValue
         }
 
         if let stringValue = value as? String {
             for formatter in dateFormatters {
-                if let date = formatter.dateFromString(stringValue) {
+                if let date = formatter.date(from: stringValue) {
                     return date
                 }
             }

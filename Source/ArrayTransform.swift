@@ -1,18 +1,18 @@
 import Foundation
 import RealmSwift
 
-public class ArrayTransform<T: Object where T:ApiModel>: Transform {
+open class ArrayTransform<T: Object>: Transform where T:ApiModel {
     let nestedModelTransform = ModelTransform<T>()
     
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
         var models: [T] = []
         
-        if let values = value as? [AnyObject] {
+        if let values = value as? [Any] {
             for value in values {
-                if let nestedData = value as? [String:AnyObject],
-                    let model = nestedModelTransform.perform(nestedData, realm: realm) as? T
+                if let nestedData = value as? [String:Any],
+                    let model = nestedModelTransform.perform(nestedData as AnyObject, realm: realm) as? T
                 {
                     models.append(model)
                 }

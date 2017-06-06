@@ -1,11 +1,11 @@
 import Foundation
 import RealmSwift
 
-public class FloatTransform: Transform {
+open class FloatTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
-        if let asFloat = value?.floatValue {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
+        if let asFloat = (value as AnyObject?)?.floatValue {
             return asFloat
         } else {
             return 0
