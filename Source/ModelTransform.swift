@@ -1,17 +1,17 @@
 import Foundation
 import RealmSwift
 
-public class ModelTransform<T: Object where T:ApiModel>: Transform {
+open class ModelTransform<T: Object>: Transform where T:ApiModel {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
-        if let value = value as? [String:AnyObject] {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
+        if let value = value as? [String:Any] {
             let model: T
             
             if let pk = T.primaryKey(),
                 let pkValue = convertToApiId(value[pk]),
                 let realm = realm,
-                let alreadyPersistedModel = realm.objectForPrimaryKey(T.self, key: pkValue)
+                let alreadyPersistedModel = realm.object(ofType: T.self, forPrimaryKey: pkValue as Any)
             {
                 model = alreadyPersistedModel
             } else {

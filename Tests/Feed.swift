@@ -37,10 +37,10 @@ class Feed: Object, ApiModel {
     }
     
     // Define how this object is to be serialized back into a server response format
-    func JSONDictionary() -> [String:AnyObject] {
+    func JSONDictionary() -> [String:Any] {
         return [
-            "id": id,
-            "title": title,
+            "id": id as AnyObject,
+            "title": title as AnyObject,
             "posts": posts.map { $0.JSONDictionary() }
         ]
     }

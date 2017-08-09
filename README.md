@@ -55,7 +55,7 @@ class Post: Object, ApiModel {
     }
 
     // Define how this object is to be serialized back into a server response format
-    func JSONDictionary() -> [String:AnyObject] {
+    func JSONDictionary() -> [String:Any] {
         return [
             "id": id,
             "title": email,
@@ -536,7 +536,7 @@ class UserAvatar: Object, ApiModel, ApiConfigurable {
     ]
   }
 
-  func JSONDictionary() -> [String:AnyObject] {
+  func JSONDictionary() -> [String:Any] {
     return [
       "image": FileUpload(fileName: "avatar.jpg", mimeType: "image/jpg", data: imageData!)
     ]

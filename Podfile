@@ -1,25 +1,24 @@
-platform :ios, '8.0'
+platform :ios, '10.0'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
 use_frameworks!
 
 def realm_dep
-  pod 'RealmSwift', '~> 1.0.0'
+  pod 'RealmSwift', '~> 2.4.3'
 end
 
 target :ApiModel do
   realm_dep
 
-  pod 'Alamofire', '~> 3.0.0'
-  pod 'SwiftyJSON', '~> 2.3.0'
+  pod 'Alamofire', '~> 4.4'
+  pod 'SwiftyJSON', '~> 3.1'
 end
 
 target :Tests do
   realm_dep
 
-  pod 'Alamofire', '~> 3.0.0'
-  pod 'SwiftyJSON', '~> 2.3.0'
-  pod 'OHHTTPStubs'
-  pod 'OHHTTPStubs/Swift'
+  pod 'Alamofire', '~> 4.4'
+  pod 'SwiftyJSON', '~> 3.1'
+  pod 'OHHTTPStubs/Swift', '~> 6.0.0'
 end

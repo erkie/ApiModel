@@ -1,32 +1,32 @@
 import Foundation
 
 public enum ApiRoutesAction {
-    case Index
-    case Show
-    case Create
-    case Update
-    case Destroy
+    case index
+    case show
+    case create
+    case update
+    case destroy
 }
 
 
-public class ApiRoutes {
-    public var index: String
-    public var show: String
-    public var create: String
+open class ApiRoutes {
+    open var index: String
+    open var show: String
+    open var create: String
     
-    public var update: String {
+    open var update: String {
         get {
             return show
         }
     }
 
-    public var destroy: String {
+    open var destroy: String {
         get {
             return show
         }
     }
 
-    public class func resource(resourcePath: String) -> ApiRoutes {
+    open class func resource(_ resourcePath: String) -> ApiRoutes {
         return ApiRoutes(index: resourcePath, show: resourcePath)
     }
 
@@ -44,17 +44,17 @@ public class ApiRoutes {
         self.init(index: "NO RESOURCE DEFINED", show: "NO RESOURCE DEFINED", create: "NO RESOURCE DEFINED")
     }
     
-    public func getAction(resourceAction: ApiRoutesAction) -> String {
+    open func getAction(_ resourceAction: ApiRoutesAction) -> String {
         switch resourceAction {
-        case .Index:
+        case .index:
             return index
-        case .Create:
+        case .create:
             return create
-        case .Show:
+        case .show:
             return show
-        case .Update:
+        case .update:
             return update
-        case .Destroy:
+        case .destroy:
             return destroy
         }
     }

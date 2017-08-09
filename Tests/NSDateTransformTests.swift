@@ -11,9 +11,9 @@ import ApiModel
 
 class NSDateTransformTests: XCTestCase {
     
-    let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
-    let utcTimeZone = NSTimeZone(name: "Etc/UTC")!
-    let yyyyMMDDDateFormatter = NSDateFormatter()
+    var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+    let utcTimeZone = TimeZone(identifier: "Etc/UTC")!
+    let yyyyMMDDDateFormatter = DateFormatter()
     
     override func setUp() {
         calendar.timeZone = utcTimeZone
@@ -22,11 +22,11 @@ class NSDateTransformTests: XCTestCase {
     }
     
     func testISO8601WithoutTimezone() {
-        let transform = NSDateTransform()
-        let res = transform.perform("2015-12-30T12:12:33.000Z", realm: nil) as? NSDate
+        let transform = DateTransform()
+        let res = transform.perform("2015-12-30T12:12:33.000Z", realm: nil) as? Date
         
-        let referenceDateCreator = NSDateComponents()
-        referenceDateCreator.timeZone = utcTimeZone
+        var referenceDateCreator = DateComponents()
+        (referenceDateCreator as NSDateComponents).timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
@@ -34,17 +34,17 @@ class NSDateTransformTests: XCTestCase {
         referenceDateCreator.minute = 12
         referenceDateCreator.second = 33
         
-        let referenceDate = calendar.dateFromComponents(referenceDateCreator)
+        let referenceDate = calendar.date(from: referenceDateCreator)
         
         XCTAssertEqualWithAccuracy(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
     }
     
     func testISO8601WithTimezone() {
-        let transform = NSDateTransform()
-        let res = transform.perform("2015-12-30T12:12:33.000-05:00", realm: nil) as? NSDate
+        let transform = DateTransform()
+        let res = transform.perform("2015-12-30T12:12:33.000-05:00", realm: nil) as? Date
         
-        let referenceDateCreator = NSDateComponents()
-        referenceDateCreator.timeZone = utcTimeZone
+        var referenceDateCreator = DateComponents()
+        (referenceDateCreator as NSDateComponents).timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
@@ -52,30 +52,30 @@ class NSDateTransformTests: XCTestCase {
         referenceDateCreator.minute = 12
         referenceDateCreator.second = 33
         
-        let referenceDate = calendar.dateFromComponents(referenceDateCreator)
+        let referenceDate = calendar.date(from: referenceDateCreator)
         
         XCTAssertEqualWithAccuracy(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
     }
     
     func testUserDefinedDateFormat() {
-        let transform = NSDateTransform(dateFormat: "yyyy-MM-dd")
-        let res = transform.perform("2015-12-30", realm: nil) as? NSDate
+        let transform = DateTransform(dateFormat: "yyyy-MM-dd")
+        let res = transform.perform("2015-12-30", realm: nil) as? Date
         
-        let referenceDateCreator = NSDateComponents()
-        referenceDateCreator.timeZone = utcTimeZone
+        var referenceDateCreator = DateComponents()
+        (referenceDateCreator as NSDateComponents).timeZone = utcTimeZone
         referenceDateCreator.year = 2015
         referenceDateCreator.month = 12
         referenceDateCreator.day = 30
         
-        let referenceDate = calendar.dateFromComponents(referenceDateCreator)
+        let referenceDate = calendar.date(from: referenceDateCreator)
         
-        XCTAssertEqual(yyyyMMDDDateFormatter.stringFromDate(res!), yyyyMMDDDateFormatter.stringFromDate(referenceDate!))
+        XCTAssertEqual(yyyyMMDDDateFormatter.string(from: res!), yyyyMMDDDateFormatter.string(from: referenceDate!))
     }
     
     
     func testInvalidDate() {
-        let transform = NSDateTransform()
-        let res = transform.perform("i am not a date", realm: nil) as? NSDate
+        let transform = DateTransform()
+        let res = transform.perform("i am not a date", realm: nil) as? Date
         XCTAssertNil(res)
     }
 }

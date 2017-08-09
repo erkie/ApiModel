@@ -1,15 +1,15 @@
 import Foundation
 import RealmSwift
 
-public class PercentageTransform: Transform {
+open class PercentageTransform: Transform {
     public init() {}
 
-    public func perform(value: AnyObject?, realm: Realm?) -> AnyObject? {
+    open func perform(_ value: Any?, realm: Realm?) -> Any? {
         if let intValue = value as? Int {
-            return Float(intValue) / 100.0
+            return Float(intValue) / Float(100.0)
         }
         if let stringValue = value as? String {
-            return (stringValue as NSString).floatValue / 100.0
+            return (stringValue as NSString).floatValue / Float(100.0)
         }
         return nil
     }

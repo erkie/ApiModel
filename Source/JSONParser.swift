@@ -9,23 +9,29 @@
 import Foundation
 import SwiftyJSON
 
-public class JSONParser: ApiParser {
-    public func parse(responseString: String, completionHandler: (AnyObject?) -> Void) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+open class JSONParser: ApiParser {
+    open func parse(_ responseString: String, completionHandler: @escaping (AnyObject?) -> Void) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: {
             
             var responseJSON: JSON
             if responseString.isEmpty {
                 responseJSON = JSON.null
             } else {
-                if let data = (responseString as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
+                if let data = (responseString as NSString).data(using: String.Encoding.utf8.rawValue) {
                     responseJSON = SwiftyJSON.JSON(data: data)
                 } else {
                     responseJSON = JSON.null
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
-                completionHandler(responseJSON.dictionaryObject ?? responseJSON.arrayObject ?? NSNull())
+            DispatchQueue.main.async(execute: {
+                if let dictionary = responseJSON.dictionaryObject {
+                    completionHandler(dictionary as AnyObject?)
+                } else if let array = responseJSON.arrayObject {
+                    completionHandler(array as AnyObject?)
+                } else {
+                    completionHandler(nil)
+                }
             })
         })
     }
