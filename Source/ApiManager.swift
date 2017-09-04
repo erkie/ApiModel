@@ -22,7 +22,7 @@ open class ApiManager {
             if self.config.requestLogging {
                 request.userInfo["requestStartedAt"] = Date() as Any?
                 
-                print("ApiModel: \(request.method) \(request.path) with headers: \(request.headers)")
+                print("ApiModel: \(request.method) \(request.path)")
             }
         }
         
