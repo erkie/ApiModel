@@ -145,7 +145,7 @@ open class ApiManager {
 }
 
 public struct ApiSingleton {
-    static var instance: ApiManager = ApiManager(config: ApiConfig())
+    public static var instance: ApiManager = ApiManager(config: ApiConfig())
     
     public static func setInstance(_ apiInstance: ApiManager) {
         instance = apiInstance
