@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.0
+
+Arbitrarily bump version to 1.0.0. API is stable and it doesn't make sense to have it in production and still be on the `0.X` versioning scheme.
+
+- Upgrade to Swift 4.2
+- Upgrade to Alamofire 4.7
+- Upgrade to SwiftyJSON 4.2
+- Upgrade to RealmSwift 3.13
+
+## 0.14.0
+
+- Upgrade to Swift 4.0
+- Upgrade to RealmSwift 3.0.1
+- Upgrade to Alamofire 4.5
+- Don't log headers by default since it might contain sensitive information
+
 ## 0.13.0
 
 Breaking changes:
