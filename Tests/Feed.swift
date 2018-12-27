@@ -12,8 +12,8 @@ import ApiModel
 
 // A test model for nested models
 class Feed: Object, ApiModel {
-    dynamic var id = ""
-    dynamic var title = ""
+    @objc dynamic var id = ""
+    @objc dynamic var title = ""
     let posts = List<Post>()
     
     override class func primaryKey() -> String {

@@ -140,7 +140,7 @@ open class Api<ModelType:Object> where ModelType:ApiModel {
         self.init(model: model, apiConfig: type(of: self).apiConfigForType())
     }
     
-    open static func apiConfigForType() -> ApiConfig {
+    public static func apiConfigForType() -> ApiConfig {
         if let configurable = ModelType.self as? ApiConfigurable.Type {
             return configurable.apiConfig(apiManager().config.copy())
         } else {

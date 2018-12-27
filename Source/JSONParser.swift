@@ -18,7 +18,11 @@ open class JSONParser: ApiParser {
                 responseJSON = JSON.null
             } else {
                 if let data = (responseString as NSString).data(using: String.Encoding.utf8.rawValue) {
-                    responseJSON = SwiftyJSON.JSON(data: data)
+                    do {
+                        responseJSON = try SwiftyJSON.JSON(data: data)
+                    } catch {
+                        responseJSON = JSON.null
+                    }
                 } else {
                     responseJSON = JSON.null
                 }

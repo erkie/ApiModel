@@ -36,7 +36,7 @@ class NSDateTransformTests: XCTestCase {
         
         let referenceDate = calendar.date(from: referenceDateCreator)
         
-        XCTAssertEqualWithAccuracy(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
+        XCTAssertEqual(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
     }
     
     func testISO8601WithTimezone() {
@@ -54,7 +54,7 @@ class NSDateTransformTests: XCTestCase {
         
         let referenceDate = calendar.date(from: referenceDateCreator)
         
-        XCTAssertEqualWithAccuracy(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
+        XCTAssertEqual(res!.timeIntervalSinceReferenceDate, referenceDate!.timeIntervalSinceReferenceDate, accuracy: 0.001)
     }
     
     func testUserDefinedDateFormat() {

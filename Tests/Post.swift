@@ -12,10 +12,10 @@ import ApiModel
 
 class Post: Object, ApiModel {
     // Standard Realm boilerplate
-    dynamic var id = ""
-    dynamic var title = ""
-    dynamic var contents = ""
-    dynamic var createdAt: Date? = Date()
+    @objc dynamic var id = ""
+    @objc dynamic var title = ""
+    @objc dynamic var contents = ""
+    @objc dynamic var createdAt: Date? = Date()
     
     override class func primaryKey() -> String {
         return "id"
