@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.8.0)
+  - Alamofire (4.9.0)
   - OHHTTPStubs/Core (6.0.0)
   - OHHTTPStubs/Default (6.0.0):
     - OHHTTPStubs/Core
@@ -13,18 +13,18 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (6.0.0)
   - OHHTTPStubs/Swift (6.0.0):
     - OHHTTPStubs/Default
-  - Realm (3.13.0):
-    - Realm/Headers (= 3.13.0)
-  - Realm/Headers (3.13.0)
-  - RealmSwift (3.13.0):
-    - Realm (= 3.13.0)
-  - SwiftyJSON (4.2.0)
+  - Realm (3.18.0):
+    - Realm/Headers (= 3.18.0)
+  - Realm/Headers (3.18.0)
+  - RealmSwift (3.18.0):
+    - Realm (= 3.18.0)
+  - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.7)
+  - Alamofire (~> 4.9)
   - OHHTTPStubs/Swift (~> 6.0.0)
-  - RealmSwift (~> 3.13)
-  - SwiftyJSON (~> 4.2)
+  - RealmSwift (~> 3.14)
+  - SwiftyJSON (~> 5.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -35,12 +35,12 @@ SPEC REPOS:
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
   OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
-  Realm: 5edd2ee65406aef591a4f9895de5a3440e51b3d8
-  RealmSwift: be5ebc7930e37cd3376b41cec7f21984528aaa16
-  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
+  Realm: 7b3d04740facf45e958a514b466a32b04f1113d6
+  RealmSwift: c817b5f374668cf08f649afb05f55d92a787649c
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 9b825591f2cd9ca5cd2c6019c96158386fe01a5b
+PODFILE CHECKSUM: 6f3b8818918f3e17cd473ae441bcb7a73e8a32e8
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.5

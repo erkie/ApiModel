@@ -45,7 +45,7 @@ class ModelTransformTests: XCTestCase {
         persistedPost.title = "Hello world"
         
         try! realm.write {
-            self.realm.add(persistedPost, update: true)
+            self.realm.add(persistedPost, update: .all)
         }
         
         let response = [

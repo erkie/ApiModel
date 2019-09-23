@@ -76,8 +76,8 @@ class ArrayTransformTests: XCTestCase {
         persistedPost1.title = "Bye world"
         
         try! realm.write {
-            self.realm.add(persistedPost0, update: true)
-            self.realm.add(persistedPost1, update: true)
+            self.realm.add(persistedPost0, update: .all)
+            self.realm.add(persistedPost1, update: .all)
         }
         
         let response = [
@@ -115,7 +115,7 @@ class ArrayTransformTests: XCTestCase {
         persistedPost0.title = "Hello world"
         
         try! realm.write {
-            self.realm.add(persistedPost0, update: true)
+            self.realm.add(persistedPost0, update: .all)
         }
         
         let response = [
@@ -150,7 +150,7 @@ class ArrayTransformTests: XCTestCase {
         feed.title = "Hello world"
         
         try! realm.write {
-            self.realm.add(feed, update: true)
+            self.realm.add(feed, update: .all)
         }
         
         let response = [

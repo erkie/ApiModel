@@ -23,7 +23,7 @@ open class ModelTransform<T: Object>: Transform where T:ApiModel {
             
             // If a realm is passed in we need to make sure to add the model in an update: true transaction, otherwise issues might happen down the road if the same object is present multiple times in a large nested response
             if let realm = realm {
-                realm.add(model, update: true)
+                realm.add(model, update: .all)
             }
             
             return model

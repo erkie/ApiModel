@@ -212,7 +212,7 @@ Api<User>.find { user, response in
 
 ```swift
 var post = Post()
-post.title = "Hello world - A prologue"
+post.title = NSLocalizedString("Hello world - A prologue", comment: "")
 post.contents = "Hello!"
 post.createdAt = NSDate()
 
